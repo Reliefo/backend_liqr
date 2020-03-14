@@ -6,11 +6,12 @@ import pickle
 
 @app.route('/')
 def hello_world():
-    return 'Hey, we have Flask in a Docker container!'
+    return 'Hey, we have Flask in a Docker container! To fetch the menu go to /menu and to place an order go to /order'
+
 @app.route('/menu')
 def fetch_menu():
-    str_menu = pickle.load(open('half_menu_main.pkl','rb'))
-    return str_menu.to_json()
+    str_menu = pickle.load(open('jason.pkl','rb'))
+    return jsonify(str_menu)
 
 
 @app.route('/order', methods=['POST'])
@@ -18,7 +19,7 @@ def receive_order():
     print(request)
     content = request.json
     print(content)
-    return "Fuck yeah buddy"
+    return jsonify({'status':"Fuck yeah buddy, order placed",'return': str(content)})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0',port="5050")

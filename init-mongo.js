@@ -1,0 +1,12 @@
+db.createUser(
+	{
+		user:"akshay",
+		pwd:"roomno402",
+		roles:[
+			{
+				role:"readWrite",
+				db:"reliefDB"
+			}
+		]
+	}
+)
