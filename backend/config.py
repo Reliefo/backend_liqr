@@ -1,3 +1,3 @@
 
 MONGO_DB = "local"
-MONGO_HOST = "mongodb://192.168.0.5:27017"
+MONGO_HOST = "mongodb://mongo:27017"
