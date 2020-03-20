@@ -1,7 +1,8 @@
 from backend.mongo.mongodb import Restaurant,MainCategory, SubCategory,FoodItem
+import json
 
 def return_restaurant():
-    return Restaurant.objects[0].to_json()
+    return json.loads(Restaurant.objects[0].to_json())
 
 def str_2(number):
     string = str(number)
