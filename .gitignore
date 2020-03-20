@@ -1,2 +1,5 @@
 cmd
 .cmds
+.idea/*
+.ipynb_checkpoints/*
+.gitignore
