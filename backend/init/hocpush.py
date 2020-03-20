@@ -1,3 +1,6 @@
+import pickle
+from backend.mongo.mongodb import Restaurant,MainCategory,SubCategory,FoodItem
+from backend.mongo.utils import str_2
 str_menu=pickle.load(open('half_menu_main.pkl','rb'))
 
 restautant_id = 'BNGHSR0001'
