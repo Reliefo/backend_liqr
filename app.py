@@ -3,6 +3,7 @@
 from flask import Flask,jsonify, request, send_from_directory, url_for
 app = Flask(__name__)
 import pickle
+from backend.mongo.utils import return_restaurant
 
 @app.route('/')
 def hello_world():
@@ -13,6 +14,10 @@ def fetch_menu():
     str_menu = pickle.load(open('jason.pkl','rb'))
     return jsonify(str_menu)
 
+@app.route('/rest')
+def fetch_restaurant():
+    str_menu=return_restaurant()
+    return jsonify(str_menu)
 
 @app.route('/order', methods=['POST'])
 def receive_order():
