@@ -1,6 +1,7 @@
 from mongoengine import *
 
 from backend.config import MONGO_DB, MONGO_HOST
+from bson import json_util
 
 conn = connect(MONGO_DB, host = MONGO_HOST,alias='default')
 
