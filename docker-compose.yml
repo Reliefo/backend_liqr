@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: always
+#    restart: always
     ports:
       - "5050:5050"
     depends_on:
@@ -15,6 +15,8 @@ services:
       FLASK_ENV: development
   mongo:
     image: mongo
-    restart: always
+#    restart: always
     ports:
       - "27017:27017"
+    volumes:
+      - /data/mongodb/db:/data/db
