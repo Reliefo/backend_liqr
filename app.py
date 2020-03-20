@@ -4,6 +4,7 @@ from flask import Flask,jsonify, request, send_from_directory, url_for
 app = Flask(__name__)
 import pickle
 from backend.mongo.utils import return_restaurant
+from backend.init.hocpush import final_list_json
 
 @app.route('/')
 def hello_world():
