@@ -21,7 +21,7 @@ for n,main_cat_name in enumerate(str_menu.loc[:,'main_category'].unique()):
         final_list_json[n]['sub_category'][p]['foodlist']=[]
         for q,food_dict in enumerate(str_menu[str_menu['main_category'].loc[:'sub_category']==main_cat_name][str_menu[str_menu['main_category'].loc[:'sub_category']==main_cat_name].loc[:,'sub_category']==sub_cat_name].iterrows()):
             final_list_json[n]['sub_category'][p]['foodlist'].append({})
-            final_list_json[n]['sub_category'][p]['foodlist'][q]['name']= food_dict[1]['dish_name']
+            final_list_json[n]['sub_category'][p]['foodlist'][q]['name']= food_dict[1]['name']
             final_list_json[n]['sub_category'][p]['foodlist'][q]['description']=food_dict[1]['description']
             final_list_json[n]['sub_category'][p]['foodlist'][q]['price']=food_dict[1]['price']
 
