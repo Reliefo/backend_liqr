@@ -1,15 +1,39 @@
-from flask_sockets import Sockets
-from flask import Flask,jsonify, request, send_from_directory, url_for
+# flask_web/app.py
 from backend.mongo.query import order_placement,fetch_order
+from flask import Flask,jsonify, request, send_from_directory, url_for
+from flask_cors import CORS, cross_origin
+from flask_socketio import SocketIO, emit
+import pickle
 from backend.mongo.utils import return_restaurant
 
-import pickle
-
 app = Flask(__name__)
-sockets = Sockets(app)
+# CORS(app, resources={r"/api/*":{"origins":"*"}})
+# socketio = SocketIO(app,cors_allowed_origins="*")
+socketio = SocketIO(app)
 
 
 
+
+@socketio.on('connect', namespace='/adhara')
+def connect():
+    print('connected')
+    emit('response', {'data':'Connected with me, sock'})
+
+@socketio.on('disconnect', namespace='/adhara')
+def disconnect():
+    emit('response', {'data':'Disconnected with me, sock'})
+
+@socketio.on('fetchme', namespace='/adhara')
+def fetch_all(message):
+    print("IT's WORKING")
+    emit('fetch',{'msg':"HERE IT IS TABLE IT "})
+
+
+@socketio.on('ack-message', namespace='/adhara')
+def fetch_all_asdf(message):
+    print("IT's WORKING")
+    print(message)
+    emit('fetch',{'msg':"HERE IT IS TABLE IT "})
 
 @app.route('/')
 def hello_world():
@@ -39,34 +63,5 @@ def receive_order():
 def fetch_orders():
     return fetch_order()
 
-
-@sockets.route('/echo')
-def echo_socket(ws):
-    while not ws.closed:
-        message = ws.receive()
-        print(message)
-        with open('fuck.txt','w') as f:
-            f.write(message)
-        ws.send(message+'Mello')
-
-
-@sockets.route('/connect')
-def connect(ws):
-    print('connected')
-    ws.send({'data':'Connected with me, sock'})
-
-# @socketio.on('disconnect', namespace='/')
-# def disconnect():
-#     emit('response', {'data':'Disconnected with me, sock'})
-
-@sockets.route('/fetchme')
-def fetch_all(ws):
-    msg=ws.receive()
-    print("IT's WORKING")
-    ws.send({'msg':"HERE IT IS TABLE IT ",'ori':msg})
-
-if __name__ == "__main__":
-    from gevent import pywsgi
-    from geventwebsocket.handler import WebSocketHandler
-    server = pywsgi.WSGIServer(('0.0.0.0', 5050), app, handler_class=WebSocketHandler)
-    server.serve_forever()
+if __name__ == '__main__':
+    socketio.run(app,debug=True, host='0.0.0.0',port=5050)
