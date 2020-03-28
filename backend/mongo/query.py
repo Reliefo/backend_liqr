@@ -44,6 +44,7 @@ def order_placement(input_order):
         foodlist = {str(key): FoodItemMod.from_json(FoodItem.objects(id=foodid).exclude('id')[0].to_json()) for
                     key, foodid in enumerate(order['foodlist'])}
         tableorder.orders.append(Order(placedby=User.objects.get(id=order['placedby']).to_dbref(), foodlist=foodlist))
+        tableorder.timestamp=datetime.datetime.now()
         tableorder.save()
     ordered_table.update(push__tableorders=tableorder.to_dbref())
 

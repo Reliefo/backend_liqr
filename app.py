@@ -72,7 +72,7 @@ def fetch_orders():
 
 @app.route('/send_orders', methods=['POST'])
 def fetch_orders2():
-    new_order = fetch_order(np.random.randint(22))
+    new_order = fetch_order(np.random.randint(len(TableOrder.objects)))
     socketio.emit('new_orders', new_order, namespace='/adhara')
     # socketio.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
     print("Sending")
@@ -93,7 +93,7 @@ def assist_them():
     server_name=send_assistance_req(str(assistance_ob.id))
     time.sleep(1)
 
-    socketio.emit('assist', {'assistance_id': str(assistance_ob.id),'server_name':server_name},namespace='/adhara')
+    socketio.emit('assist_updates', {'assistance_id': str(assistance_ob.id),'server_name':server_name},namespace='/adhara')
     return str(assistance_ob.to_json())+' '+server_name
 
 
