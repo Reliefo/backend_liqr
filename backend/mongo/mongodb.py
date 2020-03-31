@@ -64,26 +64,39 @@ class FoodOptionsMod(EmbeddedDocument):
 
 
 class FoodItemMod(EmbeddedDocument):
+    food_id = StringField()
     name = StringField()
     description = StringField()
     price = StringField()
     instructions = StringField()
+    quantity = IntField()
+    status = StringField(choices=['queued', 'cooking', 'completed'])
     foodoptions = EmbeddedDocumentField(FoodOptionsMod)
 
 
-class Order(EmbeddedDocument):
+class Order(Document):
     placedby = ReferenceField(User)
-    foodlist = MapField(EmbeddedDocumentField(FoodItemMod))
+    foodlist = ListField(EmbeddedDocumentField(FoodItemMod))
+    status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
+
+    def fetch_fooditem(self, food_id):
+        for fooditem in self.foodlist:
+            if (fooditem.food_id == food_id):
+                return fooditem.to_json()
+        return "Food item not found"
 
 
 class TableOrder(Document):
-    table =StringField()
-    orders = ListField(EmbeddedDocumentField(Order))
+    table = StringField()
+    orders = ListField(ReferenceField(Order))
+    status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
     timestamp = DateTimeField(default=datetime.datetime.now())
 
     def to_json(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
+        for key, order in enumerate(self.orders):
+            data['orders'][key] = json_util.loads(self.orders[key].to_json())
         return json_util.dumps(data)
 
 
@@ -93,7 +106,9 @@ class Table(Document):
     servers = ListField(ReferenceField(Server))
     users = ListField(ReferenceField(User))
     nofusers = IntField()
-    tableorders = ListField(ReferenceField(TableOrder))
+    qd_tableorders = ListField(ReferenceField(TableOrder))
+    cook_tableorders = ListField(ReferenceField(TableOrder))
+    com_tableorders = ListField(ReferenceField(TableOrder))
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}
 

@@ -72,19 +72,50 @@ def fetch_orders():
 
 @app.route('/send_orders', methods=['POST'])
 def fetch_orders2():
-    new_order = fetch_order(np.random.randint(len(TableOrder.objects)))
+    # new_order = fetch_order(np.random.randint(len(TableOrder.objects)))
+    new_order = order_placement(generate_order())
     socketio.emit('new_orders', new_order, namespace='/adhara')
     # socketio.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
     print("Sending")
     return new_order
 
-@app.route('/send_updates', methods=['POST'])
-def status_updates():
-    # socketio.emit('new_orders', new_order, namespace='/adhara')
+
+@app.route('/send_cooking_updates', methods=['POST'])
+def cooking_updates():
 
     # socketio.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
-    print("Sending")
-    return new_order
+    status_tuple = pick_order()
+
+    order_status_cooking(status_tuple)
+
+    sending_dict={}
+    sending_dict['tableorder_id']=status_tuple[0]
+    sending_dict['type']='cooking'
+    sending_dict['order_id']=status_tuple[1]
+    sending_dict['food_id']=status_tuple[2]
+    sending_json=json_util.dumps(sending_dict)
+    socketio.emit('order_updates', sending_json, namespace='/adhara')
+
+    return sending_json
+
+@app.route('/send_completed_updates', methods=['POST'])
+def completed_updates():
+
+    # socketio.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
+    status_tuple = pick_order2()
+
+    order_status_completed(status_tuple)
+
+    sending_dict={}
+    sending_dict['tableorder_id']=status_tuple[0]
+    sending_dict['type']='completed'
+    sending_dict['order_id']=status_tuple[1]
+    sending_dict['food_id']=status_tuple[2]
+    sending_json=json_util.dumps(sending_dict)
+    socketio.emit('order_updates', sending_json, namespace='/adhara')
+
+    return sending_json
+
 
 @app.route('/assist', methods=['POST'])
 def assist_them():
