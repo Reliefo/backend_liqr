@@ -52,8 +52,9 @@ def fetch_menu():
 
 @app.route('/rest')
 def fetch_restaurant():
-    str_menu = return_restaurant()
-    return jsonify(str_menu)
+    rest_json = return_restaurant()
+    socketio.emit('restaurant_object', rest_json, namespace='/adhara')
+    return rest_json
 
 
 @app.route('/order', methods=['POST'])
@@ -70,7 +71,7 @@ def fetch_orders():
     return fetch_order(np.random.randint(6))
 
 
-@app.route('/send_orders', methods=['POST'])
+@app.route('/send_orders', methods=['GET'])
 def fetch_orders2():
     # new_order = fetch_order(np.random.randint(len(TableOrder.objects)))
     new_order = order_placement(generate_order())
@@ -132,6 +133,16 @@ def assist_them():
 def fetch_orders3():
     print("YEAH IT; WORSFANDKLF")
     return jsonify("FUCK YESAH BUDY")
+
+@app.route('/user_scan',methods=['POST'])
+def user_scan_portal():
+    content = request.json
+    table_no=content['table']
+    unique_id=content['unique_id']
+    table_id = str(Table.objects[int(table_no)].id)
+    user_id=str(user_scan(table_id,unique_id))
+    socketio.emit('user_scan', json_util.dumps({"table_no":table_no,"user_id":user_id,"table_id":table_id}) ,namespace='/adhara')
+    return json_util.dumps({"table_no":table_no,"user_id":user_id,"table_id":table_id})
 
 
 if __name__ == '__main__':

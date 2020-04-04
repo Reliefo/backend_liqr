@@ -15,9 +15,11 @@ def user_scan(table_id, unique_id, email_id='dud'):
         if (len(tempuser) > 0):
             tempuser[0].update(set__current_table_id=str(scanned_table.id))
             scanned_table.update(push__users=tempuser[0].to_dbref())
+            return tempuser[0].id
         else:
             tempuser = TempUser(unique_id=unique_id, current_table_id=str(scanned_table.id)).save()
             scanned_table.update(push__users=tempuser.to_dbref())
+            return tempuser.id
         scanned_table.update(inc__nofusers=1)
     else:
         reg_user = RegisteredUser.objects.filter(email_id=email_id)[0]

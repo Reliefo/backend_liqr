@@ -41,7 +41,10 @@ class Server(Document):
     name = StringField()
     assistance_history = MapField(ListField(ReferenceField(Assistance)))
     order_history = MapField(ListField(ReferenceField(TableOrder)))
+    def to_mymongo(self):
+        data = self.to_mongo()
 
+        return data
 
 class Assistance(Document):
     types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
@@ -51,6 +54,13 @@ class Assistance(Document):
     timestamp = DateTimeField()
     accepted_by = ReferenceField(Server, default=None)
     meta = {'strict': False}
+
+    def to_mymongo(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+        data['table'] = Table.objects(assistance_reqs__in=[self.id])[0].name
+
+        return data
 
     def to_json(self):
         data = self.to_mongo()
@@ -92,6 +102,14 @@ class TableOrder(Document):
     status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
     timestamp = DateTimeField(default=datetime.datetime.now())
 
+    def to_mymongo(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+        for key, order in enumerate(self.orders):
+            data['orders'][key] = json_util.loads(self.orders[key].to_json())
+
+        return data
+
     def to_json(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
@@ -111,6 +129,19 @@ class Table(Document):
     com_tableorders = ListField(ReferenceField(TableOrder))
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}
+
+    def to_mymongo(self):
+        data = self.to_mongo()
+        for key, tableorder in enumerate(self.qd_tableorders):
+            data['qd_tableorders'][key] = self.qd_tableorders[key].to_mymongo()
+        for key, tableorder in enumerate(self.cook_tableorders):
+            data['cook_tableorders'][key] = self.cook_tableorders[key].to_mymongo()
+        for key, tableorder in enumerate(self.com_tableorders):
+            data['com_tableorders'][key] = self.com_tableorders[key].to_mymongo()
+        for key, ass_req in enumerate(self.assistance_reqs):
+            data['assistance_reqs'][key] = self.assistance_reqs[key].to_mymongo()
+
+        return data
 
 
 class FoodOptions(DynamicDocument):
@@ -177,5 +208,9 @@ class Restaurant(Document):
         data = self.to_mongo()
         for key, sub_cat in enumerate(self.menu):
             data['menu'][key] = self.menu[key].to_mymongo()
+        for key, server in enumerate(self.servers):
+            data['servers'][key] = self.servers[key].to_mymongo()
+        for key, table in enumerate(self.tables):
+            data['tables'][key] = self.tables[key].to_mymongo()
 
         return json_util.dumps(data)

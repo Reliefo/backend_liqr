@@ -16,7 +16,7 @@ for obj in FoodItem.objects:
 
 
 def return_restaurant():
-    return json.loads(Restaurant.objects[0].to_json())
+    return Restaurant.objects[0].to_json()
 
 
 def str_2(number):
@@ -51,7 +51,7 @@ def random_food_list():
     randomfl = []
     for i in range(np.random.randint(2, 9)):
         randomfl.append(random_food())
-    return randomfl
+    return list(set(randomfl))
 
 
 # Generating orders and asstypes
