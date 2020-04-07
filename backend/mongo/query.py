@@ -30,15 +30,18 @@ def user_scan(table_id, unique_id, email_id='dud'):
 
 
 
+
+
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
-    tableorder = TableOrder(table=ordered_table.name,timestamp=datetime.datetime.now())
+    tableorder = TableOrder(table=str(ordered_table.name),table_id=str(ordered_table.name),timestamp=datetime.datetime.now())
     for order in input_order['orders']:
-        foodlist=[FoodItemMod.from_json(food_embed(food_dict)) for food_dict in order['foodlist']]
+        foodlist=[FoodItemMod.from_json(food_dict) for food_dict in order['foodlist']]
         tableorder.orders.append(Order(placedby=User.objects.get(id=order['placedby']).to_dbref(),foodlist=foodlist).save().to_dbref())
         tableorder.timestamp=datetime.datetime.now()
         tableorder.save()
-    ordered_table.update(push__qd_tableorders=tableorder.to_dbref())
+    ordered_table.update(push__tableorders=tableorder.to_dbref())
+    Restaurant.objects(tables__in=[str(ordered_table.id)]).update(push__tableorders=tableorder.to_dbref())
     return TableOrder.objects.get(id=tableorder.id).to_json()
 
 

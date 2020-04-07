@@ -2,18 +2,6 @@ from backend.mongo.mongodb import *
 import json
 import numpy as np
 
-user_list = []
-for obj in User.objects:
-    user_list.append(str(obj.id))
-
-all_table_list = []
-for obj in Table.objects:
-    all_table_list.append(str(obj.id))
-
-all_food_list = []
-for obj in FoodItem.objects:
-    all_food_list.append(str(obj.id))
-
 
 def return_restaurant():
     return Restaurant.objects[0].to_json()
@@ -28,7 +16,7 @@ def str_2(number):
 
 
 def nprand(a, b=-1):
-    if (b == -1):
+    if b == -1:
         return np.random.randint(a)
     else:
         return np.random.randint(a, b)
@@ -36,14 +24,23 @@ def nprand(a, b=-1):
 
 # RANDOM Functions
 def random_table():
+    all_table_list = []
+    for obj in Table.objects:
+        all_table_list.append(str(obj.id))
     return all_table_list[np.random.randint(len(all_table_list))]
 
 
 def random_user():
+    user_list = []
+    for obj in User.objects:
+        user_list.append(str(obj.id))
     return user_list[np.random.randint(len(user_list))]
 
 
 def random_food():
+    all_food_list = []
+    for obj in FoodItem.objects:
+        all_food_list.append(str(obj.id))
     return all_food_list[np.random.randint(len(all_food_list))]
 
 
@@ -55,32 +52,46 @@ def random_food_list():
 
 
 # Generating orders and asstypes
-
 def food_embed(food_dict):
     json_dict = json_util.loads(FoodItem.objects(id=food_dict['food_id']).exclude('id')[0].to_json())
     json_dict['food_id'] = food_dict['food_id']
     json_dict['quantity'] = food_dict['quantity']
     json_dict['instructions'] = food_dict['instructions']
     json_dict['status'] = 'queued'
+    option_id = choice_id = ''
+    try:
+        option = np.random.choice(list(json_dict['foodoptions']['options'].keys()))
+        option_pair = {option: json_dict['foodoptions']['options'][option]}
+        json_dict['foodoptions']['options'] = option_pair
+        option_id = option.lower()
+    except:
+        pass
+    try:
+        choice = np.random.choice(list(json_dict['foodoptions']['choices']))
+        json_dict['foodoptions']['choices'] = [choice]
+        choice_id = choice.lower()
+    except:
+        pass
+    if option_id != '':
+        if choice_id != '':
+            json_dict['food_id'] = food_dict['food_id'] + "#" + option_id + "_" + choice_id
+        else:
+            json_dict['food_id'] = food_dict['food_id'] + "#" + option_id
     return json_util.dumps(json_dict)
 
 
 def c_food_dict(food_id):
-    f_dict = {}
-    f_dict['food_id'] = food_id
-    f_dict['quantity'] = int(np.random.choice([1, 1, 1, 1, 2, 2, 3]))
-    f_dict['instructions'] = ['Cook with love' if np.random.randint(2) else 'no'][0]
+    f_dict = {'food_id': food_id, 'quantity': int(np.random.choice([1, 1, 1, 1, 2, 2, 3])),
+              'instructions': ['Cook with love' if np.random.randint(2) else 'no'][0]}
     return f_dict
 
 
 def generate_order():
-    input_order = {}
-    input_order['table'] = random_table()
-    input_order['orders'] = []
+    input_order = {'table': random_table(), 'orders': []}
     for n in range(np.random.randint(1, 5)):
         input_order['orders'].append({})
         input_order['orders'][n]['placedby'] = random_user()
-        input_order['orders'][n]['foodlist'] = [c_food_dict(v) for v in random_food_list()]
+        input_order['orders'][n]['foodlist'] = [food_embed(c_food_dict(v)) for v in random_food_list()]
     return input_order
 
 
@@ -142,6 +153,7 @@ def pick_order():
         order = non_completed(tableorder.orders, True)
         if (not isinstance(order, Order)):
             TableOrder.objects.get(id=tableorder.id).update(set__status='cooking')
+            print('changeing tableorder status')
             return pick_order()
 
         food_ob = food_status_check(order.foodlist)
@@ -150,6 +162,7 @@ def pick_order():
             return (tableorder.id, order.id, food_id)
         elif (food_ob == 'all_cooking'):
             Order.objects.get(id=order.id).update(set__status='cooking')
+            print('changeing order status')
             return pick_order()
     else:
         tableorder = non_completed(TableOrder.objects, 1)
@@ -165,6 +178,7 @@ def pick_order2():
         order = non_completed(tableorder.orders, False)
         if (not isinstance(order, Order)):
             TableOrder.objects.get(id=tableorder.id).update(set__status='completed')
+            print('changeing tableorder status')
             return pick_order()
 
         food_ob = food_status_check_cook(order.foodlist)
@@ -173,6 +187,7 @@ def pick_order2():
             return (tableorder.id, order.id, food_id)
         elif (food_ob == 'all_completed'):
             Order.objects.get(id=order.id).update(set__status='completed')
+            print('changeing order status')
             return pick_order()
 
 
@@ -182,3 +197,5 @@ def pick_order2():
         food_id = food_status_check(order.foodlist).food_id
 
         return (tableorder.id, order.id, food_id)
+
+
