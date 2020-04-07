@@ -1,10 +1,11 @@
 from backend.mongo.mongodb import *
 import json
 import numpy as np
+import re
 
 
-def return_restaurant():
-    return Restaurant.objects[0].to_json()
+def return_restaurant(rest_id):
+    return Restaurant.objects(restaurant_id=rest_id)[0].to_json()
 
 
 def str_2(number):
@@ -199,3 +200,14 @@ def pick_order2():
         return (tableorder.id, order.id, food_id)
 
 
+def custom_splitter(text):
+    types = []
+    full_splits = re.split('[/]', text)
+    for n, spl in enumerate(full_splits):
+        if (n == 0):
+            types.append(re.search('[a-zA-Z]+', spl.strip().split()[-1]).group())
+        elif (n == len(full_splits) - 1):
+            types.append(re.search('[a-zA-Z]+', spl.strip().split()[0]).group())
+        else:
+            types.append(re.search('[a-zA-Z]+', spl).group())
+    return types
