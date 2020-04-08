@@ -137,4 +137,14 @@ def configuring_restaurant(message):
             table_objects.append(new_table.to_dbref())
             table_dict_list.append({**{'table_id': str(new_table.id)}, **table_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__tables=table_objects)
-        return table_dict_list
+        return {"restaurant_id": "BNGHSR0002", "type": "add_tables", "tables": table_dict_list}
+    elif message['type'] == 'add_servers':
+        server_objects = []
+        server_dict_list = []
+        for server_pair in message['servers']:
+            new_server = Server(name=server_pair['staff_name']).save()
+            server_objects.append(new_server.to_dbref())
+            server_dict_list.append({**{'server_id': str(new_server.id)}, **server_pair})
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__servers=server_objects)
+        return {"restaurant_id": "BNGHSR0002", "type": "add_servers", "servers": server_dict_list}
+

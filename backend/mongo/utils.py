@@ -16,7 +16,7 @@ def str_2(number):
         return string
 
 
-def nprand(a, b=-1):
+def np_rand(a, b=-1):
     if b == -1:
         return np.random.randint(a)
     else:
@@ -46,10 +46,10 @@ def random_food():
 
 
 def random_food_list():
-    randomfl = []
+    random_fl = []
     for i in range(np.random.randint(2, 9)):
-        randomfl.append(random_food())
-    return list(set(randomfl))
+        random_fl.append(random_food())
+    return list(set(random_fl))
 
 
 # Generating orders and asstypes
@@ -160,7 +160,7 @@ def pick_order():
         food_ob = food_status_check(order.foodlist)
         if (isinstance(food_ob, FoodItemMod)):
             food_id = food_ob.food_id
-            return (tableorder.id, order.id, food_id)
+            return (str(tableorder.id), str(order.id), food_id)
         elif (food_ob == 'all_cooking'):
             Order.objects.get(id=order.id).update(set__status='cooking')
             print('changeing order status')
@@ -185,7 +185,7 @@ def pick_order2():
         food_ob = food_status_check_cook(order.foodlist)
         if (isinstance(food_ob, FoodItemMod)):
             food_id = food_ob.food_id
-            return (tableorder.id, order.id, food_id)
+            return (str(tableorder.id), str(order.id), food_id)
         elif (food_ob == 'all_completed'):
             Order.objects.get(id=order.id).update(set__status='completed')
             print('changeing order status')
