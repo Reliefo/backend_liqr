@@ -29,10 +29,29 @@ def disconnect():
 
 
 @socket_io.on('rest_with_id', namespace='/adhara')
-def fetch_all(message):
+def fetch_rest_object(message):
     rest_json = return_restaurant(message)
     emit('restaurant_object', rest_json)
     return rest_json
+
+
+@socket_io.on('configuring_restaurant', namespace='/adhara')
+def configuring_restaurant_event(message):
+    print("IT's WORKING")
+    output = configuring_restaurant(json_util.loads(message))
+    print(message)
+    emit('updating_config', {'msg': json_util.dumps(output)})
+    emit('updating_config', {'msg': "configured      " + message['type']})
+    emit('updating_config', {'msg': "configured      " + message['tables']})
+
+
+@socket_io.on('configuring_rest', namespace='/adhara')
+def configuring_restaurant_event2(message):
+    print("IT's WORKING")
+    configuring_restaurant(message)
+    print(message)
+    emit('updating_con', {'msg': "configured      "})
+    emit('updating_con', {'msg': "configured      " + message})
 
 
 @socket_io.on('fetchme', namespace='/adhara')
@@ -92,8 +111,8 @@ def fetch_menu():
 
 @app.route('/rest')
 def fetch_restaurant():
-    rest_json = return_restaurant()
-    socket_io.emit('restaurant_object', rest_json, namespace='/adhara')
+    rest_json = return_restaurant("BNGHSR0001")
+    # socket_io.emit('restaurant_object', rest_json, namespace='/adhara')
     return rest_json
 
 

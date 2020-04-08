@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    image: datascientist69/reliefo:relief_webv1
+    image: datascientist69/reliefo:relief_web
     build:
       context: .
       dockerfile: Dockerfile

@@ -126,3 +126,15 @@ def order_status_completed(status_tuple):
     if validate_for_table_order(status_tuple[0], False):
         TableOrder.objects.get(id=status_tuple[0]).update(set__status='completed')
     return "Done"
+
+
+def configuring_restaurant(message):
+    if message['type'] == 'add_tables':
+        table_objects = []
+        table_dict_list = []
+        for table_pair in message['tables']:
+            new_table = Table(name=table_pair['table_name'], seats=table_pair['seats']).save()
+            table_objects.append(new_table.to_dbref())
+            table_dict_list.append({**{'table_id': str(new_table.id)}, **table_pair})
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__tables=table_objects)
+        return table_dict_list
