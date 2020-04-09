@@ -2,6 +2,7 @@ import pickle
 
 from backend.mongo.query import *
 
+
 def setup_mongo():
     final_list_json = pickle.load(open('final_usable_json.pkl', 'rb'))
 
@@ -12,7 +13,7 @@ def setup_mongo():
     Table.drop_collection()
     TempUser.drop_collection()
     RegisteredUser.drop_collection()
-    Server.drop_collection()
+    Staff.drop_collection()
     Assistance.drop_collection()
     TableOrder.drop_collection()
     Order.drop_collection()
@@ -23,19 +24,20 @@ def setup_mongo():
         sub_cat_list = []
         for q, sub_cat in enumerate(main_cat['sub_category']):
             food_list = []
-            for r, food in enumerate(sub_cat['foodlist']):
-                food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
+            for r, food in enumerate(sub_cat['food_list']):
+                food_list.append(
+                    FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
             sub_cat_list.append(
                 SubCategory(name=sub_cat['name'], description=sub_cat['description'], foodlist=food_list).save())
         main_cat_list.append(
             MainCategory(name=main_cat['name'], description=main_cat['description'], sub_category=sub_cat_list).save())
 
-    houseofcommons = Restaurant(name='House of Commons', restaurant_id='BNGHSR0001', menu=main_cat_list, address='')
-    houseofcommons.save()
+    house_of_commons = Restaurant(name='House of Commons', restaurant_id='BNGHSR0001', menu=main_cat_list, address='')
+    house_of_commons.save()
 
     table_list = []
     for n in range(1, 16):
-        table_list.append(Table(name='table' + str(n), seats=6, nofusers=0).save().to_dbref())
+        table_list.append(Table(name='table' + str(n), seats=6, no_of_users=0).save().to_dbref())
 
     Restaurant.objects[0].update(set__tables=table_list)
     akshay = TempUser(unique_id="hfirnivnhhwocn34534no34n34r")
@@ -57,20 +59,20 @@ def setup_mongo():
 
     user_scan(str(table_list[2].id), '', email_id='akshay.dn5@gmail.com')
 
-    for foodob in FoodItem.objects:
-        if re.search('/', foodob.price):
-            if re.search('/', foodob.name):
-                options = custom_splitter(foodob.name)
+    for food_ob in FoodItem.objects:
+        if re.search('/', food_ob.price):
+            if re.search('/', food_ob.name):
+                options = custom_splitter(food_ob.name)
 
-            elif re.search('/', foodob.description):
-                options = custom_splitter(foodob.description)
-            prices = foodob.price.split('/')
+            elif re.search('/', food_ob.description):
+                options = custom_splitter(food_ob.description)
+            prices = food_ob.price.split('/')
             if len(options) == len(prices):
                 options = {k: v for k, v in zip(options, prices)}
-                FoodItem.objects.get(id=foodob.id).update(set__foodoptions=FoodOptions(options=options))
+                FoodItem.objects.get(id=food_ob.id).update(set__food_options=FoodOptions(options=options))
             else:
-                left_out = foodob.id
+                left_out = food_ob.id
     left_out_options = {k: v for k, v in
                         zip(custom_splitter(' Vegetables/chicken/prawns, Served'), '250/280/300'.split('/'))}
     FoodItem.objects.get(id=left_out).update(
-        set__foodoptions=FoodOptions(options=left_out_options, choices=['Red', 'Green']))
+        set__food_options=FoodOptions(options=left_out_options, choices=['Red', 'Green']))

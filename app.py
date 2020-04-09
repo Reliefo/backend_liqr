@@ -41,17 +41,6 @@ def configuring_restaurant_event(message):
     output = configuring_restaurant(json_util.loads(message))
     print(message)
     emit('updating_config', {'msg': json_util.dumps(output)})
-    emit('updating_config', {'msg': "configured      " + message['type']})
-    emit('updating_config', {'msg': "configured      " + message['tables']})
-
-
-@socket_io.on('configuring_rest', namespace='/adhara')
-def configuring_restaurant_event2(message):
-    print("IT's WORKING")
-    configuring_restaurant(message)
-    print(message)
-    emit('updating_con', {'msg': "configured      "})
-    emit('updating_con', {'msg': "configured      " + message})
 
 
 @socket_io.on('fetchme', namespace='/adhara')
@@ -67,32 +56,27 @@ def fetch_order_lists(message):
     emit('order_lists', message)
     try:
         lists_json = Restaurant.objects[0].fetch_order_lists()
-    # except NameError:
-    #     emit('order_lists', 'fuck this Name Error')
-    except:
-        emit('order_lists', message)
+    except NameError:
         try:
             emit('order_lists', str(traceback.format_exc()))
-        except:
-            emit('order_lists', 'Nothign is working')
+        except TypeError:
+            emit('order_lists', 'Nothing is working')
 
     emit('order_lists', lists_json)
 
 
 @socket_io.on('kitchen_updates', namespace='/adhara')
 def send_new_orders(message):
-    print(message)
-    # status_tuple = message[0]
     status_tuple = (message['table'], message['order'], message['food'])
     if message['type'] == 'cooking':
         order_status_cooking(status_tuple)
     else:
         order_status_completed(status_tuple)
 
-    sending_dict = {'tableorder_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
+    sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
                     'food_id': status_tuple[2]}
-    if (len(status_tuple) == 4):
-        sending_dict['foodoptions_id'] = status_tuple[3]
+    if len(status_tuple) == 4:
+        sending_dict['food_options_id'] = status_tuple[3]
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, namespace='/adhara')
     emit('fetch', {'msg': message})
@@ -147,13 +131,10 @@ def cooking_updates():
 
     order_status_cooking(status_tuple)
 
-    sending_dict = {}
-    sending_dict['tableorder_id'] = status_tuple[0]
-    sending_dict['type'] = 'cooking'
-    sending_dict['order_id'] = status_tuple[1]
-    sending_dict['food_id'] = status_tuple[2]
+    sending_dict = {'table_order_id': status_tuple[0], 'type': 'cooking', 'order_id': status_tuple[1],
+                    'food_id': status_tuple[2]}
     if len(status_tuple) == 4:
-        sending_dict['foodoptions_id'] = status_tuple[3]
+        sending_dict['food_options_id'] = status_tuple[3]
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, namespace='/adhara')
 
@@ -167,7 +148,7 @@ def completed_updates():
 
     order_status_completed(status_tuple)
 
-    sending_dict = {'tableorder_id': status_tuple[0], 'type': 'completed', 'order_id': status_tuple[1],
+    sending_dict = {'table_order_id': status_tuple[0], 'type': 'completed', 'order_id': status_tuple[1],
                     'food_id': status_tuple[2]}
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, namespace='/adhara')
@@ -179,12 +160,12 @@ def completed_updates():
 def assist_them():
     assistance_ob = assistance_req(generate_asstype())
     socket_io.emit('assist', assistance_ob.to_json(), namespace='/adhara')
-    server_name = send_assistance_req(str(assistance_ob.id))
+    staff_name = send_assistance_req(str(assistance_ob.id))
     time.sleep(1)
 
-    socket_io.emit('assist_updates', {'assistance_id': str(assistance_ob.id), 'server_name': server_name},
+    socket_io.emit('assist_updates', {'assistance_id': str(assistance_ob.id), 'staff_name': staff_name},
                    namespace='/adhara')
-    return str(assistance_ob.to_json()) + ' ' + server_name
+    return str(assistance_ob.to_json()) + ' ' + staff_name
 
 
 @app.route('/end_orders', methods=['POST'])

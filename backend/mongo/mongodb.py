@@ -3,7 +3,6 @@ import datetime
 from backend.config import MONGO_DB, MONGO_HOST
 from bson import json_util
 
-
 conn = connect(MONGO_DB, host=MONGO_HOST, alias='default')
 
 
@@ -38,12 +37,12 @@ class Assistance(Document):
     pass
 
 
-class Server(Document):
+class Staff(Document):
     name = StringField()
     assistance_history = MapField(ListField(ReferenceField(Assistance)))
     order_history = MapField(ListField(ReferenceField(TableOrder)))
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
 
         return data
@@ -55,10 +54,10 @@ class Assistance(Document):
     user = ReferenceField(User)
     assistance_type = StringField(choices=types)
     timestamp = DateTimeField()
-    accepted_by = ReferenceField(Server, default=None)
+    accepted_by = ReferenceField(Staff, default=None)
     meta = {'strict': False}
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
         data['table'] = Table.objects(assistance_reqs__in=[self.id])[0].name
@@ -85,18 +84,18 @@ class FoodItemMod(EmbeddedDocument):
     instructions = StringField()
     quantity = IntField()
     status = StringField(choices=['queued', 'cooking', 'completed'])
-    foodoptions = EmbeddedDocumentField(FoodOptionsMod)
+    food_options = EmbeddedDocumentField(FoodOptionsMod)
 
 
 class Order(Document):
-    placedby = ReferenceField(User)
-    foodlist = ListField(EmbeddedDocumentField(FoodItemMod))
+    placed_by = ReferenceField(User)
+    food_list = ListField(EmbeddedDocumentField(FoodItemMod))
     status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
 
-    def fetch_fooditem(self, food_id):
-        for fooditem in self.foodlist:
-            if (fooditem.food_id == food_id):
-                return fooditem.to_json()
+    def fetch_food_item(self, food_id):
+        for food_item in self.food_list:
+            if food_item.food_id == food_id:
+                return food_item.to_json()
         return "Food item not found"
 
 
@@ -107,7 +106,7 @@ class TableOrder(Document):
     status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
     timestamp = DateTimeField(default=datetime.datetime.now())
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
         for key, order in enumerate(self.orders):
@@ -126,19 +125,19 @@ class TableOrder(Document):
 class Table(Document):
     name = StringField(required=True)
     seats = IntField(required=True)
-    servers = ListField(ReferenceField(Server))
+    staff = ListField(ReferenceField(Staff))
     users = ListField(ReferenceField(User))
-    nofusers = IntField()
-    tableorders = ListField(ReferenceField(TableOrder))
+    no_of_users = IntField()
+    table_orders = ListField(ReferenceField(TableOrder))
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
-        for key, tableorder in enumerate(self.tableorders):
-            data['tableorders'][key] = self.tableorders[key].to_mymongo()
+        for key, table_order in enumerate(self.table_orders):
+            data['table_orders'][key] = self.table_orders[key].to_my_mongo()
         for key, ass_req in enumerate(self.assistance_reqs):
-            data['assistance_reqs'][key] = self.assistance_reqs[key].to_mymongo()
+            data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
 
         return data
 
@@ -152,19 +151,19 @@ class FoodItem(Document):
     name = StringField(required=True)
     description = StringField(required=True)
     price = StringField(required=True)
-    foodoptions = EmbeddedDocumentField(FoodOptions)
+    food_options = EmbeddedDocumentField(FoodOptions)
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
-        if (self.foodoptions):
-            data['foodoptions'] = self.foodoptions.to_mongo()
+        if self.food_options:
+            data['food_options'] = self.food_options.to_mongo()
 
         return data
 
     def to_json(self):
         data = self.to_mongo()
-        if (self.foodoptions):
-            data['foodoptions'] = self.foodoptions.to_mongo()
+        if self.food_options:
+            data['food_options'] = self.food_options.to_mongo()
 
         return json_util.dumps(data)
 
@@ -172,12 +171,12 @@ class FoodItem(Document):
 class SubCategory(Document):
     name = StringField(required=True)
     description = StringField(required=True)
-    foodlist = ListField(ReferenceField(FoodItem), required=True)
+    food_list = ListField(ReferenceField(FoodItem), required=True)
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
-        for key, fooditem in enumerate(self.foodlist):
-            data['foodlist'][key] = self.foodlist[key].to_mymongo()
+        for key, food_item in enumerate(self.food_list):
+            data['food_list'][key] = self.food_list[key].to_my_mongo()
 
         return data
 
@@ -187,19 +186,20 @@ class MainCategory(Document):
     description = StringField(required=True)
     sub_category = ListField(ReferenceField(SubCategory), required=True)
 
-    def to_mymongo(self):
+    def to_my_mongo(self):
         data = self.to_mongo()
         for key, sub_cat in enumerate(self.sub_category):
-            data['sub_category'][key] = self.sub_category[key].to_mymongo()
+            data['sub_category'][key] = self.sub_category[key].to_my_mongo()
 
         return data
 
 
 def check_exists(order_id, order_list):
-    for n,order in enumerate(order_list):
-        if(order_id==order['_id']):
+    for n, order in enumerate(order_list):
+        if order_id == order['_id']:
             return n
     return -1
+
 
 class Restaurant(Document):
     name = StringField(required=True)
@@ -207,18 +207,18 @@ class Restaurant(Document):
     menu = ListField(ReferenceField(MainCategory), required=True)
     address = StringField()
     tables = ListField(ReferenceField(Table))
-    servers = ListField(ReferenceField(Server))
-    tableorders = ListField(ReferenceField(TableOrder))
+    staff = ListField(ReferenceField(Staff))
+    table_orders = ListField(ReferenceField(TableOrder))
     assistance_reqs = ListField(ReferenceField(Assistance))
 
     def to_json(self):
         data = self.to_mongo()
         for key, sub_cat in enumerate(self.menu):
-            data['menu'][key] = self.menu[key].to_mymongo()
-        for key, server in enumerate(self.servers):
-            data['servers'][key] = self.servers[key].to_mymongo()
+            data['menu'][key] = self.menu[key].to_my_mongo()
+        for key, staff in enumerate(self.staff):
+            data['staff'][key] = self.staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
-            data['tables'][key] = self.tables[key].to_mymongo()
+            data['tables'][key] = self.tables[key].to_my_mongo()
 
         return json_util.dumps(data)
 
@@ -226,73 +226,73 @@ class Restaurant(Document):
         q_list = []
         cook_list = []
         comp_list = []
-        for table_order_ob in self.tableorders:
+        for table_order_ob in self.table_orders:
             tabord_dict = json_util.loads(table_order_ob.to_json())
-            if (tabord_dict['status'] == 'completed'):
+            if tabord_dict['status'] == 'completed':
                 comp_list.append(tabord_dict)
                 break
             for order in tabord_dict['orders']:
-                for food_item in order['foodlist']:
-                    if (food_item['status'] == 'queued'):
+                for food_item in order['food_list']:
+                    if food_item['status'] == 'queued':
                         update_list = q_list
                         index = check_exists(tabord_dict['_id'], update_list)
-                        if (index >= 0):
+                        if index >= 0:
                             order_index = check_exists(order['_id'], update_list[index]['orders'])
-                            if (order_index >= 0):
-                                update_list[index]['orders'][order_index]['foodlist'].append(food_item)
+                            if order_index >= 0:
+                                update_list[index]['orders'][order_index]['food_list'].append(food_item)
                             else:
-                                o_app_dict = {k: order[k] for k in ['_id', 'placedby', 'status']}
-                                o_app_dict['foodlist'] = []
-                                o_app_dict['foodlist'].append(food_item)
+                                o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
+                                o_app_dict['food_list'] = []
+                                o_app_dict['food_list'].append(food_item)
                                 update_list[index]['orders'].append(o_app_dict)
 
                         else:
                             t_app_dict = {k: tabord_dict[k] for k in ['_id', 'table', 'status', 'timestamp']}
-                            o_app_dict = {k: order[k] for k in ['_id', 'placedby', 'status']}
-                            o_app_dict['foodlist'] = []
-                            o_app_dict['foodlist'].append(food_item)
+                            o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
+                            o_app_dict['food_list'] = []
+                            o_app_dict['food_list'].append(food_item)
                             t_app_dict['orders'] = []
                             t_app_dict['orders'].append(o_app_dict)
                             update_list.append(t_app_dict)
-                    elif (food_item['status'] == 'cooking'):
+                    elif food_item['status'] == 'cooking':
                         update_list = cook_list
                         index = check_exists(tabord_dict['_id'], update_list)
-                        if (index >= 0):
+                        if index >= 0:
                             order_index = check_exists(order['_id'], update_list[index]['orders'])
-                            if (order_index >= 0):
-                                update_list[index]['orders'][order_index]['foodlist'].append(food_item)
+                            if order_index >= 0:
+                                update_list[index]['orders'][order_index]['food_list'].append(food_item)
                             else:
-                                o_app_dict = {k: order[k] for k in ['_id', 'placedby', 'status']}
-                                o_app_dict['foodlist'] = []
-                                o_app_dict['foodlist'].append(food_item)
+                                o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
+                                o_app_dict['food_list'] = []
+                                o_app_dict['food_list'].append(food_item)
                                 update_list[index]['orders'].append(o_app_dict)
 
                         else:
                             t_app_dict = {k: tabord_dict[k] for k in ['_id', 'table', 'status', 'timestamp']}
-                            o_app_dict = {k: order[k] for k in ['_id', 'placedby', 'status']}
-                            o_app_dict['foodlist'] = []
-                            o_app_dict['foodlist'].append(food_item)
+                            o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
+                            o_app_dict['food_list'] = []
+                            o_app_dict['food_list'].append(food_item)
                             t_app_dict['orders'] = []
                             t_app_dict['orders'].append(o_app_dict)
                             update_list.append(t_app_dict)
-                    elif (food_item['status'] == 'completed'):
+                    elif food_item['status'] == 'completed':
                         update_list = comp_list
                         index = check_exists(tabord_dict['_id'], update_list)
-                        if (index >= 0):
+                        if index >= 0:
                             order_index = check_exists(order['_id'], update_list[index]['orders'])
-                            if (order_index >= 0):
-                                update_list[index]['orders'][order_index]['foodlist'].append(food_item)
+                            if order_index >= 0:
+                                update_list[index]['orders'][order_index]['food_list'].append(food_item)
                             else:
-                                o_app_dict = {k: order[k] for k in ['_id', 'placedby', 'status']}
-                                o_app_dict['foodlist'] = []
-                                o_app_dict['foodlist'].append(food_item)
+                                o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
+                                o_app_dict['food_list'] = []
+                                o_app_dict['food_list'].append(food_item)
                                 update_list[index]['orders'].append(o_app_dict)
 
                         else:
                             t_app_dict = {k: tabord_dict[k] for k in ['_id', 'table', 'status', 'timestamp']}
-                            o_app_dict = {k: order[k] for k in ['_id', 'placedby', 'status']}
-                            o_app_dict['foodlist'] = []
-                            o_app_dict['foodlist'].append(food_item)
+                            o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
+                            o_app_dict['food_list'] = []
+                            o_app_dict['food_list'].append(food_item)
                             t_app_dict['orders'] = []
                             t_app_dict['orders'].append(o_app_dict)
                             update_list.append(t_app_dict)

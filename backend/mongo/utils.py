@@ -61,15 +61,15 @@ def food_embed(food_dict):
     json_dict['status'] = 'queued'
     option_id = choice_id = ''
     try:
-        option = np.random.choice(list(json_dict['foodoptions']['options'].keys()))
-        option_pair = {option: json_dict['foodoptions']['options'][option]}
-        json_dict['foodoptions']['options'] = option_pair
+        option = np.random.choice(list(json_dict['food_options']['options'].keys()))
+        option_pair = {option: json_dict['food_options']['options'][option]}
+        json_dict['food_options']['options'] = option_pair
         option_id = option.lower()
     except:
         pass
     try:
-        choice = np.random.choice(list(json_dict['foodoptions']['choices']))
-        json_dict['foodoptions']['choices'] = [choice]
+        choice = np.random.choice(list(json_dict['food_options']['choices']))
+        json_dict['food_options']['choices'] = [choice]
         choice_id = choice.lower()
     except:
         pass
@@ -91,34 +91,34 @@ def generate_order():
     input_order = {'table': random_table(), 'orders': []}
     for n in range(np.random.randint(1, 5)):
         input_order['orders'].append({})
-        input_order['orders'][n]['placedby'] = random_user()
-        input_order['orders'][n]['foodlist'] = [food_embed(c_food_dict(v)) for v in random_food_list()]
+        input_order['orders'][n]['placed_by'] = random_user()
+        input_order['orders'][n]['food_list'] = [food_embed(c_food_dict(v)) for v in random_food_list()]
     return input_order
 
 
 def generate_asstype():
     assist_input = {'table': random_table(), 'user': random_user(),
-                    'assistancetype': Assistance.types[np.random.randint(len(Assistance.types))]}
+                    'assistance_type': Assistance.types[np.random.randint(len(Assistance.types))]}
     return assist_input
 
 
 # Randomizing order status
 
 
-def non_completed(clas_objects, cooking, skip=0):
-    if (cooking):
-        for obj in clas_objects:
-            if (obj.status == 'queued'):
-                if (skip == 0):
+def non_completed(class_objects, cooking, skip=0):
+    if cooking:
+        for obj in class_objects:
+            if obj.status == 'queued':
+                if skip == 0:
                     return obj
                 else:
                     skip = 0
                     continue
         return 'all_cooking'
     else:
-        for obj in clas_objects:
-            if (obj.status == 'cooking'):
-                if (skip == 0):
+        for obj in class_objects:
+            if obj.status == 'cooking':
+                if skip == 0:
                     return obj
                 else:
                     skip = 0
@@ -126,10 +126,10 @@ def non_completed(clas_objects, cooking, skip=0):
         return 'all_completed'
 
 
-def food_status_check(clas_objects, skip=0):
-    for obj in clas_objects:
-        if (obj.status == 'queued'):
-            if (skip == 0):
+def food_status_check(class_objects, skip=0):
+    for obj in class_objects:
+        if obj.status == 'queued':
+            if skip == 0:
                 return obj
             else:
                 skip = 0
@@ -137,10 +137,10 @@ def food_status_check(clas_objects, skip=0):
     return 'all_cooking'
 
 
-def food_status_check_cook(clas_objects, skip=0):
-    for obj in clas_objects:
-        if (obj.status == 'cooking'):
-            if (skip == 0):
+def food_status_check_cook(class_objects, skip=0):
+    for obj in class_objects:
+        if obj.status == 'cooking':
+            if skip == 0:
                 return obj
             else:
                 skip = 0
@@ -149,64 +149,48 @@ def food_status_check_cook(clas_objects, skip=0):
 
 
 def pick_order():
-    if (True):
-        tableorder = non_completed(TableOrder.objects, True)
-        order = non_completed(tableorder.orders, True)
-        if (not isinstance(order, Order)):
-            TableOrder.objects.get(id=tableorder.id).update(set__status='cooking')
-            print('changeing tableorder status')
+    if True:
+        table_order = non_completed(TableOrder.objects, True)
+        order = non_completed(table_order.orders, True)
+        if not isinstance(order, Order):
+            TableOrder.objects.get(id=table_order.id).update(set__status='cooking')
+            print('changing table order status')
             return pick_order()
 
-        food_ob = food_status_check(order.foodlist)
-        if (isinstance(food_ob, FoodItemMod)):
+        food_ob = food_status_check(order.food_list)
+        if isinstance(food_ob, FoodItemMod):
             food_id = food_ob.food_id
-            return (str(tableorder.id), str(order.id), food_id)
-        elif (food_ob == 'all_cooking'):
+            return (str(table_order.id), str(order.id), food_id)
+        elif food_ob == 'all_cooking':
             Order.objects.get(id=order.id).update(set__status='cooking')
-            print('changeing order status')
+            print('changing order status')
             return pick_order()
-    else:
-        tableorder = non_completed(TableOrder.objects, 1)
-        order = non_completed(tableorder.orders)
-        food_id = food_status_check_cook(order.foodlist).food_id
-
-        return (tableorder.id, order.id, food_id)
 
 
 def pick_order2():
-    if (True):
-        tableorder = non_completed(TableOrder.objects, False)
-        order = non_completed(tableorder.orders, False)
-        if (not isinstance(order, Order)):
-            TableOrder.objects.get(id=tableorder.id).update(set__status='completed')
-            print('changeing tableorder status')
+    if True:
+        table_order = non_completed(TableOrder.objects, False)
+        order = non_completed(table_order.orders, False)
+        if not isinstance(order, Order):
+            TableOrder.objects.get(id=table_order.id).update(set__status='completed')
             return pick_order()
 
-        food_ob = food_status_check_cook(order.foodlist)
-        if (isinstance(food_ob, FoodItemMod)):
+        food_ob = food_status_check_cook(order.food_list)
+        if isinstance(food_ob, FoodItemMod):
             food_id = food_ob.food_id
-            return (str(tableorder.id), str(order.id), food_id)
-        elif (food_ob == 'all_completed'):
+            return (str(table_order.id), str(order.id), food_id)
+        elif food_ob == 'all_completed':
             Order.objects.get(id=order.id).update(set__status='completed')
-            print('changeing order status')
             return pick_order()
-
-
-    else:
-        tableorder = non_completed(TableOrder.objects, 1)
-        order = non_completed(tableorder.orders)
-        food_id = food_status_check(order.foodlist).food_id
-
-        return (tableorder.id, order.id, food_id)
 
 
 def custom_splitter(text):
     types = []
     full_splits = re.split('[/]', text)
     for n, spl in enumerate(full_splits):
-        if (n == 0):
+        if n == 0:
             types.append(re.search('[a-zA-Z]+', spl.strip().split()[-1]).group())
-        elif (n == len(full_splits) - 1):
+        elif n == len(full_splits) - 1:
             types.append(re.search('[a-zA-Z]+', spl.strip().split()[0]).group())
         else:
             types.append(re.search('[a-zA-Z]+', spl).group())
