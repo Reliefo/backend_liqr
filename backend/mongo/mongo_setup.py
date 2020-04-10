@@ -1,14 +1,14 @@
 import pickle
-
+import math
 from backend.mongo.query import *
 
 
 def setup_mongo():
     final_list_json = pickle.load(open('final_usable_json.pkl', 'rb'))
+    bar_final_json = pickle.load(open('bar_final_json.pkl', 'rb'))
 
     FoodItem.drop_collection()
-    SubCategory.drop_collection()
-    MainCategory.drop_collection()
+    Category.drop_collection()
     Restaurant.drop_collection()
     Table.drop_collection()
     TempUser.drop_collection()
@@ -19,20 +19,25 @@ def setup_mongo():
     Order.drop_collection()
     User.drop_collection()
 
-    main_cat_list = []
-    for p, main_cat in enumerate(final_list_json):
-        sub_cat_list = []
-        for q, sub_cat in enumerate(main_cat['sub_category']):
-            food_list = []
-            for r, food in enumerate(sub_cat['food_list']):
-                food_list.append(
-                    FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
-            sub_cat_list.append(
-                SubCategory(name=sub_cat['name'], description=sub_cat['description'], foodlist=food_list).save())
-        main_cat_list.append(
-            MainCategory(name=main_cat['name'], description=main_cat['description'], sub_category=sub_cat_list).save())
+    cat_list = []
+    for p, category in enumerate(final_list_json):
+        food_list = []
+        for r, food in enumerate(category['food_list']):
+            food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
+        cat_list.append(
+            Category(name=category['name'], description=category['description'], food_list=food_list).save())
 
-    house_of_commons = Restaurant(name='House of Commons', restaurant_id='BNGHSR0001', menu=main_cat_list, address='')
+    bar_cat_list = []
+    for p, category in enumerate(bar_final_json):
+        food_list = []
+        for r, food in enumerate(category['food_list']):
+            food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
+        bar_cat_list.append(
+            Category(name=category['name'], description=category['description'], food_list=food_list).save())
+
+    house_of_commons = Restaurant(name='House of Commons', restaurant_id='BNGHSR0001', food_menu=cat_list,
+                                  bar_menu=bar_cat_list)
+
     house_of_commons.save()
 
     table_list = []
@@ -76,3 +81,35 @@ def setup_mongo():
                         zip(custom_splitter(' Vegetables/chicken/prawns, Served'), '250/280/300'.split('/'))}
     FoodItem.objects.get(id=left_out).update(
         set__food_options=FoodOptions(options=left_out_options, choices=['Red', 'Green']))
+
+    names = pickle.load(open('indian_names.pkl', 'rb'))
+    girls_name = names[0]
+    boys_name = names[1]
+
+    total = {}
+    sers = []
+    tabs = []
+    for n, table in enumerate(Table.objects):
+        #     print(math.floor(n/1.5))
+        sers.append(math.floor(n / 1.5))
+        tabs.append(n)
+        if (n + 1) % 3 == 0:
+            total[tuple(set(sers))] = tabs
+            sers = []
+            tabs = []
+
+    # assigning tables to servers
+    for i in range(10):
+        if i < 5:
+            staff = Staff(name=girls_name[np.random.randint(len(girls_name))]).save()
+            Restaurant.objects[0].update(push__staff=staff.to_dbref())
+        else:
+            staff = Staff(name=boys_name[np.random.randint(len(boys_name))]).save()
+            Restaurant.objects[0].update(push__staff=staff.to_dbref())
+
+    for key in total.keys():
+        for tab in total[key]:
+            Table.objects[tab].update(push__staff=Staff.objects[key[0]].to_dbref())
+
+        for tab in total[key]:
+            Table.objects[tab].update(push__staff=Staff.objects[key[1]].to_dbref())

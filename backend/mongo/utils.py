@@ -55,6 +55,7 @@ def random_food_list():
 # Generating orders and asstypes
 def food_embed(food_dict):
     json_dict = json_util.loads(FoodItem.objects(id=food_dict['food_id']).exclude('id')[0].to_json())
+    json_dict.pop('tags')
     json_dict['food_id'] = food_dict['food_id']
     json_dict['quantity'] = food_dict['quantity']
     json_dict['instructions'] = food_dict['instructions']
@@ -78,7 +79,7 @@ def food_embed(food_dict):
             json_dict['food_id'] = food_dict['food_id'] + "#" + option_id + "_" + choice_id
         else:
             json_dict['food_id'] = food_dict['food_id'] + "#" + option_id
-    return json_util.dumps(json_dict)
+    return json_dict
 
 
 def c_food_dict(food_id):

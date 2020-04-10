@@ -40,7 +40,7 @@ def configuring_restaurant_event(message):
     print("IT's WORKING")
     output = configuring_restaurant(json_util.loads(message))
     print(message)
-    emit('updating_config', {'msg': json_util.dumps(output)})
+    emit('updating_config', json_util.dumps(output))
 
 
 @socket_io.on('fetchme', namespace='/adhara')
@@ -67,16 +67,14 @@ def fetch_order_lists(message):
 
 @socket_io.on('kitchen_updates', namespace='/adhara')
 def send_new_orders(message):
-    status_tuple = (message['table'], message['order'], message['food'])
+    status_tuple = (message['table_order_id'], message['order_id'], message['food_id'])
     if message['type'] == 'cooking':
         order_status_cooking(status_tuple)
     else:
         order_status_completed(status_tuple)
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
-                    'food_id': status_tuple[2]}
-    if len(status_tuple) == 4:
-        sending_dict['food_options_id'] = status_tuple[3]
+                    'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id']}
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, namespace='/adhara')
     emit('fetch', {'msg': message})
