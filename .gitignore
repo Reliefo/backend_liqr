@@ -2,3 +2,4 @@ cmd
 .cmds
 .idea/*
 .ipynb_checkpoints/*
+backend/mongo/__pycache__/*

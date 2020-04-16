@@ -192,12 +192,12 @@ def configuring_restaurant_event(message):
 def fetch_all(message):
     print("here i am printingi requiest id", request.sid, request.namespace, str(current_user.is_authenticated))
     print(all_clients)
-    global active_clients
-    socket_io.emit('hand_shake', active_clients, namespace=our_namespace)
-    active_clients = []
-    thr = threading.Thread(target=hand_shake_check, args=(), kwargs={})
-    thr.start()  # Will run "foo"
-    print(threading.active_count())
+    # global active_clients
+    # socket_io.emit('hand_shake', active_clients, namespace=our_namespace)
+    # active_clients = []
+    # thr = threading.Thread(target=hand_shake_check, args=(), kwargs={})
+    # thr.start()  # Will run "foo"
+    # print(threading.active_count())
     print(message)
     print(datetime.datetime.now())
     emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
