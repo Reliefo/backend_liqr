@@ -19,8 +19,8 @@ from flask_jwt_extended import (
 )
 
 app = Flask(__name__)
-CORS(app)
-app.config['CORS_HEADERS']="Content-Type"
+# CORS(app)
+# app.config['CORS_HEADERS']="Content-Type"
 app.config["SECRET_KEY"] = "reliefoasbvuierjvnsdv23"
 our_namespace = '/reliefo'
 app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
