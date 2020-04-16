@@ -129,7 +129,22 @@ def order_status_completed(status_tuple):
 
 
 def configuring_restaurant(message):
-    if message['type'] == 'add_tables':
+    [request_type, element_type] = message['type'].split('_', 1)
+
+    if element_type == 'tables':
+        return configuring_tables(request_type, message)
+    elif element_type == 'staff':
+        return configuring_staff(request_type, message)
+    elif element_type == 'food_menu':
+        return configuring_food_menu(request_type, message)
+    elif element_type == 'bar_menu':
+        return configuring_bar_menu(request_type, message)
+    elif element_type == 'food_item':
+        return configuring_food_item(request_type, message)
+
+
+def configuring_tables(request_type, message):
+    if request_type == 'add':
         table_objects = []
         table_dict_list = []
         for table_pair in message['tables']:
@@ -137,8 +152,16 @@ def configuring_restaurant(message):
             table_objects.append(new_table.to_dbref())
             table_dict_list.append({**{'table_id': str(new_table.id)}, **table_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__tables=table_objects)
-        return {"restaurant_id": message['restaurant_id'], "type": "add_tables", "tables": table_dict_list}
-    elif message['type'] == 'add_staff':
+        message['tables'] = table_dict_list
+        return message
+    elif request_type == 'delete':
+        Table.objects.get(id=message['table_id']).delete()
+        message['status'] = "Table Deleted"
+        return message
+
+
+def configuring_staff(request_type, message):
+    if request_type == 'add':
         staff_objects = []
         staff_dict_list = []
         for staff_pair in message['staff']:
@@ -146,22 +169,57 @@ def configuring_restaurant(message):
             staff_objects.append(new_staff.to_dbref())
             staff_dict_list.append({**{'staff_id': str(new_staff.id)}, **staff_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__staff=staff_objects)
-        return {"restaurant_id": message['restaurant_id'], "type": "add_staff", "staff": staff_dict_list}
-    elif message['type'] == 'assign_staff':
+        message['staff'] = staff_dict_list
+        return message
+    elif request_type == 'delete':
+        Staff.objects.get(id=message['staff_id']).delete()
+        message['status'] = "Staff Deleted"
+        return message
+    elif request_type == 'assign':
         for staff_id in message['assigned_staff']:
             Table.objects.get(id=message['table_id']).update(push__staff=Staff.objects.get(id=staff_id))
-        return message
-    elif message['type'] == 'add_category':
+        return {**message, **{'status': 'Staff Assigned'}}
+    elif request_type == 'withdraw':
+        for staff_id in message['remove_staff_list']:
+            Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=staff_id))
+        return {**message, **{'status': 'Staff Removed'}}
+
+
+def configuring_food_menu(request_type, message):
+    if request_type == 'add':
         category_object = Category.from_json(json_util.dumps(message['category'])).save()
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__menu=category_object.to_dbref())
-        message['category']['category_id']=str(category_object.id)
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__food_menu=category_object.to_dbref())
+        message['category']['category_id'] = str(category_object.id)
         return message
-    elif message['type'] == 'add_food_item':
-        options={}
+    elif request_type == 'delete':
+        Category.objects.get(id=message['category_id']).delete()
+        message['status'] = "Food Menu Deleted"
+        return message
+
+
+def configuring_bar_menu(request_type, message):
+    if request_type == 'add':
+        category_object = Category.from_json(json_util.dumps(message['category'])).save()
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__bar_menu=category_object.to_dbref())
+        message['category']['category_id'] = str(category_object.id)
+        return message
+    elif request_type == 'delete':
+        Category.objects.get(id=message['category_id']).delete()
+        message['status'] = "Bar Menu Deleted"
+        return message
+
+
+def configuring_food_item(request_type, message):
+    if request_type == 'add':
+        options = {}
         for dictionary in message['food_dict']['food_options']['options']:
-            options = {**options,**dictionary}
-        message['food_dict']['food_options']['options']=options
-        food_object=FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
+            options = {**options, **dictionary}
+        message['food_dict']['food_options']['options'] = options
+        food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
         Category.objects(id=message['category_id'])[0].update(push__food_list=food_object.to_dbref())
         message['food_dict']['food_id'] = str(food_object.id)
+        return message
+    elif request_type == 'delete':
+        FoodItem.objects.get(id=message['food_id']).delete()
+        message['status'] = "Food Item Deleted"
         return message

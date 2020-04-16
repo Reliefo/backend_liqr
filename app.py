@@ -1,30 +1,143 @@
 # flask_web/app.py
 import traceback
 import eventlet
-eventlet.monkey_patch()
+from werkzeug.security import check_password_hash, generate_password_hash
+import functools
 from backend.mongo.mongo_setup import *
-import sys
 from flask import Flask, jsonify, request, send_from_directory, url_for
+from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 from flask_cors import CORS, cross_origin
 import numpy as np
-from flask_socketio import SocketIO, emit, disconnect
+from flask_socketio import SocketIO, emit, disconnect, join_room
 import pickle
 from backend.mongo.utils import return_restaurant
 import threading
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token, jwt_refresh_token_required, create_refresh_token, get_jwt_identity,
+    fresh_jwt_required
+)
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "reliefoasbvuierjvnsdv23"
+
+app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 30
+app.config['JWT_SECRET_KEY'] = 'vniodnv4o2949fjerf'  # Change this!
+login_manager = LoginManager(app)
+
+jwt = JWTManager(app)
 # CORS(app, resources={r"/api/*":{"origins":"*"}})
 # socket_io = SocketIO(app,cors_allowed_origins="*")
-socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5)
+socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, manage_session=False)
 all_clients = []
 active_clients = []
+eventlet.monkey_patch()
+
+
+class AppUser(UserMixin, Document):
+    username = StringField(max_length=30)
+    password = StringField()
+    sid = StringField()
+    room = StringField()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return AppUser.objects.get(id=user_id)
+
+
+@login_manager.request_loader
+def load_user_from_request(request):
+    # first, try to login using the api_key url arg
+    api_key = request.args.get('user_key')
+    if api_key:
+        user = User.query.filter_by(api_key=api_key).first()
+        if user:
+            return user
+    # finally, return None if both methods did not login the user
+    return None
+
+
+@app.route('/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    current_username = get_jwt_identity()
+    ret = {
+        'access_token': create_access_token(identity=current_username),
+        'code':'200'
+    }
+    return jsonify(ret)
+
+
+def authenticated_only(f):
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        if not current_user.is_authenticated:
+            disconnect()
+        else:
+            return f(*args, **kwargs)
+
+    return wrapped
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    if current_user.is_authenticated:
+        return json_util.dumps({"status": "You're logged in ", "code": "202"})
+    if request.method == 'POST':
+        check_user = AppUser.objects(username=request.form["username"]).first()
+        if check_user:
+            if check_password_hash(check_user['password'], request.form["password"]):
+                login_user(check_user)
+                access_token = create_access_token(identity=request.form["username"])
+                refresh_token = create_refresh_token(identity=request.form["username"])
+                return json_util.dumps(
+                    {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200"})
+    return json_util.dumps({"status": "Authentication Failed", "code": "401"})
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        if AppUser.objects.filter(username=request.form["username"]):
+            return json_util.dumps({"status": "Already Registered"})
+        hashpass = generate_password_hash(request.form["password"], method='sha256')
+        assigned_room = "kids_room" if request.form["username"][:3] == "KID" else "adults_room"
+        print(request.form["username"], " joined ", assigned_room)
+        hey = AppUser(username=request.form["username"], password=hashpass, room=assigned_room).save()
+        login_user(hey)
+        return json_util.dumps({"status": "Registration successful"})
+    return json_util.dumps({"status": "Registration failed"})
+
+
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return "Logout Successful"
 
 
 @socket_io.on('connect', namespace='/adhara')
+# @fresh_jwt_required
+@jwt_required
 def connect():
     print('connected')
-    print(request.sid)
+    print(request.args)
+    username = get_jwt_identity()
+    previous_sid = AppUser.objects(username=username).first().sid
+    if previous_sid:
+        print("I have it here", previous_sid)
+        disconnect(previous_sid)
+    AppUser.objects(username=username).first().update(set__sid=request.sid)
+    if AppUser.objects(username=username).first().room == "kids_room":
+        join_room("kids_room")
+    else:
+        join_room("adults_room")
     all_clients.append(request.sid)
+    if current_user.is_authenticated:
+        emit('fetch',
+             {'message': '{-1} has joined'.format(current_user.name)},
+             broadcast=True)
     # disconnect(request.sid)
 
 
@@ -55,7 +168,7 @@ def configuring_restaurant_event(message):
 
 @socket_io.on('fetchme', namespace='/adhara')
 def fetch_all(message):
-    print("here i am printingi requiest id", request.sid ,request.namespace)
+    print("here i am printingi requiest id", request.sid, request.namespace, str(current_user.is_authenticated))
     print(all_clients)
     global active_clients
     socket_io.emit('hand_shake', active_clients, namespace='/adhara')
@@ -65,7 +178,7 @@ def fetch_all(message):
     print(threading.active_count())
     print(message)
     print(datetime.datetime.now())
-    emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))})
+    emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
 
 
 @socket_io.on('hand_shook', namespace='/adhara')
@@ -80,13 +193,12 @@ def hand_shake_check():
         if client in active_clients:
             continue
         with app.test_request_context('/'):
-            disconnect(client,namespace='/adhara')
+            disconnect(client, namespace='/adhara')
     return
 
 
 @socket_io.on('fetch_order_lists', namespace='/adhara')
 def fetch_order_lists(message):
-    emit('order_lists', message)
     try:
         lists_json = Restaurant.objects[0].fetch_order_lists()
     except NameError:
@@ -131,6 +243,13 @@ def fetch_restaurant():
     return rest_json
 
 
+@app.route('/rest2')
+def fetch_restaurant2():
+    rest_json = return_restaurant("BNGHSR0002")
+    # socket_io.emit('restaurant_object', rest_json, namespace='/adhara')
+    return rest_json
+
+
 @app.route('/order', methods=['POST'])
 def receive_order():
     input_order = request.json
@@ -143,6 +262,13 @@ def receive_order():
 @app.route('/fetch_orders', methods=['POST'])
 def fetch_orders():
     return fetch_order(np.random.randint(6))
+
+
+@app.route('/send_room_messages', methods=['POST'])
+def disconnect_user():
+    data=request.json
+    socket_io.emit('order_lists', Restaurant.objects[0].fetch_order_lists(), room = data['room'], namespace='/adhara')
+    return request.json
 
 
 @app.route('/send_orders', methods=['GET'])
