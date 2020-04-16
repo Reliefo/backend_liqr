@@ -195,15 +195,17 @@ class Restaurant(Document):
     food_menu = ListField(ReferenceField(Category), required=True)
     bar_menu = ListField(ReferenceField(Category))
     address = StringField()
-    tables = ListField(ReferenceField(Table))
-    staff = ListField(ReferenceField(Staff))
+    tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
+    staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder))
     assistance_reqs = ListField(ReferenceField(Assistance))
 
     def to_json(self):
         data = self.to_mongo()
-        for key, sub_cat in enumerate(self.menu):
-            data['food_menu'][key] = self.menu[key].to_my_mongo()
+        for key, sub_cat in enumerate(self.food_menu):
+            data['food_menu'][key] = self.food_menu[key].to_my_mongo()
+        for key, sub_cat in enumerate(self.bar_menu):
+            data['bar_menu'][key] = self.bar_menu[key].to_my_mongo()
         for key, staff in enumerate(self.staff):
             data['staff'][key] = self.staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
