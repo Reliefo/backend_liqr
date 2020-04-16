@@ -1,6 +1,6 @@
 # flask_web/app.py
 import traceback
-import eventlet
+# import eventlet
 from werkzeug.security import check_password_hash, generate_password_hash
 import functools
 from backend.mongo.mongo_setup import *
@@ -19,7 +19,7 @@ from flask_jwt_extended import (
 )
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 # app.config['CORS_HEADERS']="Content-Type"
 app.config["SECRET_KEY"] = "reliefoasbvuierjvnsdv23"
 our_namespace = '/reliefo'
@@ -32,10 +32,10 @@ login_manager = LoginManager(app)
 jwt = JWTManager(app)
 # CORS(app, resources={r"/api/*":{"origins":"*"}})
 # socket_io = SocketIO(app,cors_allowed_origins="*")
-socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, manage_session=False)
+socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, cors_allowed_origins="*")
 all_clients = []
 active_clients = []
-eventlet.monkey_patch(thread=False)
+# eventlet.monkey_patch()
 
 
 class AppUser(UserMixin, Document):

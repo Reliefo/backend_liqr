@@ -1,6 +1,6 @@
 
 
-if 1==1:
+if 1==2:
     MONGO_DB = "local"
     MONGO_HOST = "mongodb://mongo:27017"
 else:
