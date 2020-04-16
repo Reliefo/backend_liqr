@@ -35,7 +35,7 @@ jwt = JWTManager(app)
 socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, manage_session=False)
 all_clients = []
 active_clients = []
-eventlet.monkey_patch()
+eventlet.monkey_patch(thread=False)
 
 
 class AppUser(UserMixin, Document):
