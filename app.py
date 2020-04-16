@@ -1,31 +1,41 @@
 # flask_web/app.py
 import traceback
-
+import eventlet
+eventlet.monkey_patch()
 from backend.mongo.mongo_setup import *
 import sys
 from flask import Flask, jsonify, request, send_from_directory, url_for
 from flask_cors import CORS, cross_origin
 import numpy as np
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, disconnect
 import pickle
 from backend.mongo.utils import return_restaurant
+import threading
 
 app = Flask(__name__)
 # CORS(app, resources={r"/api/*":{"origins":"*"}})
 # socket_io = SocketIO(app,cors_allowed_origins="*")
-socket_io = SocketIO(app)
+socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5)
+all_clients = []
+active_clients = []
 
 
 @socket_io.on('connect', namespace='/adhara')
 def connect():
     print('connected')
-    emit('connect', {'data': 'Connected with me, sock'})
+    print(request.sid)
+    all_clients.append(request.sid)
+    # disconnect(request.sid)
+
+
+@socket_io.on('shake_hands', namespace='/adhara')
+def shake_hands(message):
+    print(message)
 
 
 @socket_io.on('disconnect', namespace='/adhara')
-def disconnect():
-    print("Disconnected :(")
-    emit('response', {'data': 'Disconnected with me, sock'})
+def on_disconnect():
+    print("Disconnected :( from ", request.sid)
 
 
 @socket_io.on('rest_with_id', namespace='/adhara')
@@ -40,19 +50,42 @@ def configuring_restaurant_event(message):
     print("IT's WORKING")
     output = configuring_restaurant(json_util.loads(message))
     print(message)
-    emit('updating_config', {'msg': json_util.dumps(output)})
+    emit('updating_config', json_util.dumps(output))
 
 
 @socket_io.on('fetchme', namespace='/adhara')
 def fetch_all(message):
-    print("IT's WORKING")
+    print("here i am printingi requiest id", request.sid ,request.namespace)
+    print(all_clients)
+    global active_clients
+    socket_io.emit('hand_shake', active_clients, namespace='/adhara')
+    active_clients = []
+    thr = threading.Thread(target=hand_shake_check, args=(), kwargs={})
+    thr.start()  # Will run "foo"
+    print(threading.active_count())
     print(message)
+    print(datetime.datetime.now())
     emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))})
+
+
+@socket_io.on('hand_shook', namespace='/adhara')
+def hand_shook(message):
+    active_clients.append(request.sid)
+    print("got ti back from ", request.sid)
+
+
+def hand_shake_check():
+    time.sleep(5)
+    for client in all_clients:
+        if client in active_clients:
+            continue
+        with app.test_request_context('/'):
+            disconnect(client,namespace='/adhara')
+    return
 
 
 @socket_io.on('fetch_order_lists', namespace='/adhara')
 def fetch_order_lists(message):
-    print('Restaurant id ', message)
     emit('order_lists', message)
     try:
         lists_json = Restaurant.objects[0].fetch_order_lists()
@@ -67,16 +100,14 @@ def fetch_order_lists(message):
 
 @socket_io.on('kitchen_updates', namespace='/adhara')
 def send_new_orders(message):
-    status_tuple = (message['table'], message['order'], message['food'])
+    status_tuple = (message['table_order_id'], message['order_id'], message['food_id'])
     if message['type'] == 'cooking':
         order_status_cooking(status_tuple)
     else:
         order_status_completed(status_tuple)
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
-                    'food_id': status_tuple[2]}
-    if len(status_tuple) == 4:
-        sending_dict['food_options_id'] = status_tuple[3]
+                    'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id']}
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, namespace='/adhara')
     emit('fetch', {'msg': message})

@@ -151,6 +151,7 @@ class FoodItem(Document):
     name = StringField(required=True)
     description = StringField(required=True)
     price = StringField(required=True)
+    tags = ListField(StringField())
     food_options = EmbeddedDocumentField(FoodOptions)
 
     def to_my_mongo(self):
@@ -168,28 +169,15 @@ class FoodItem(Document):
         return json_util.dumps(data)
 
 
-class SubCategory(Document):
+class Category(Document):
     name = StringField(required=True)
-    description = StringField(required=True)
-    food_list = ListField(ReferenceField(FoodItem), required=True)
+    description = StringField()
+    food_list = ListField(ReferenceField(FoodItem))
 
     def to_my_mongo(self):
         data = self.to_mongo()
         for key, food_item in enumerate(self.food_list):
             data['food_list'][key] = self.food_list[key].to_my_mongo()
-
-        return data
-
-
-class MainCategory(Document):
-    name = StringField(required=True)
-    description = StringField(required=True)
-    sub_category = ListField(ReferenceField(SubCategory), required=True)
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
-        for key, sub_cat in enumerate(self.sub_category):
-            data['sub_category'][key] = self.sub_category[key].to_my_mongo()
 
         return data
 
@@ -204,7 +192,8 @@ def check_exists(order_id, order_list):
 class Restaurant(Document):
     name = StringField(required=True)
     restaurant_id = StringField(required=True)
-    menu = ListField(ReferenceField(MainCategory), required=True)
+    food_menu = ListField(ReferenceField(Category), required=True)
+    bar_menu = ListField(ReferenceField(Category))
     address = StringField()
     tables = ListField(ReferenceField(Table))
     staff = ListField(ReferenceField(Staff))
@@ -214,7 +203,7 @@ class Restaurant(Document):
     def to_json(self):
         data = self.to_mongo()
         for key, sub_cat in enumerate(self.menu):
-            data['menu'][key] = self.menu[key].to_my_mongo()
+            data['food_menu'][key] = self.menu[key].to_my_mongo()
         for key, staff in enumerate(self.staff):
             data['staff'][key] = self.staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
@@ -230,7 +219,7 @@ class Restaurant(Document):
             tabord_dict = json_util.loads(table_order_ob.to_json())
             if tabord_dict['status'] == 'completed':
                 comp_list.append(tabord_dict)
-                break
+                continue
             for order in tabord_dict['orders']:
                 for food_item in order['food_list']:
                     if food_item['status'] == 'queued':

@@ -33,7 +33,7 @@ def order_placement(input_order):
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.name),
                              timestamp=datetime.datetime.now())
     for order in input_order['orders']:
-        food_list = [FoodItemMod.from_json(food_dict) for food_dict in order['food_list']]
+        food_list = [FoodItemMod.from_json(json_util.dumps(food_dict)) for food_dict in order['food_list']]
         table_order.orders.append(
             Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(), food_list=food_list).save().to_dbref())
         table_order.timestamp = datetime.datetime.now()
@@ -147,3 +147,21 @@ def configuring_restaurant(message):
             staff_dict_list.append({**{'staff_id': str(new_staff.id)}, **staff_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__staff=staff_objects)
         return {"restaurant_id": message['restaurant_id'], "type": "add_staff", "staff": staff_dict_list}
+    elif message['type'] == 'assign_staff':
+        for staff_id in message['assigned_staff']:
+            Table.objects.get(id=message['table_id']).update(push__staff=Staff.objects.get(id=staff_id))
+        return message
+    elif message['type'] == 'add_category':
+        category_object = Category.from_json(json_util.dumps(message['category'])).save()
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__menu=category_object.to_dbref())
+        message['category']['category_id']=str(category_object.id)
+        return message
+    elif message['type'] == 'add_food_item':
+        options={}
+        for dictionary in message['food_dict']['food_options']['options']:
+            options = {**options,**dictionary}
+        message['food_dict']['food_options']['options']=options
+        food_object=FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
+        Category.objects(id=message['category_id'])[0].update(push__food_list=food_object.to_dbref())
+        message['food_dict']['food_id'] = str(food_object.id)
+        return message
