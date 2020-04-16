@@ -14,15 +14,19 @@ from backend.mongo.utils import return_restaurant
 import threading
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, jwt_refresh_token_required, create_refresh_token, get_jwt_identity,
+    verify_jwt_in_request,
     fresh_jwt_required
 )
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS']="Content-Type"
 app.config["SECRET_KEY"] = "reliefoasbvuierjvnsdv23"
-
+our_namespace = '/reliefo'
 app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 30
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15
 app.config['JWT_SECRET_KEY'] = 'vniodnv4o2949fjerf'  # Change this!
+app.config['PROPAGATE_EXCEPTIONS'] = True
 login_manager = LoginManager(app)
 
 jwt = JWTManager(app)
@@ -46,6 +50,16 @@ def load_user(user_id):
     return AppUser.objects.get(id=user_id)
 
 
+# @jwt.expired_token_loader
+# def my_expired_token_callback(expired_token):
+#     token_type = expired_token['type']
+#     return jsonify({
+#         'status': 401,
+#         'sub_status': 42,
+#         'msg': 'The {} token has expired'.format(token_type)
+#     }), 401
+
+
 @login_manager.request_loader
 def load_user_from_request(request):
     # first, try to login using the api_key url arg
@@ -64,7 +78,7 @@ def refresh():
     current_username = get_jwt_identity()
     ret = {
         'access_token': create_access_token(identity=current_username),
-        'code':'200'
+        'code': '200'
     }
     return jsonify(ret)
 
@@ -117,48 +131,56 @@ def logout():
     return "Logout Successful"
 
 
-@socket_io.on('connect', namespace='/adhara')
+@socket_io.on('connect', namespace=our_namespace)
 # @fresh_jwt_required
-@jwt_required
 def connect():
     print('connected')
     print(request.args)
-    username = get_jwt_identity()
-    previous_sid = AppUser.objects(username=username).first().sid
-    if previous_sid:
+    # username = get_jwt_identity()
+    # previous_sid = AppUser.objects(username=username).first().sid
+    # if previous_sid:
+    if False:
         print("I have it here", previous_sid)
         disconnect(previous_sid)
-    AppUser.objects(username=username).first().update(set__sid=request.sid)
-    if AppUser.objects(username=username).first().room == "kids_room":
-        join_room("kids_room")
-    else:
-        join_room("adults_room")
+    # AppUser.objects(username=username).first().update(set__sid=request.sid)
+    # if AppUser.objects(username=username).first().room == "kids_room":
+    #     join_room("kids_room")
+    # else:
+    #     join_room("adults_room")
     all_clients.append(request.sid)
-    if current_user.is_authenticated:
+    # if current_user.is_authenticated:
+    if False:
         emit('fetch',
              {'message': '{-1} has joined'.format(current_user.name)},
              broadcast=True)
     # disconnect(request.sid)
 
 
-@socket_io.on('shake_hands', namespace='/adhara')
+@socket_io.on('shake_hands', namespace=our_namespace)
 def shake_hands(message):
     print(message)
 
 
-@socket_io.on('disconnect', namespace='/adhara')
+@socket_io.on('disconnect', namespace=our_namespace)
 def on_disconnect():
     print("Disconnected :( from ", request.sid)
 
 
-@socket_io.on('rest_with_id', namespace='/adhara')
+@socket_io.on('rest_with_id', namespace=our_namespace)
 def fetch_rest_object(message):
     rest_json = return_restaurant(message)
     emit('restaurant_object', rest_json)
     return rest_json
 
 
-@socket_io.on('configuring_restaurant', namespace='/adhara')
+@socket_io.on('place_order', namespace=our_namespace)
+def place_order(message):
+    input_order = json_util.loads(message)
+    new_order = order_placement(input_order)
+    socket_io.emit('new_orders', new_order, namespace=our_namespace)
+
+
+@socket_io.on('configuring_restaurant', namespace=our_namespace)
 def configuring_restaurant_event(message):
     print("IT's WORKING")
     output = configuring_restaurant(json_util.loads(message))
@@ -166,12 +188,12 @@ def configuring_restaurant_event(message):
     emit('updating_config', json_util.dumps(output))
 
 
-@socket_io.on('fetchme', namespace='/adhara')
+@socket_io.on('fetchme', namespace=our_namespace)
 def fetch_all(message):
     print("here i am printingi requiest id", request.sid, request.namespace, str(current_user.is_authenticated))
     print(all_clients)
     global active_clients
-    socket_io.emit('hand_shake', active_clients, namespace='/adhara')
+    socket_io.emit('hand_shake', active_clients, namespace=our_namespace)
     active_clients = []
     thr = threading.Thread(target=hand_shake_check, args=(), kwargs={})
     thr.start()  # Will run "foo"
@@ -181,7 +203,7 @@ def fetch_all(message):
     emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
 
 
-@socket_io.on('hand_shook', namespace='/adhara')
+@socket_io.on('hand_shook', namespace=our_namespace)
 def hand_shook(message):
     active_clients.append(request.sid)
     print("got ti back from ", request.sid)
@@ -193,11 +215,11 @@ def hand_shake_check():
         if client in active_clients:
             continue
         with app.test_request_context('/'):
-            disconnect(client, namespace='/adhara')
+            disconnect(client, namespace=our_namespace)
     return
 
 
-@socket_io.on('fetch_order_lists', namespace='/adhara')
+@socket_io.on('fetch_order_lists', namespace=our_namespace)
 def fetch_order_lists(message):
     try:
         lists_json = Restaurant.objects[0].fetch_order_lists()
@@ -210,7 +232,7 @@ def fetch_order_lists(message):
     emit('order_lists', lists_json)
 
 
-@socket_io.on('kitchen_updates', namespace='/adhara')
+@socket_io.on('kitchen_updates', namespace=our_namespace)
 def send_new_orders(message):
     status_tuple = (message['table_order_id'], message['order_id'], message['food_id'])
     if message['type'] == 'cooking':
@@ -221,7 +243,7 @@ def send_new_orders(message):
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
                     'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id']}
     sending_json = json_util.dumps(sending_dict)
-    socket_io.emit('order_updates', sending_json, namespace='/adhara')
+    socket_io.emit('order_updates', sending_json, namespace=our_namespace)
     emit('fetch', {'msg': message})
 
 
@@ -232,6 +254,7 @@ def hello_world():
 
 @app.route('/menu')
 def fetch_menu():
+    print(verify_jwt_in_request(), 'asdfasdf')
     str_menu = pickle.load(open('jason.pkl', 'rb'))
     return jsonify(str_menu)
 
@@ -239,14 +262,14 @@ def fetch_menu():
 @app.route('/rest')
 def fetch_restaurant():
     rest_json = return_restaurant("BNGHSR0001")
-    # socket_io.emit('restaurant_object', rest_json, namespace='/adhara')
+    # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_json
 
 
 @app.route('/rest2')
 def fetch_restaurant2():
     rest_json = return_restaurant("BNGHSR0002")
-    # socket_io.emit('restaurant_object', rest_json, namespace='/adhara')
+    # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_json
 
 
@@ -266,8 +289,8 @@ def fetch_orders():
 
 @app.route('/send_room_messages', methods=['POST'])
 def disconnect_user():
-    data=request.json
-    socket_io.emit('order_lists', Restaurant.objects[0].fetch_order_lists(), room = data['room'], namespace='/adhara')
+    data = request.json
+    socket_io.emit('order_lists', Restaurant.objects[0].fetch_order_lists(), room=data['room'], namespace=our_namespace)
     return request.json
 
 
@@ -275,15 +298,15 @@ def disconnect_user():
 def fetch_orders2():
     # new_order = fetch_order(np.random.randint(len(TableOrder.objects)))
     new_order = order_placement(generate_order())
-    socket_io.emit('new_orders', new_order, namespace='/adhara')
-    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
+    socket_io.emit('new_orders', new_order, namespace=our_namespace)
+    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace=our_namespace)
     print("Sending")
     return new_order
 
 
 @app.route('/send_cooking_updates', methods=['POST'])
 def cooking_updates():
-    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
+    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace=our_namespace)
     status_tuple = pick_order()
 
     order_status_cooking(status_tuple)
@@ -293,14 +316,14 @@ def cooking_updates():
     if len(status_tuple) == 4:
         sending_dict['food_options_id'] = status_tuple[3]
     sending_json = json_util.dumps(sending_dict)
-    socket_io.emit('order_updates', sending_json, namespace='/adhara')
+    socket_io.emit('order_updates', sending_json, namespace=our_namespace)
 
     return sending_json
 
 
 @app.route('/send_completed_updates', methods=['POST'])
 def completed_updates():
-    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace='/adhara')
+    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace=our_namespace)
     status_tuple = pick_order2()
 
     order_status_completed(status_tuple)
@@ -308,7 +331,7 @@ def completed_updates():
     sending_dict = {'table_order_id': status_tuple[0], 'type': 'completed', 'order_id': status_tuple[1],
                     'food_id': status_tuple[2]}
     sending_json = json_util.dumps(sending_dict)
-    socket_io.emit('order_updates', sending_json, namespace='/adhara')
+    socket_io.emit('order_updates', sending_json, namespace=our_namespace)
 
     return sending_json
 
@@ -316,12 +339,12 @@ def completed_updates():
 @app.route('/assist', methods=['POST'])
 def assist_them():
     assistance_ob = assistance_req(generate_asstype())
-    socket_io.emit('assist', assistance_ob.to_json(), namespace='/adhara')
+    socket_io.emit('assist', assistance_ob.to_json(), namespace=our_namespace)
     staff_name = send_assistance_req(str(assistance_ob.id))
     time.sleep(1)
 
     socket_io.emit('assist_updates', {'assistance_id': str(assistance_ob.id), 'staff_name': staff_name},
-                   namespace='/adhara')
+                   namespace=our_namespace)
     return str(assistance_ob.to_json()) + ' ' + staff_name
 
 
@@ -345,7 +368,7 @@ def user_scan_portal():
     table_id = str(Table.objects[int(table_no)].id)
     user_id = str(user_scan(table_id, unique_id))
     socket_io.emit('user_scan', json_util.dumps({"table_no": table_no, "user_id": user_id, "table_id": table_id}),
-                   namespace='/adhara')
+                   namespace=our_namespace)
     return json_util.dumps({"table_no": table_no, "user_id": user_id, "table_id": table_id})
 
 
