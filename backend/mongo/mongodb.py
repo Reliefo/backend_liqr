@@ -125,7 +125,7 @@ class TableOrder(Document):
 class Table(Document):
     name = StringField(required=True)
     seats = IntField(required=True)
-    staff = ListField(ReferenceField(Staff))
+    staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     users = ListField(ReferenceField(User))
     no_of_users = IntField()
     table_orders = ListField(ReferenceField(TableOrder))
@@ -140,6 +140,11 @@ class Table(Document):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
 
         return data
+
+    def remove_staff(self, staff_id):
+        for staff_ob in self.staff:
+            print(staff_ob.id)
+            self.staff.pop()
 
 
 class FoodOptions(EmbeddedDocument):
@@ -172,7 +177,7 @@ class FoodItem(Document):
 class Category(Document):
     name = StringField(required=True)
     description = StringField()
-    food_list = ListField(ReferenceField(FoodItem))
+    food_list = ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -192,8 +197,8 @@ def check_exists(order_id, order_list):
 class Restaurant(Document):
     name = StringField(required=True)
     restaurant_id = StringField(required=True)
-    food_menu = ListField(ReferenceField(Category), required=True)
-    bar_menu = ListField(ReferenceField(Category))
+    food_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL), required=True)
+    bar_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
     address = StringField()
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
@@ -240,7 +245,8 @@ class Restaurant(Document):
                                 update_list[index]['orders'].append(o_app_dict)
 
                         else:
-                            t_app_dict = {k: tabord_dict[k] for k in ['_id', 'table', 'status', 'timestamp']}
+                            t_app_dict = {k: tabord_dict[k] for k in
+                                          ['_id', 'table', 'table_id', 'status', 'timestamp']}
                             o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
                             o_app_dict['food_list'] = []
                             o_app_dict['food_list'].append(food_item)
@@ -261,7 +267,8 @@ class Restaurant(Document):
                                 update_list[index]['orders'].append(o_app_dict)
 
                         else:
-                            t_app_dict = {k: tabord_dict[k] for k in ['_id', 'table', 'status', 'timestamp']}
+                            t_app_dict = {k: tabord_dict[k] for k in
+                                          ['_id', 'table', 'table_id', 'status', 'timestamp']}
                             o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
                             o_app_dict['food_list'] = []
                             o_app_dict['food_list'].append(food_item)
@@ -282,7 +289,8 @@ class Restaurant(Document):
                                 update_list[index]['orders'].append(o_app_dict)
 
                         else:
-                            t_app_dict = {k: tabord_dict[k] for k in ['_id', 'table', 'status', 'timestamp']}
+                            t_app_dict = {k: tabord_dict[k] for k in
+                                          ['_id', 'table', 'table_id', 'status', 'timestamp']}
                             o_app_dict = {k: order[k] for k in ['_id', 'placed_by', 'status']}
                             o_app_dict['food_list'] = []
                             o_app_dict['food_list'].append(food_item)
