@@ -24,7 +24,7 @@ CORS(app)
 app.config["SECRET_KEY"] = "reliefoasbvuierjvnsdv23"
 our_namespace = '/reliefo'
 app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15000
 app.config['JWT_SECRET_KEY'] = 'vniodnv4o2949fjerf'  # Change this!
 app.config['PROPAGATE_EXCEPTIONS'] = True
 login_manager = LoginManager(app)
@@ -32,9 +32,12 @@ login_manager = LoginManager(app)
 jwt = JWTManager(app)
 # CORS(app, resources={r"/api/*":{"origins":"*"}})
 # socket_io = SocketIO(app,cors_allowed_origins="*")
-socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, cors_allowed_origins="*")
+socket_io = SocketIO(app, logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5,
+                     cors_allowed_origins="*")
 all_clients = []
 active_clients = []
+
+
 # eventlet.monkey_patch()
 
 
@@ -133,16 +136,18 @@ def logout():
 
 @socket_io.on('connect', namespace=our_namespace)
 # @fresh_jwt_required
+@jwt_required
 def connect():
     print('connected')
     print(request.args)
-    # username = get_jwt_identity()
-    # previous_sid = AppUser.objects(username=username).first().sid
-    # if previous_sid:
-    if False:
+    username = get_jwt_identity()
+    print(username)
+    previous_sid = AppUser.objects(username=username).first().sid
+    # if False:
+    if previous_sid:
         print("I have it here", previous_sid)
         disconnect(previous_sid)
-    # AppUser.objects(username=username).first().update(set__sid=request.sid)
+    AppUser.objects(username=username).first().update(set__sid=request.sid)
     # if AppUser.objects(username=username).first().room == "kids_room":
     #     join_room("kids_room")
     # else:
@@ -198,6 +203,21 @@ def fetch_all(message):
     # thr = threading.Thread(target=hand_shake_check, args=(), kwargs={})
     # thr.start()  # Will run "foo"
     # print(threading.active_count())
+    print(message)
+    print(datetime.datetime.now())
+    emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
+
+
+@socket_io.on('fetch_handshake', namespace=our_namespace)
+def hand_shake_fetch(message):
+    print("here i am printingi requiest id", request.sid, request.namespace, str(current_user.is_authenticated))
+    print(all_clients)
+    global active_clients
+    socket_io.emit('hand_shake', active_clients, namespace=our_namespace)
+    active_clients = []
+    thr = threading.Thread(target=hand_shake_check, args=(), kwargs={})
+    thr.start()  # Will run "foo"
+    print(threading.active_count())
     print(message)
     print(datetime.datetime.now())
     emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )

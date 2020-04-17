@@ -210,6 +210,8 @@ class Restaurant(Document):
             data['staff'][key] = self.staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
             data['tables'][key] = self.tables[key].to_my_mongo()
+        for key, table_order in enumerate(self.table_orders):
+            data['table_orders'][key] = self.table_orders[key].to_my_mongo()
 
         return json_util.dumps(data)
 
