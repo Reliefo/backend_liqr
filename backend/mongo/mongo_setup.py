@@ -18,12 +18,14 @@ def setup_mongo():
     TableOrder.drop_collection()
     Order.drop_collection()
     User.drop_collection()
+    house_of_commons = Restaurant(name='House of Commons', restaurant_id='BNGHSR0001').save()
 
     cat_list = []
     for p, category in enumerate(final_list_json):
         food_list = []
         for r, food in enumerate(category['food_list']):
-            food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
+            food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price'],
+                                      restaurant=str(house_of_commons.id)).save())
         cat_list.append(
             Category(name=category['name'], description=category['description'], food_list=food_list).save())
 
@@ -31,14 +33,13 @@ def setup_mongo():
     for p, category in enumerate(bar_final_json):
         food_list = []
         for r, food in enumerate(category['food_list']):
-            food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price']).save())
+            food_list.append(FoodItem(name=food['name'], description=food['description'], price=food['price'],
+                                      restaurant=str(house_of_commons.id)).save())
         bar_cat_list.append(
             Category(name=category['name'], description=category['description'], food_list=food_list).save())
 
-    house_of_commons = Restaurant(name='House of Commons', restaurant_id='BNGHSR0001', food_menu=cat_list,
-                                  bar_menu=bar_cat_list)
-
-    house_of_commons.save()
+    house_of_commons.update(set__food_menu=cat_list)
+    house_of_commons.update(set__bar_menu=bar_cat_list)
 
     table_list = []
     for n in range(1, 16):
