@@ -158,6 +158,7 @@ class FoodItem(Document):
     price = StringField(required=True)
     tags = ListField(StringField())
     food_options = EmbeddedDocumentField(FoodOptions)
+    restaurant = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
