@@ -136,10 +136,10 @@ def configuring_restaurant(message):
         return configuring_tables(request_type, message)
     elif element_type == 'staff':
         return configuring_staff(request_type, message)
-    elif element_type == 'food_menu':
-        return configuring_food_menu(request_type, message)
-    elif element_type == 'bar_menu':
-        return configuring_bar_menu(request_type, message)
+    elif element_type == 'food_category':
+        return configuring_food_category(request_type, message)
+    elif element_type == 'bar_category':
+        return configuring_bar_category(request_type, message)
     elif element_type == 'food_item':
         return configuring_food_item(request_type, message)
 
@@ -183,10 +183,10 @@ def configuring_staff(request_type, message):
     elif request_type == 'withdraw':
         for staff_id in message['remove_staff_list']:
             Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=staff_id))
-        return {**message, **{'status': 'Staff Removed'}}
+        return {**message, **{'status': 'Staff Withdrawn'}}
 
 
-def configuring_food_menu(request_type, message):
+def configuring_food_category(request_type, message):
     if request_type == 'add':
         category_object = Category.from_json(json_util.dumps(message['category'])).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__food_menu=category_object.to_dbref())
@@ -194,11 +194,11 @@ def configuring_food_menu(request_type, message):
         return message
     elif request_type == 'delete':
         Category.objects.get(id=message['category_id']).delete()
-        message['status'] = "Food Menu Deleted"
+        message['status'] = "Food category deleted!"
         return message
 
 
-def configuring_bar_menu(request_type, message):
+def configuring_bar_category(request_type, message):
     if request_type == 'add':
         category_object = Category.from_json(json_util.dumps(message['category'])).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__bar_menu=category_object.to_dbref())
@@ -206,7 +206,7 @@ def configuring_bar_menu(request_type, message):
         return message
     elif request_type == 'delete':
         Category.objects.get(id=message['category_id']).delete()
-        message['status'] = "Bar Menu Deleted"
+        message['status'] = "Bar category deleted!"
         return message
 
 
