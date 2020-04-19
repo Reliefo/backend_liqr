@@ -3,12 +3,11 @@ from . import main
 from flask import session, request
 from flask_socketio import emit, join_room, leave_room
 from .. import socket_io, our_namespace
-from datetime import datetime
 from backend.mongo.query import *
 import numpy as np
 from flask_jwt_extended import (
     jwt_required, get_jwt_identity,
-    current_user)
+    )
 
 all_clients = []
 active_clients = []
@@ -86,7 +85,7 @@ def on_disconnect():
 
 @socket_io.on('fetch_handshake', namespace=our_namespace)
 def hand_shake_fetch(message):
-    print("here i am printingi requiest id", request.sid, request.namespace, str(current_user.is_authenticated))
+    print("here i am printingi requiest id", request.sid, request.namespace)
     print(all_clients)
     global active_clients
     socket_io.emit('hand_shake', active_clients, namespace=our_namespace)
@@ -95,7 +94,7 @@ def hand_shake_fetch(message):
     thr.start()  # Will run "foo"
     print(threading.active_count())
     print(message)
-    print(datetime.datetime.now())
+    print(datetime.now())
     emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
 
 

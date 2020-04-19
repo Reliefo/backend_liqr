@@ -1,5 +1,5 @@
 from mongoengine import *
-import datetime
+from datetime import datetime
 from backend.config import MONGO_DB, MONGO_HOST
 from bson import json_util
 from flask_login import UserMixin
@@ -112,7 +112,7 @@ class TableOrder(Document):
     table_id = StringField()
     orders = ListField(ReferenceField(Order))
     status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
-    timestamp = DateTimeField(default=datetime.datetime.now())
+    timestamp = DateTimeField(default=datetime.now())
 
     def to_my_mongo(self):
         data = self.to_mongo()
