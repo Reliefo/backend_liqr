@@ -302,11 +302,6 @@ def receive_order():
         return jsonify({'status': "Error, couldn't place the order"})
 
 
-@app.route('/fetch_orders', methods=['POST'])
-def fetch_orders():
-    return fetch_order(np.random.randint(6))
-
-
 @app.route('/send_room_messages', methods=['POST'])
 def disconnect_user():
     data = request.json
@@ -366,12 +361,6 @@ def assist_them():
     socket_io.emit('assist_updates', {'assistance_id': str(assistance_ob.id), 'staff_name': staff_name},
                    namespace=our_namespace)
     return str(assistance_ob.to_json()) + ' ' + staff_name
-
-
-@app.route('/end_orders', methods=['POST'])
-def fetch_orders3():
-    print("YEAH IT; WORSFANDKLF")
-    return jsonify("FUCK YESAH BUDY")
 
 
 @app.route('/mongo_setup', methods=['GET'])

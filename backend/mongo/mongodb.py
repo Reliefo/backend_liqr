@@ -2,8 +2,16 @@ from mongoengine import *
 import datetime
 from backend.config import MONGO_DB, MONGO_HOST
 from bson import json_util
+from flask_login import UserMixin
 
 conn = connect(MONGO_DB, host=MONGO_HOST, alias='default')
+
+
+class AppUser(UserMixin, Document):
+    username = StringField(max_length=30)
+    password = StringField()
+    sid = StringField()
+    room = StringField()
 
 
 class TableOrder(Document):
