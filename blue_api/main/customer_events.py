@@ -12,6 +12,8 @@ def fetch_rest_customer(message):
 @socket_io.on('place_order', namespace=our_namespace)
 def place_order(message):
     input_order = json_util.loads(message)
+    socket_io.emit('fetch', message, namespace=our_namespace)
+    print(input_order)
     new_order = order_placement(input_order)
     emit('new_orders', new_order)
 
