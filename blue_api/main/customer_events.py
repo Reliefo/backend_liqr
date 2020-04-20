@@ -22,3 +22,10 @@ def place_order(message):
 @socket_io.on('kitchen_updates', namespace=our_namespace)
 socket_io.emit('order_updates')
 """
+
+
+@socket_io.on('assistance_requests', namespace=our_namespace)
+def assistance_requests(message):
+    input_request = json_util.loads(message)
+    assistance_ob = assistance_req(input_request)
+    socket_io.emit('assist', assistance_ob.to_json(), namespace=our_namespace)
