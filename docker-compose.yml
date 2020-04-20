@@ -21,4 +21,4 @@ services:
       - "27017:27017"
     volumes:
       - /tmp/mongodb/db:/data/db
-    command: --quiet
+    command: --quiet --auth
