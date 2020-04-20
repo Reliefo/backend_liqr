@@ -4,7 +4,7 @@ from backend.config import MONGO_DB, MONGO_HOST
 from bson import json_util
 from flask_login import UserMixin
 
-conn = connect(MONGO_DB, host=MONGO_HOST, alias='default')
+conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud', password='screwZomato@420', authentication_source='reliefo')
 
 
 class AppUser(UserMixin, Document):
