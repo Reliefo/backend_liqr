@@ -5,6 +5,25 @@ li = [(i, j) for i, j in zip(range(10), [k for k in range(10)])]
 np.random.shuffle(li)
 
 
+def return_restaurant(rest_id):
+    return Restaurant.objects(restaurant_id=rest_id)[0].to_json()
+
+
+def home_screen_lists(rest_id):
+    home_screen = {'available_tags': Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags}
+    for tag in home_screen['available_tags']:
+        home_screen[tag] = [str(food.id) for food in
+                            FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
+    return json.dumps(home_screen)
+
+
+def return_restaurant_customer(rest_id):
+    return Restaurant.objects(restaurant_id=rest_id) \
+        .exclude('staff') \
+        .exclude('tables') \
+        .exclude("table_orders").first().to_json()
+
+
 def fetch_order(n):
     return TableOrder.objects[n].to_json()
 
@@ -31,24 +50,23 @@ def user_scan(table_id, unique_id, email_id='dud'):
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
-                             timestamp=datetime.datetime.now())
+                             timestamp=datetime.now())
     for order in input_order['orders']:
         food_list = [FoodItemMod.from_json(json_util.dumps(food_dict)) for food_dict in order['food_list']]
         table_order.orders.append(
             Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(), food_list=food_list).save().to_dbref())
-        table_order.timestamp = datetime.datetime.now()
+        table_order.timestamp = datetime.now()
         table_order.save()
     ordered_table.update(push__table_orders=table_order.to_dbref())
     Restaurant.objects(tables__in=[str(ordered_table.id)]).update(push__table_orders=table_order.to_dbref())
     return TableOrder.objects.get(id=table_order.id).to_json()
 
 
-
 def assistance_req(assist_input):
     curr_table = Table.objects.get(id=assist_input['table'])
     curr_ass = Assistance(user=User.objects.get(id=assist_input['user']).to_dbref())
     curr_ass.assistance_type = assist_input['assistance_type']
-    curr_ass.timestamp = datetime.datetime.now()
+    curr_ass.timestamp = datetime.now()
     curr_ass.save()
     curr_table.update(push__assistance_reqs=curr_ass.to_dbref())
     return curr_ass
@@ -181,8 +199,7 @@ def configuring_staff(request_type, message):
             Table.objects.get(id=message['table_id']).update(push__staff=Staff.objects.get(id=staff_id))
         return {**message, **{'status': 'Staff Assigned'}}
     elif request_type == 'withdraw':
-        for staff_id in message['remove_staff_list']:
-            Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=staff_id))
+        Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=message['withdraw_staff_id']))
         return {**message, **{'status': 'Staff Withdrawn'}}
 
 

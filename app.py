@@ -10,7 +10,7 @@ from flask_cors import CORS, cross_origin
 import numpy as np
 from flask_socketio import SocketIO, emit, disconnect, join_room
 import pickle
-from backend.mongo.utils import return_restaurant
+from backend.mongo.query import return_restaurant
 import threading
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, jwt_refresh_token_required, create_refresh_token, get_jwt_identity,
