@@ -4,9 +4,6 @@ import numpy as np
 import re
 
 
-def return_restaurant(rest_id):
-    return Restaurant.objects(restaurant_id=rest_id)[0].to_json()
-
 
 def str_2(number):
     string = str(number)

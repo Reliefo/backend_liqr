@@ -1,13 +1,13 @@
 import threading
 from . import main
 from flask import session, request
-from flask_socketio import emit, join_room, leave_room
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
 import numpy as np
 from flask_jwt_extended import (
     jwt_required, get_jwt_identity,
-    )
+)
+from flask_socketio import emit, join_room, leave_room, disconnect
 
 all_clients = []
 active_clients = []
@@ -39,21 +39,6 @@ def left(message):
     emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
 
 
-@socket_io.on('fetch_me', namespace=our_namespace)
-def fetch_all(message):
-    print("here i am printing requiest id", request.sid, request.namespace)
-    print(message)
-    print(datetime.now())
-    emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
-
-
-@socket_io.on('rest_with_id', namespace=our_namespace)
-def fetch_rest_object(message):
-    rest_json = return_restaurant(message)
-    emit('restaurant_object', rest_json)
-    return rest_json
-
-
 @socket_io.on('connect', namespace=our_namespace)
 @jwt_required
 def connect():
@@ -73,14 +58,22 @@ def connect():
     # all_clients.append(request.sid)
 
 
+@socket_io.on('disconnect', namespace=our_namespace)
+def on_disconnect():
+    print("Disconnected :( from ", request.sid)
+
+
 @socket_io.on('shake_hands', namespace=our_namespace)
 def shake_hands(message):
     print(message)
 
 
-@socket_io.on('disconnect', namespace=our_namespace)
-def on_disconnect():
-    print("Disconnected :( from ", request.sid)
+@socket_io.on('fetch_me', namespace=our_namespace)
+def fetch_all(message):
+    print("here i am printing requiest id", request.sid, request.namespace)
+    print(message)
+    print(datetime.now())
+    emit('fetch', {'msg': "HERE IT IS TABLE      " + str(np.random.randint(100))}, )
 
 
 @socket_io.on('fetch_handshake', namespace=our_namespace)
@@ -106,6 +99,7 @@ def hand_shook(message):
 
 def hand_shake_check():
     time.sleep(5)
+    print("checking hand_shake_fetch")
     for client in all_clients:
         if client in active_clients:
             continue

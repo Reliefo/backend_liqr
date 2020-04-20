@@ -5,6 +5,12 @@ from .. import socket_io, our_namespace
 from backend.mongo.query import *
 
 
+@socket_io.on('rest_with_id', namespace=our_namespace)
+def fetch_rest_object(message):
+    rest_json = return_restaurant(message)
+    emit('restaurant_object', rest_json)
+
+
 @socket_io.on('fetch_order_lists', namespace=our_namespace)
 def fetch_order_lists(message):
     try:

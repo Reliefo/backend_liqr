@@ -206,13 +206,14 @@ def check_exists(order_id, order_list):
 class Restaurant(Document):
     name = StringField(required=True)
     restaurant_id = StringField(required=True)
-    food_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL), required=True)
+    food_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
     bar_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
     address = StringField()
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder))
     assistance_reqs = ListField(ReferenceField(Assistance))
+    home_screen_tags = ListField(StringField())
 
     def to_json(self):
         data = self.to_mongo()

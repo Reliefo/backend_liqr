@@ -41,6 +41,10 @@ def setup_mongo():
     house_of_commons.update(set__food_menu=cat_list)
     house_of_commons.update(set__bar_menu=bar_cat_list)
 
+    home_screen_tags = ['most_popular', 'chefs_special', 'eat_with_drinks', 'eat_with_beer', 'healty_bites',
+                        'fill_stomach']
+    house_of_commons.update(set__home_screen_tags=home_screen_tags)
+
     table_list = []
     for n in range(1, 16):
         table_list.append(Table(name='table' + str(n), seats=6, no_of_users=0).save().to_dbref())
@@ -83,7 +87,7 @@ def setup_mongo():
     FoodItem.objects.get(id=left_out).update(
         set__food_options=FoodOptions(options=left_out_options, choices=['Red', 'Green']))
 
-    names = pickle.load(open('indian_names.pkl', 'rb'))
+    names = pickle.load(open('pkls/indian_names.pkl', 'rb'))
     girls_name = names[0]
     boys_name = names[1]
 
