@@ -111,3 +111,12 @@ def user_scan_portal():
     socket_io.emit('user_scan', json_util.dumps({"table_no": table_no, "user_id": user_id, "table_id": table_id}),
                    namespace=our_namespace)
     return json_util.dumps({"table_no": table_no, "user_id": user_id, "table_id": table_id})
+
+
+@main.route('/clear_orders', methods=['GET'])
+def clear_orders():
+    for order in Order.objects:
+        order.delete()
+
+    for order in TableOrder.objects:
+        order.delete()
