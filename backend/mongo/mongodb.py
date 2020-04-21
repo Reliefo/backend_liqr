@@ -211,7 +211,7 @@ class Restaurant(Document):
     address = StringField()
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
-    table_orders = ListField(ReferenceField(TableOrder))
+    table_orders = ListField(ReferenceField(TableOrder,reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance))
     home_screen_tags = ListField(StringField())
 

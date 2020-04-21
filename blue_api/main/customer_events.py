@@ -15,7 +15,7 @@ def place_order(message):
     socket_io.emit('fetch', message, namespace=our_namespace)
     print(input_order)
     new_order = order_placement(input_order)
-    emit('new_orders', new_order)
+    socket_io.emit('new_orders', new_order, namespace=our_namespace)
 
 
 """
