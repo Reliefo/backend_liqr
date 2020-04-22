@@ -4,7 +4,8 @@ from backend.config import MONGO_DB, MONGO_HOST
 from bson import json_util
 from flask_login import UserMixin
 
-conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud', password='screwZomato@420', authentication_source='reliefo')
+conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud', password='screwZomato@420',
+               authentication_source='reliefo')
 
 
 class AppUser(UserMixin, Document):
@@ -136,7 +137,7 @@ class Table(Document):
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     users = ListField(ReferenceField(User))
     no_of_users = IntField()
-    table_orders = ListField(ReferenceField(TableOrder))
+    table_orders = ListField(ReferenceField(TableOrder,reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}
 
@@ -211,7 +212,7 @@ class Restaurant(Document):
     address = StringField()
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
-    table_orders = ListField(ReferenceField(TableOrder,reverse_delete_rule=PULL))
+    table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance))
     home_screen_tags = ListField(StringField())
 

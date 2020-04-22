@@ -120,3 +120,4 @@ def clear_orders():
 
     for order in TableOrder.objects:
         order.delete()
+    return "Cleared orders"
