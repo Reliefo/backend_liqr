@@ -9,12 +9,28 @@ def fetch_rest_customer(message):
     emit('home_screen_lists', home_screen_lists(message))
 
 
-@socket_io.on('place_order', namespace=our_namespace)
-def place_order(message):
+@socket_io.on('place_personal_order', namespace=our_namespace)
+def place_personal_order(message):
     input_order = json_util.loads(message)
     socket_io.emit('fetch', message, namespace=our_namespace)
-    print(input_order)
     new_order = order_placement(input_order)
+    socket_io.emit('new_orders', new_order, namespace=our_namespace)
+
+
+@socket_io.on('push_to_table_cart', namespace=our_namespace)
+def push_to_table_cart(message):
+    input_order = json_util.loads(message)
+    socket_io.emit('fetch', message, namespace=our_namespace)
+    table_cart_order = push_to_table_cart(input_order)
+    socket_io.emit('table_cart_updates', table_cart_order, namespace=our_namespace)
+
+
+@socket_io.on('place_table_order', namespace=our_namespace)
+def place_table_order(message):
+    table_id_dict = json_util.loads(message)
+    table_id = table_id_dict['table_id']
+    socket_io.emit('fetch', message, namespace=our_namespace)
+    new_order = order_placement_table(table_id)
     socket_io.emit('new_orders', new_order, namespace=our_namespace)
 
 

@@ -112,6 +112,7 @@ class TableOrder(Document):
     table = StringField()
     table_id = StringField()
     orders = ListField(ReferenceField(Order))
+    personal_order = BooleanField()
     status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
     timestamp = DateTimeField(default=datetime.now())
 
@@ -138,6 +139,7 @@ class Table(Document):
     users = ListField(ReferenceField(User))
     no_of_users = IntField()
     table_orders = ListField(ReferenceField(TableOrder,reverse_delete_rule=PULL))
+    table_cart = ReferenceField(TableOrder, reverse_delete_rule=CASCADE)
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}
 

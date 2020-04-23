@@ -49,18 +49,46 @@ def user_scan(table_id, unique_id, email_id='dud'):
 
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
-    table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
+    table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=True,
                              timestamp=datetime.now())
     for order in input_order['orders']:
         food_list = [FoodItemMod.from_json(json_util.dumps({**food_dict, **{'status': "queued"}})) for food_dict in
                      order['food_list']]
         table_order.orders.append(
             Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(), food_list=food_list).save().to_dbref())
-        table_order.timestamp = datetime.now()
-        table_order.save()
+    table_order.save()
     ordered_table.update(push__table_orders=table_order.to_dbref())
     Restaurant.objects(tables__in=[str(ordered_table.id)]).update(push__table_orders=table_order.to_dbref())
     return TableOrder.objects.get(id=table_order.id).to_json()
+
+
+def push_to_table_cart(input_order):
+    ordered_table = Table.objects.get(id=input_order['table'])
+    order = input_order['orders'][0]
+    if ordered_table.table_cart:
+        food_list = [FoodItemMod.from_json(json_util.dumps({**food_dict, **{'status': "queued"}})) for food_dict in
+                     order['food_list']]
+        TableOrder.objects.get(id=ordered_table.table_cart.id).update(
+            push__orders=Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(),
+                               food_list=food_list).save().to_dbref())
+    else:
+        table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=False,
+                                 timestamp=datetime.now())
+        food_list = [FoodItemMod.from_json(json_util.dumps({**food_dict, **{'status': "queued"}})) for food_dict in
+                     order['food_list']]
+        table_order.orders.append(
+            Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(), food_list=food_list).save().to_dbref())
+        table_order.save()
+        Table.objects.get(id=input_order['table']).update(set__table_cart=table_order)
+    return Table.objects.get(id=input_order['table']).table_cart.to_json()
+
+
+def order_placement_table(table_id):
+    table_order = Table.objects.get(id=table_id).table_cart
+    Table.objects.get(id=table_id).update(unset__table_cart="")
+    Table.objects.get(id=table_id).update(push__table_orders=table_order.to_dbref())
+    Restaurant.objects(tables__in=[str(table_id)]).update(push__table_orders=table_order.to_dbref())
+    return table_order.to_json()
 
 
 def assistance_req(assist_input):
