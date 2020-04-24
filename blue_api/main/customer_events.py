@@ -23,7 +23,7 @@ def push_to_table(message):
     input_order = json_util.loads(message)
     socket_io.emit('fetch', message, namespace=our_namespace)
     table_cart_order = push_to_table_cart(input_order)
-    socket_io.emit('table_cart_updates', table_cart_order, namespace=our_namespace)
+    socket_io.emit('table_cart_orders', table_cart_order, namespace=our_namespace)
 
 
 @socket_io.on('place_table_order', namespace=our_namespace)
