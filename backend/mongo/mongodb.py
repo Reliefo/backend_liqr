@@ -139,7 +139,7 @@ class Table(Document):
     users = ListField(ReferenceField(User))
     no_of_users = IntField()
     table_orders = ListField(ReferenceField(TableOrder,reverse_delete_rule=PULL))
-    table_cart = ReferenceField(TableOrder, reverse_delete_rule=CASCADE)
+    table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}
 
