@@ -19,7 +19,6 @@ def place_personal_order(message):
 
 @socket_io.on('push_to_table_cart', namespace=our_namespace)
 def push_to_table(message):
-    socket_io.emit('fetch', message, namespace=our_namespace)
     input_order = json_util.loads(message)
     socket_io.emit('fetch', message, namespace=our_namespace)
     table_cart_order = push_to_table_cart(input_order)
