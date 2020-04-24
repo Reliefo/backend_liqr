@@ -3,3 +3,7 @@ cmd
 .idea/*
 .ipynb_checkpoints/*
 backend/mongo/__pycache__/*
+backend/config.py
+blue_api/__pycache__
+blue_api/main/__pycache__
+~                                
