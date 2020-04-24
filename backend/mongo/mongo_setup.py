@@ -4,8 +4,8 @@ from backend.mongo.query import *
 
 
 def setup_mongo():
-    final_list_json = pickle.load(open('final_usable_json.pkl', 'rb'))
-    bar_final_json = pickle.load(open('bar_final_json.pkl', 'rb'))
+    final_list_json = pickle.load(open('pkls/final_usable_json.pkl', 'rb'))
+    bar_final_json = pickle.load(open('pkls/bar_final_json.pkl', 'rb'))
 
     FoodItem.drop_collection()
     Category.drop_collection()
