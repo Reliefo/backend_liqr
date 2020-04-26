@@ -22,7 +22,7 @@ def push_order_complete_notification(update_dict):
 
     response = client.publish(
         TopicArn='arn:aws:sns:ap-south-1:020452232211:Reliefo-Topic',
-        Message=final_message_dict,
+        Message=json_util.dumps(final_message_dict),
         Subject='Thsi is subejct',
         MessageStructure="json"
     )
