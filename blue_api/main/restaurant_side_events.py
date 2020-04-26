@@ -3,6 +3,7 @@ import traceback
 from flask_socketio import emit
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
+from backend.aws_api.sns_pub import push_order_complete_notification
 
 
 @socket_io.on('rest_with_id', namespace=our_namespace)
@@ -34,6 +35,10 @@ def send_new_orders(message):
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
                     'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id']}
+
+    if sending_dict['type'] == 'completed':
+        push_order_complete_notification(sending_dict)
+
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, namespace=our_namespace)
     emit('fetch', {'msg': message})
