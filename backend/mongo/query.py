@@ -10,8 +10,13 @@ def return_restaurant(rest_id):
 
 
 def home_screen_lists(rest_id):
-    home_screen = {'available_tags': Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags}
+    home_screen = {'available_tags': Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags,
+                   'navigate better': {}}
+    nav_better = ['eat_with_beer', 'eat_with_drinks', 'healty_bites', 'fill_stomach']
     for tag in home_screen['available_tags']:
+        if tag in nav_better:
+            home_screen['navigate better'][tag] = [str(food.id) for food in FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
+            continue
         home_screen[tag] = [str(food.id) for food in
                             FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
     return json.dumps(home_screen)
@@ -189,6 +194,8 @@ def configuring_restaurant(message):
         return configuring_bar_category(request_type, message)
     elif element_type == 'food_item':
         return configuring_food_item(request_type, message)
+    else:
+        return {'status': 'element not recognized'}
 
 
 def configuring_tables(request_type, message):
@@ -196,7 +203,7 @@ def configuring_tables(request_type, message):
         table_objects = []
         table_dict_list = []
         for table_pair in message['tables']:
-            new_table = Table(name=table_pair['table_name'], seats=table_pair['seats']).save()
+            new_table = Table(name=table_pair['name'], seats=table_pair['seats']).save()
             table_objects.append(new_table.to_dbref())
             table_dict_list.append({**{'table_id': str(new_table.id)}, **table_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__tables=table_objects)
@@ -206,6 +213,14 @@ def configuring_tables(request_type, message):
         Table.objects.get(id=message['table_id']).delete()
         message['status'] = "Table Deleted"
         return message
+    elif request_type == 'edit':
+        table_ob = Table.objects.get(id=message['table_id'])
+        for field in message['editing_fields'].keys():
+            table_ob[field] = message['editing_fields'][field]
+        table_ob.save()
+        return message
+    else:
+        return {'status': 'command type not recognized'}
 
 
 def configuring_staff(request_type, message):
@@ -213,7 +228,7 @@ def configuring_staff(request_type, message):
         staff_objects = []
         staff_dict_list = []
         for staff_pair in message['staff']:
-            new_staff = Staff(name=staff_pair['staff_name']).save()
+            new_staff = Staff(name=staff_pair['name']).save()
             staff_objects.append(new_staff.to_dbref())
             staff_dict_list.append({**{'staff_id': str(new_staff.id)}, **staff_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__staff=staff_objects)
@@ -230,6 +245,8 @@ def configuring_staff(request_type, message):
     elif request_type == 'withdraw':
         Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=message['withdraw_staff_id']))
         return {**message, **{'status': 'Staff Withdrawn'}}
+    else:
+        return {'status': 'command type not recognized'}
 
 
 def configuring_food_category(request_type, message):
@@ -242,6 +259,8 @@ def configuring_food_category(request_type, message):
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Food category deleted!"
         return message
+    else:
+        return {'status': 'command type not recognized'}
 
 
 def configuring_bar_category(request_type, message):
@@ -254,6 +273,8 @@ def configuring_bar_category(request_type, message):
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Bar category deleted!"
         return message
+    else:
+        return {'status': 'command type not recognized'}
 
 
 def configuring_food_item(request_type, message):
@@ -270,3 +291,5 @@ def configuring_food_item(request_type, message):
         FoodItem.objects.get(id=message['food_id']).delete()
         message['status'] = "Food Item Deleted"
         return message
+    else:
+        return {'status': 'command type not recognized'}
