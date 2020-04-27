@@ -1,4 +1,4 @@
-mongo_setup = "docker_local"
+mongo_setup = "docker_rocal"
 
 if mongo_setup == "docker_local":
     MONGO_DB = "reliefo"
