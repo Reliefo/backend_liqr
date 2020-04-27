@@ -25,6 +25,14 @@ def fetch_order_lists(message):
     emit('order_lists', lists_json)
 
 
+@socket_io.on('configuring_restaurant', namespace=our_namespace)
+def configuring_restaurant_event(message):
+    print("IT's WORKING")
+    output = configuring_restaurant(json_util.loads(message))
+    print(message)
+    emit('updating_config', json_util.dumps(output))
+
+
 @socket_io.on('kitchen_updates', namespace=our_namespace)
 def send_new_orders(message):
     status_tuple = (message['table_order_id'], message['order_id'], message['food_id'])
@@ -44,9 +52,12 @@ def send_new_orders(message):
     emit('fetch', {'msg': message})
 
 
-@socket_io.on('configuring_restaurant', namespace=our_namespace)
-def configuring_restaurant_event(message):
-    print("IT's WORKING")
-    output = configuring_restaurant(json_util.loads(message))
-    print(message)
-    emit('updating_config', json_util.dumps(output))
+@socket_io.on('staff_acceptance', namespace=our_namespace)
+def staff_acceptance(message):
+    if message['status'] == "rejected":
+        socket_io.emit('order_updates', message, namespace=our_namespace)
+        return
+    accepted_by = message['staff']
+
+    message['type'] = 'on_the_way'
+    socket_io.emit('order_updates', message, namespace=our_namespace)
