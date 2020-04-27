@@ -54,10 +54,11 @@ def send_new_orders(message):
 
 @socket_io.on('staff_acceptance', namespace=our_namespace)
 def staff_acceptance(message):
-    if message['status'] == "rejected":
-        socket_io.emit('order_updates', message, namespace=our_namespace)
+    input_dict = json_util.loads(message)
+    if input_dict['status'] == "rejected":
+        socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
         return
-    accepted_by = message['staff']
+    accepted_by = input_dict['staff_id']
 
-    message['type'] = 'on_the_way'
-    socket_io.emit('order_updates', message, namespace=our_namespace)
+    input_dict['type'] = 'on_the_way'
+    socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
