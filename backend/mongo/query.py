@@ -297,10 +297,6 @@ def configuring_bar_category(request_type, message):
 
 def configuring_food_item(request_type, message):
     if request_type == 'add':
-        options = {}
-        for dictionary in message['food_dict']['food_options']['options']:
-            options = {**options, **dictionary}
-        message['food_dict']['food_options']['options'] = options
         food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
         Category.objects(id=message['category_id'])[0].update(push__food_list=food_object.to_dbref())
         message['food_dict']['food_id'] = str(food_object.id)
