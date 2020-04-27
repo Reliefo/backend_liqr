@@ -214,10 +214,10 @@ def configuring_tables(request_type, message):
         message['status'] = "Table Deleted"
         return message
     elif request_type == 'edit':
-        table_ob = Table.objects.get(id=message['table_id'])
+        this_object = Table.objects.get(id=message['table_id'])
         for field in message['editing_fields'].keys():
-            table_ob[field] = message['editing_fields'][field]
-        table_ob.save()
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
         return message
     else:
         return {'status': 'command type not recognized'}
@@ -237,6 +237,12 @@ def configuring_staff(request_type, message):
     elif request_type == 'delete':
         Staff.objects.get(id=message['staff_id']).delete()
         message['status'] = "Staff Deleted"
+        return message
+    elif request_type == 'edit':
+        this_object = Staff.objects.get(id=message['staff_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
         return message
     elif request_type == 'assign':
         for staff_id in message['assigned_staff']:
@@ -259,6 +265,12 @@ def configuring_food_category(request_type, message):
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Food category deleted!"
         return message
+    elif request_type == 'edit':
+        this_object = Category.objects.get(id=message['category_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
+        return message
     else:
         return {'status': 'command type not recognized'}
 
@@ -272,6 +284,12 @@ def configuring_bar_category(request_type, message):
     elif request_type == 'delete':
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Bar category deleted!"
+        return message
+    elif request_type == 'edit':
+        this_object = Category.objects.get(id=message['category_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
         return message
     else:
         return {'status': 'command type not recognized'}
@@ -290,6 +308,12 @@ def configuring_food_item(request_type, message):
     elif request_type == 'delete':
         FoodItem.objects.get(id=message['food_id']).delete()
         message['status'] = "Food Item Deleted"
+        return message
+    elif request_type == 'edit':
+        this_object = FoodItem.objects.get(id=message['food_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
         return message
     else:
         return {'status': 'command type not recognized'}
