@@ -81,6 +81,10 @@ def assist_them():
     assistance_ob = assistance_req(generate_asstype())
     socket_io.emit('assist', assistance_ob.to_json(), namespace=our_namespace)
     staff_name = send_assistance_req(str(assistance_ob.id))
+    returning_message = assistance_ob.to_json()
+    returning_dict=json_util.loads(returning_message)
+    returning_dict['msg'] = "Service has been acceptewafnsdovn"
+    socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
     time.sleep(1)
 
     socket_io.emit('assist_updates', {'assistance_id': str(assistance_ob.id), 'staff_name': staff_name},
