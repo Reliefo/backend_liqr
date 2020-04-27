@@ -45,4 +45,7 @@ socket_io.emit('order_updates')
 def assistance_requests(message):
     input_request = json_util.loads(message)
     assistance_ob = assistance_req(input_request)
-    socket_io.emit('assist', assistance_ob.to_json(), namespace=our_namespace)
+    returning_message = assistance_ob.to_json()
+    returning_dict=json_util.loads(returning_message)
+    returning_dict['msg'] = "Service has been requested"
+    socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
