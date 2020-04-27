@@ -28,6 +28,7 @@ def push_to_table(message):
 @socket_io.on('place_table_order', namespace=our_namespace)
 def place_table_order(message):
     table_id_dict = json_util.loads(message)
+    socket_io.emit('fetch', table_id_dict, namespace=our_namespace)
     table_id = table_id_dict['table_id']
     socket_io.emit('fetch', message, namespace=our_namespace)
     new_order = order_placement_table(table_id)
