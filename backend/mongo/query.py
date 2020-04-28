@@ -15,7 +15,8 @@ def home_screen_lists(rest_id):
     nav_better = ['eat_with_beer', 'eat_with_drinks', 'healty_bites', 'fill_stomach']
     for tag in home_screen['available_tags']:
         if tag in nav_better:
-            home_screen['navigate better'][tag] = [str(food.id) for food in FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
+            home_screen['navigate better'][tag] = [str(food.id) for food in
+                                                   FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
             continue
         home_screen[tag] = [str(food.id) for food in
                             FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
@@ -100,6 +101,8 @@ def assistance_req(assist_input):
     curr_table = Table.objects.get(id=assist_input['table'])
     curr_ass = Assistance(user=User.objects.get(id=assist_input['user']).to_dbref())
     curr_ass.assistance_type = assist_input['assistance_type']
+    curr_ass.table_id = assist_input['table']
+    curr_ass.table = curr_table.name
     curr_ass.timestamp = datetime.now()
     curr_ass.save()
     curr_table.update(push__assistance_reqs=curr_ass.to_dbref())
