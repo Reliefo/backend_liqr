@@ -1,6 +1,7 @@
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
 from flask_socketio import emit
+from backend.aws_api.sns_pub import push_assistance_request_notification
 
 
 @socket_io.on('fetch_rest_customer', namespace=our_namespace)
@@ -45,6 +46,7 @@ def assistance_requests(message):
     input_request = json_util.loads(message)
     assistance_ob = assistance_req(input_request)
     returning_message = assistance_ob.to_json()
-    returning_dict=json_util.loads(returning_message)
+    push_assistance_request_notification(returning_message)
+    returning_dict = json_util.loads(returning_message)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)

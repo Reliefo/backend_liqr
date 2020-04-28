@@ -60,6 +60,7 @@ class Staff(Document):
 class Assistance(Document):
     types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
     table = StringField()
+    table_id = StringField()
     user = ReferenceField(User)
     assistance_type = StringField(choices=types)
     timestamp = DateTimeField()
@@ -69,14 +70,11 @@ class Assistance(Document):
     def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
-        data['table'] = Table.objects(assistance_reqs__in=[self.id])[0].name
-
         return data
 
     def to_json(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
-        data['table'] = Table.objects(assistance_reqs__in=[self.id])[0].name
         return json_util.dumps(data)
 
 
@@ -138,7 +136,7 @@ class Table(Document):
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     users = ListField(ReferenceField(User))
     no_of_users = IntField()
-    table_orders = ListField(ReferenceField(TableOrder,reverse_delete_rule=PULL))
+    table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance))
     meta = {'strict': False}

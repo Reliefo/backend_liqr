@@ -20,7 +20,7 @@ def fetch_restaurant():
 
 @main.route('/rest2')
 def fetch_restaurant2():
-    rest_json = return_restaurant("BNGHSR0002")
+    rest_json = return_restaurant_customer("BNGHSR0001")
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_json
 
