@@ -301,6 +301,7 @@ def configuring_bar_category(request_type, message):
 def configuring_food_item(request_type, message):
     if request_type == 'add':
         food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
+        print(message)
         Category.objects(id=message['category_id'])[0].update(push__food_list=food_object.to_dbref())
         message['food_dict']['food_id'] = str(food_object.id)
         return message
@@ -311,7 +312,10 @@ def configuring_food_item(request_type, message):
     elif request_type == 'edit':
         this_object = FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():
-            this_object[field] = message['editing_fields'][field]
+            if field == 'food_options':
+                this_object[field] = FoodOptions.from_json(json_util.dumps(message['editing_fields'][field]))
+            else:
+                this_object[field] = message['editing_fields'][field]
         this_object.save()
         return message
     else:

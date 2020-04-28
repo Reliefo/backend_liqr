@@ -27,9 +27,7 @@ def fetch_order_lists(message):
 
 @socket_io.on('configuring_restaurant', namespace=our_namespace)
 def configuring_restaurant_event(message):
-    print("IT's WORKING")
     output = configuring_restaurant(json_util.loads(message))
-    print(message)
     emit('updating_config', json_util.dumps(output))
 
 
