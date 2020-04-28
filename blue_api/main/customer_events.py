@@ -46,7 +46,7 @@ def assistance_requests(message):
     input_request = json_util.loads(message)
     assistance_ob = assistance_req(input_request)
     returning_message = assistance_ob.to_json()
-    push_assistance_request_notification(returning_message)
     returning_dict = json_util.loads(returning_message)
+    push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
