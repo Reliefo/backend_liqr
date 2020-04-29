@@ -11,7 +11,7 @@ client = boto3.client(
 
 def push_order_complete_notification(request_dict):
     pub_data_dict = {'table_order_id': request_dict['table_order_id'], 'request_type': 'pickup_request', 'type': request_dict['type'],
-                     'order_id': request_dict['order_id'], 'food_id': request_dict['food_id'],
+                     'order_id': request_dict['order_id'], 'food_id': request_dict['food_id'],  'timestamp': request_dict['timestamp'],
                      'click_action': "FLUTTER_NOTIFICATION_CLICK"}
 
     gcm_dict = {'data': pub_data_dict,
