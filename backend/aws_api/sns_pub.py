@@ -30,8 +30,8 @@ def push_order_complete_notification(request_dict):
 
 
 def push_assistance_request_notification(request_dict):
-    pub_data_dict = {'assistance_req_id': request_dict['_id']['$oid'], 'assistance_type': request_dict['assistance_type'],
-                     'user_id': request_dict['user']['$oid'], 'timestamp': request_dict['timestamp'],
+    pub_data_dict = {'assistance_req_id': str(request_dict['_id']), 'assistance_type': request_dict['assistance_type'],
+                     'user_id': str(request_dict['user']), 'timestamp': request_dict['timestamp'],
                      'table_id': request_dict['table_id'],
                      'click_action': "FLUTTER_NOTIFICATION_CLICK"}
 
