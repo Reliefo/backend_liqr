@@ -86,7 +86,6 @@ class Assistance(Document):
     def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
-
         return data
 
     def to_json(self):

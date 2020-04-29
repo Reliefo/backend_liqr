@@ -48,6 +48,10 @@ def assistance_requests(message):
     assistance_ob = assistance_req(input_dict)
     returning_message = assistance_ob.to_json()
     returning_dict = json_util.loads(returning_message)
+    user_id = str(returning_dict.pop('user'))
+    assistance_req_id = str(returning_dict.pop('_id'))
+    returning_dict['user_id'] = user_id
+    returning_dict['assistance_req_id'] = assistance_req_id
     push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
