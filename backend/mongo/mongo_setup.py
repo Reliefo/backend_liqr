@@ -78,12 +78,12 @@ def setup_mongo():
                 options = custom_splitter(food_ob.description)
             prices = food_ob.price.split('/')
             if len(options) == len(prices):
-                options = {k: v for k, v in zip(options, prices)}
+                options = [{"option_name": k, "option_price":v} for k, v in zip(options, prices)]
                 FoodItem.objects.get(id=food_ob.id).update(set__food_options=FoodOptions(options=options))
             else:
                 left_out = food_ob.id
-    left_out_options = {k: v for k, v in
-                        zip(custom_splitter(' Vegetables/chicken/prawns, Served'), '250/280/300'.split('/'))}
+    left_out_options = [{"option_name": k, "option_price":v} for k, v in
+                        zip(custom_splitter(' Vegetables/chicken/prawns, Served'), '250/280/300'.split('/'))]
     FoodItem.objects.get(id=left_out).update(
         set__food_options=FoodOptions(options=left_out_options, choices=['Red', 'Green']))
 
