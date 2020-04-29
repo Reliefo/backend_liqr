@@ -64,8 +64,10 @@ class TempUser(User):
 
 class Staff(Document):
     name = StringField()
-    assistance_history = MapField(ListField(ReferenceField(Assistance)))
-    order_history = MapField(ListField(ReferenceField(TableOrder)))
+    assistance_history = ListField(ReferenceField(Assistance))
+    rej_assistance_history = ListField(ReferenceField(Assistance))
+    order_history = ListField(DictField())
+    rej_order_history = ListField(DictField())
 
     def to_my_mongo(self):
         data = self.to_mongo()

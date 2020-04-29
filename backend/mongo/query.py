@@ -39,6 +39,8 @@ def user_scan(table_id, unique_id, email_id='dud'):
     if email_id == 'dud':
         temp_user = TempUser.objects.filter(unique_id=unique_id)
         if len(temp_user) > 0:
+            if temp_user[0].current_table_id == str(scanned_table.id):
+                return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
             scanned_table.update(push__users=temp_user[0].to_dbref())
             return temp_user[0]

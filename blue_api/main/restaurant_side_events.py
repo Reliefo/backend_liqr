@@ -56,18 +56,23 @@ def staff_acceptance(message):
     if input_dict['request_type'] == 'pickup_request':
         if input_dict['status'] == "rejected":
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            order_history={k: input_dict[k] for k in ["table_order_id", "order_id", "food_id", "timestamp"]}
+            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=order_history)
             push_order_complete_notification(input_dict)
             return
         else:
             input_dict['type'] = 'on_the_way'
+            order_history={k: input_dict[k] for k in ["table_order_id", "order_id", "food_id", "timestamp"]}
+            Staff.objects.get(id=input_dict['staff_id']).update(push__order_history=order_history)
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             return
     if input_dict['request_type'] == 'assistance_request':
         if input_dict['status'] == "rejected":
+            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']))
             push_assistance_request_notification(input_dict)
             return
         else:
             input_dict['msg'] = "Service has been requested"
-            accepted_by = input_dict['staff_id']
+            Staff.objects.get(id=input_dict['staff_id']).update(push__assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']))
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
