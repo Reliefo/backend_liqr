@@ -3,7 +3,7 @@ import traceback
 from flask_socketio import emit
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
-from backend.aws_api.sns_pub import push_order_complete_notification
+from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification
 
 
 @socket_io.on('rest_with_id', namespace=our_namespace)
@@ -53,10 +53,21 @@ def send_new_orders(message):
 @socket_io.on('staff_acceptance', namespace=our_namespace)
 def staff_acceptance(message):
     input_dict = json_util.loads(message)
-    if input_dict['status'] == "rejected":
-        socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
-        return
-    accepted_by = input_dict['staff_id']
-
-    input_dict['type'] = 'on_the_way'
-    socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+    if input_dict['request_type'] == 'pickup_request':
+        if input_dict['status'] == "rejected":
+            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            push_order_complete_notification(input_dict)
+            return
+        else:
+            input_dict['type'] = 'on_the_way'
+            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            return
+    if input_dict['request_type'] == 'assistance_request':
+        if input_dict['status'] == "rejected":
+            push_assistance_request_notification(input_dict)
+            return
+        else:
+            input_dict['msg'] = "Service has been requested"
+            accepted_by = input_dict['staff_id']
+            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            return

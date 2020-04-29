@@ -43,8 +43,8 @@ socket_io.emit('order_updates')
 
 @socket_io.on('assistance_requests', namespace=our_namespace)
 def assistance_requests(message):
-    input_request = json_util.loads(message)
-    assistance_ob = assistance_req(input_request)
+    input_dict = json_util.loads(message)
+    assistance_ob = assistance_req(input_dict)
     returning_message = assistance_ob.to_json()
     returning_dict = json_util.loads(returning_message)
     push_assistance_request_notification(returning_dict)

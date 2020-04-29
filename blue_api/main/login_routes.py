@@ -1,6 +1,7 @@
 from flask import session, jsonify, request
 from backend.mongo.mongodb import *
-
+from backend.mongo.query import user_scan
+import re
 from flask_login import current_user, login_user, login_required, logout_user
 from . import main
 from .. import login_manager
@@ -31,6 +32,15 @@ def user_register():
 
 @main.route('/user_login', methods=['POST'])
 def user_login():
+    unique_id = request.form['unique_id']
+    email_id = request.form['email_id']
+    if re.search("\$", "YessIamUniueeLOLOLOLOL$Mar"):
+        if email_id == "dud":
+            the_user = User.objects(unique_id = unique_id).first()
+        else:
+            the_user = User.objects(email_id = email_id).first()
+    else:
+        the_user = user_scan(request.form['table_id'], unique_id)
     if current_user.is_authenticated:
         return json_util.dumps({"status": "You're logged in ", "code": "202"})
     if request.method == 'POST':
