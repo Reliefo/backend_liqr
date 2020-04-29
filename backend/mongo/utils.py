@@ -4,13 +4,10 @@ import numpy as np
 import re
 
 
-
-def str_2(number):
+def str_n(number, n=2):
     string = str(number)
-    if len(string) == 1:
-        return '0' + string
-    else:
-        return string
+    diff = n - len(string)
+    return '0' * diff + string
 
 
 def np_rand(a, b=-1):
@@ -51,7 +48,8 @@ def random_food_list():
 
 # Generating orders and asstypes
 def food_embed(food_dict):
-    json_dict = json_util.loads(FoodItem.objects(id=food_dict['food_id']).exclude('id').exclude('restaurant')[0].to_json())
+    json_dict = json_util.loads(
+        FoodItem.objects(id=food_dict['food_id']).exclude('id').exclude('restaurant')[0].to_json())
     json_dict.pop('tags')
     json_dict['food_id'] = food_dict['food_id']
     json_dict['quantity'] = food_dict['quantity']
