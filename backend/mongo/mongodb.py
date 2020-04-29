@@ -36,6 +36,7 @@ class User(Document):
 
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
+    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen'])
     password = StringField()
     sid = StringField()
     room = StringField()
@@ -47,6 +48,7 @@ class TempUser(User):
 
 
 class RegisteredUser(User):
+    name = StringField()
     email_id = StringField(required=True)
     phone_no = StringField()
     tempuser_ob = ReferenceField(TempUser)

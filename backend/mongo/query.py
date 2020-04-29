@@ -41,16 +41,24 @@ def user_scan(table_id, unique_id, email_id='dud'):
         if len(temp_user) > 0:
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
             scanned_table.update(push__users=temp_user[0].to_dbref())
-            return temp_user[0].id
+            return temp_user[0]
         else:
-            temp_user = TempUser(unique_id=unique_id, current_table_id=str(scanned_table.id)).save()
+            planet = np.random.choice(TempUser.planet_choices)
+            if len(TempUser.objects.filter(planet__in=[planet])) == 0:
+                planet_no = 1
+            else:
+                planet_no = TempUser.objects.filter(planet__in=[planet]).order_by('-planet_no').first().planet_no
+            name = planet + "_" + str(planet_no)
+            temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
+                                 planet=planet, planet_no=planet_no, name=name).save()
             scanned_table.update(push__users=temp_user.to_dbref())
-            return temp_user.id
+            return temp_user
     else:
         reg_user = RegisteredUser.objects.filter(email_id=email_id)[0]
         scanned_table.update(push__users=reg_user)
         reg_user.update(set__current_table_id=str(scanned_table.id))
         scanned_table.update(inc__no_of_users=1)
+        return reg_user
 
 
 def order_placement(input_order):
