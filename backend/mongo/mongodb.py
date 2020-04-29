@@ -8,22 +8,38 @@ conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud',
                authentication_source='reliefo')
 
 
+class TableOrder(Document):
+    pass
+
+
+class Assistance(Document):
+    pass
+
+
+class UserHistory(Document):
+    restaurant_name = StringField()
+    restaurant_id = StringField()
+    table_orders = ListField(ReferenceField(TableOrder))
+    personal_orders = ListField(ReferenceField(TableOrder))
+    users = ListField(StringField())
+    assistance_reqs = ListField(ReferenceField(Assistance))
+    table = StringField()
+
+
+class User(Document):
+    name = StringField(required=True)
+    dine_in_history = ListField(ReferenceField(UserHistory, reverse_delete_rule=PULL))
+    current_table_id = StringField()
+    personal_cart = ListField(ReferenceField(TableOrder))
+    meta = {'allow_inheritance': True}
+
+
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
     password = StringField()
     sid = StringField()
     room = StringField()
-
-
-class TableOrder(Document):
-    pass
-
-
-class User(Document):
-    dine_in_history = DynamicField()
-    current_table_id = StringField()
-    personal_cart = ListField(ReferenceField(TableOrder))
-    meta = {'allow_inheritance': True}
+    rest_user = ReferenceField(User)
 
 
 class TempUser(User):
@@ -31,19 +47,17 @@ class TempUser(User):
 
 
 class RegisteredUser(User):
-    name = StringField(required=True)
     email_id = StringField(required=True)
     phone_no = StringField()
     tempuser_ob = ReferenceField(TempUser)
 
 
 class TempUser(User):
+    planet_choices = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Lt_Pluto']
+    planet = StringField(choices=planet_choices)
+    planet_no = IntField()
     unique_id = StringField(required=True)
     reguser_ob = ReferenceField(RegisteredUser)
-
-
-class Assistance(Document):
-    pass
 
 
 class Staff(Document):
@@ -70,6 +84,7 @@ class Assistance(Document):
     def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
+
         return data
 
     def to_json(self):
@@ -157,7 +172,7 @@ class Table(Document):
 
 
 class FoodOptions(EmbeddedDocument):
-    options = DictField()
+    options = ListField(DictField())
     choices = ListField()
 
 
