@@ -41,9 +41,10 @@ def setup_mongo():
     house_of_commons.update(set__food_menu=cat_list)
     house_of_commons.update(set__bar_menu=bar_cat_list)
 
-    home_screen_tags = ['most_popular', 'chefs_special', 'eat_with_drinks', 'eat_with_beer', 'healty_bites',
-                        'fill_stomach']
+    home_screen_tags=['most_popular', 'chefs_special']
     house_of_commons.update(set__home_screen_tags=home_screen_tags)
+    navigate_better_tags=['eat_with_drinks','eat_with_beer','healty_bites','fill_stomach']
+    house_of_commons.update(set__navigate_better_tags=navigate_better_tags)
 
     table_list = []
     for n in range(1, 16):
