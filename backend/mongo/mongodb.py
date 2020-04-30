@@ -231,6 +231,7 @@ class Restaurant(Document):
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance))
     home_screen_tags = ListField(StringField())
+    navigate_better_tags = ListField(StringField())
 
     def to_json(self):
         data = self.to_mongo()

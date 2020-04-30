@@ -51,7 +51,7 @@ def user_register():
         refresh_token = create_refresh_token(identity=app_user["username"])
         return json_util.dumps(
             {"status": "Registration successful", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-             "name": the_user.name, "email": the_user.email_id})
+             "name": the_user.name, "email": the_user.email_id, "user_id": str(the_user.id)})
     return json_util.dumps({"status": "Registration failed"})
 
 
@@ -89,11 +89,11 @@ def user_login():
                 if the_user._cls=="User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "unique_id": the_user.email_id})
+                         "name": the_user.name, "unique_id": the_user.email_id, "user_id": str(the_user.id)})
                 else:
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "unique_id": the_user.unique_id})
+                         "name": the_user.name, "unique_id": the_user.unique_id, "user_id": str(the_user.id)})
 
             else:
                 return json_util.dumps({"status": "Wrong Password", "code": "401"})
