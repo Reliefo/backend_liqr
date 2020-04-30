@@ -59,9 +59,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
         reg_user = RegisteredUser.objects.filter(email_id=email_id)[0]
         scanned_table.update(push__users=reg_user)
         reg_user.update(set__current_table_id=str(scanned_table.id))
-        scanned_table.update(inc__no_of_users=1)
         return reg_user
-
 
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])

@@ -48,10 +48,9 @@ class TempUser(User):
 
 
 class RegisteredUser(User):
-    name = StringField()
     email_id = StringField(required=True)
     phone_no = StringField()
-    tempuser_ob = ReferenceField(TempUser)
+    tempuser_ob = StringField()
 
 
 class TempUser(User):
@@ -59,7 +58,7 @@ class TempUser(User):
     planet = StringField(choices=planet_choices)
     planet_no = IntField()
     unique_id = StringField(required=True)
-    reguser_ob = ReferenceField(RegisteredUser)
+    reguser_ob = StringField()
 
 
 class Staff(Document):
@@ -71,7 +70,6 @@ class Staff(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
-
         return data
 
 
@@ -88,6 +86,7 @@ class Assistance(Document):
     def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
+
         return data
 
     def to_json(self):
@@ -153,7 +152,6 @@ class Table(Document):
     seats = IntField(required=True)
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     users = ListField(ReferenceField(User))
-    no_of_users = IntField()
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance))
