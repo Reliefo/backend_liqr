@@ -77,7 +77,7 @@ def user_login():
                 password = "temp_pass" + username
                 hash_pass = generate_password_hash("temp_pass" + username, method='sha256')
                 AppUser(username=username, user_type="customer", room="cust_room", password=hash_pass,
-                        rest_user=the_user.to_dbref()).save()
+                        rest_user=the_user.to_dbref(), timestamp=datetime.now()).save()
             else:
                 the_user = user_scan(table_id, unique_id, email_id)
         check_user = AppUser.objects(rest_user__in=[the_user.id]).first()

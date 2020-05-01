@@ -56,7 +56,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 planet_no = len(TempUser.objects.filter(planet__in=[planet])) + 1
             name = planet + "_" + str(planet_no)
             temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
-                                 planet=planet, planet_no=planet_no, name=name).save()
+                                 planet=planet, planet_no=planet_no, name=name, timestamp=datetime.now()).save()
             scanned_table.update(push__users=temp_user.to_dbref())
             return temp_user
     else:
