@@ -4,6 +4,8 @@ import time
 li = [(i, j) for i, j in zip(range(10), [k for k in range(10)])]
 np.random.shuffle(li)
 
+def return_user_details(user_id):
+    pass
 
 def return_restaurant(rest_id):
     return Restaurant.objects(restaurant_id=rest_id)[0].to_json()

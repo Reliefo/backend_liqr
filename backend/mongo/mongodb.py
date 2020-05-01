@@ -23,7 +23,19 @@ class UserHistory(Document):
     personal_orders = ListField(ReferenceField(TableOrder))
     users = ListField(StringField())
     assistance_reqs = ListField(ReferenceField(Assistance))
+    timestamp = DateTimeField(default=datetime.now())
     table = StringField()
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        for key, table_order in enumerate(self.table_orders):
+            data['table_orders'][key] = self.table_orders[key].to_my_mongo()
+        for key, ass_req in enumerate(self.assistance_reqs):
+            data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
+        for key, user in enumerate(self.personal_orders):
+            data['personal_orders'][key] = self.personal_orders[key].to_my_mongo()
+
+        return data
 
 
 class User(Document):
@@ -31,7 +43,17 @@ class User(Document):
     dine_in_history = ListField(ReferenceField(UserHistory, reverse_delete_rule=PULL))
     current_table_id = StringField()
     personal_cart = ListField(ReferenceField(TableOrder))
+    timestamp = DateTimeField(default=datetime.now())
     meta = {'allow_inheritance': True}
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        for key, table_order in enumerate(self.dine_in_history):
+            data['dine_in_history'][key] = self.dine_in_history[key].to_my_mongo()
+        for key, ass_req in enumerate(self.personal_cart):
+            data['personal_cart'][key] = self.personal_cart[key].to_my_mongo()
+
+        return data
 
 
 class AppUser(UserMixin, Document):
@@ -40,7 +62,8 @@ class AppUser(UserMixin, Document):
     password = StringField()
     sid = StringField()
     room = StringField()
-    rest_user = ReferenceField(User)
+    timestamp = DateTimeField(default=datetime.now())
+    rest_user = ReferenceField(User, reverse_delete_rule=CASCADE)
 
 
 class TempUser(User):
@@ -96,7 +119,7 @@ class Assistance(Document):
 
 
 class FoodOptionsMod(EmbeddedDocument):
-    options = DictField()
+    options = ListField(DictField())
     choices = ListField()
 
 
@@ -151,7 +174,7 @@ class Table(Document):
     name = StringField(required=True)
     seats = IntField(required=True)
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
-    users = ListField(ReferenceField(User))
+    users = ListField(ReferenceField(User, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance))
@@ -163,6 +186,8 @@ class Table(Document):
             data['table_orders'][key] = self.table_orders[key].to_my_mongo()
         for key, ass_req in enumerate(self.assistance_reqs):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
+        for key, user in enumerate(self.users):
+            data['users'][key] = self.users[key].to_my_mongo()
 
         return data
 
