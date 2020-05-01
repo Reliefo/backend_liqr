@@ -4,8 +4,10 @@ import time
 li = [(i, j) for i, j in zip(range(10), [k for k in range(10)])]
 np.random.shuffle(li)
 
+
 def return_user_details(user_id):
     pass
+
 
 def return_restaurant(rest_id):
     return Restaurant.objects(restaurant_id=rest_id)[0].to_json()
@@ -13,12 +15,14 @@ def return_restaurant(rest_id):
 
 def home_screen_lists(rest_id):
     home_screen = {'available_tags': Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags,
-                   'navigate better': {'available_tags': Restaurant.objects(restaurant_id=rest_id).first().navigate_better_tags}}
+                   'navigate better': {
+                       'available_tags': Restaurant.objects(restaurant_id=rest_id).first().navigate_better_tags}}
 
     for tag in home_screen['available_tags']:
         home_screen[tag] = [str(food.id) for food in FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
     for tag in home_screen['navigate better']['available_tags']:
-        home_screen['navigate better'][tag] = [str(food.id) for food in FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
+        home_screen['navigate better'][tag] = [str(food.id) for food in
+                                               FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
 
     return json.dumps(home_screen)
 
@@ -49,7 +53,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
             if len(TempUser.objects.filter(planet__in=[planet])) == 0:
                 planet_no = 1
             else:
-                planet_no = TempUser.objects.filter(planet__in=[planet]).order_by('-planet_no').first().planet_no
+                planet_no = len(TempUser.objects.filter(planet__in=[planet])) + 1
             name = planet + "_" + str(planet_no)
             temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
                                  planet=planet, planet_no=planet_no, name=name).save()
@@ -60,6 +64,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
         scanned_table.update(push__users=reg_user)
         reg_user.update(set__current_table_id=str(scanned_table.id))
         return reg_user
+
 
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
