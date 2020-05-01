@@ -1,4 +1,4 @@
-from flask import session, request, jsonify
+from flask import session, request, jsonify, redirect
 
 from backend.mongo.mongo_setup import setup_mongo
 from . import main
@@ -125,3 +125,9 @@ def clear_orders():
     for order in TableOrder.objects:
         order.delete()
     return "Cleared orders"
+
+
+@main.route('/table/<string:table_id>', methods=['GET'])
+def scanned_table(table_id):
+
+    return redirect("http://192.168.0.9:3001/?table_id="+table_id)

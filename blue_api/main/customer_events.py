@@ -6,8 +6,11 @@ from backend.aws_api.sns_pub import push_assistance_request_notification
 
 @socket_io.on('fetch_rest_customer', namespace=our_namespace)
 def fetch_rest_customer(message):
-    emit('restaurant_object', return_restaurant_customer(message))
-    emit('home_screen_lists', home_screen_lists(message))
+    # user_id, rest_id = message.split(',')
+    rest_id = message
+    # emit('user_details', return_user_details(user_id))
+    emit('restaurant_object', return_restaurant_customer(rest_id))
+    emit('home_screen_lists', home_screen_lists(rest_id))
 
 
 @socket_io.on('place_personal_order', namespace=our_namespace)
