@@ -6,9 +6,12 @@ from backend.aws_api.sns_pub import push_assistance_request_notification
 
 @socket_io.on('fetch_rest_customer', namespace=our_namespace)
 def fetch_rest_customer(message):
-    # user_id, rest_id = message.split(',')
-    rest_id = message
-    # emit('user_details', return_user_details(user_id))
+    if re.search(",", message):
+        user_id, rest_id = message.split(',')
+        emit('user_details', return_user_details(user_id))
+    else:
+        rest_id = message
+    #TODO Remove this after frontend integraton
     emit('restaurant_object', return_restaurant_customer(rest_id))
     emit('home_screen_lists', home_screen_lists(rest_id))
 
@@ -48,6 +51,7 @@ socket_io.emit('order_updates')
 @socket_io.on('assistance_requests', namespace=our_namespace)
 def assistance_requests(message):
     input_dict = json_util.loads(message)
+    socket_io.emit('fetch', message, namespace=our_namespace)
     assistance_ob = assistance_req(input_dict)
     returning_message = assistance_ob.to_json()
     returning_dict = json_util.loads(returning_message)

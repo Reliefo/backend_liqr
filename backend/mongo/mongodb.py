@@ -52,8 +52,15 @@ class User(Document):
             data['dine_in_history'][key] = self.dine_in_history[key].to_my_mongo()
         for key, ass_req in enumerate(self.personal_cart):
             data['personal_cart'][key] = self.personal_cart[key].to_my_mongo()
-
         return data
+
+    def to_json(self):
+        data = self.to_mongo()
+        for key, table_order in enumerate(self.dine_in_history):
+            data['dine_in_history'][key] = self.dine_in_history[key].to_my_mongo()
+        for key, ass_req in enumerate(self.personal_cart):
+            data['personal_cart'][key] = self.personal_cart[key].to_my_mongo()
+        return json_util.dumps(data)
 
 
 class AppUser(UserMixin, Document):
@@ -93,6 +100,10 @@ class Staff(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
+        for key, assistance in enumerate(self.assistance_history):
+            data['assistance_history'][key] = self.assistance_history[key].to_my_mongo()
+        for key, assistance in enumerate(self.rej_assistance_history):
+            data['rej_assistance_history'][key] = self.rej_assistance_history[key].to_my_mongo()
         return data
 
 
