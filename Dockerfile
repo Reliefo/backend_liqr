@@ -16,4 +16,4 @@ COPY . /app
 
 ENTRYPOINT [ "python" ]
 
-CMD [ "blue_app.py" ]
+CMD [ "app.py" ]

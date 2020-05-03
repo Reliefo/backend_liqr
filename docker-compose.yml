@@ -1,6 +1,6 @@
 version: "3"
 services:
-  web:
+  backend:
     image: datascientist69/reliefo:relief_web
     build:
       context: .
@@ -22,3 +22,12 @@ services:
     volumes:
       - /tmp/mongodb/db:/data/db
     command: --quiet --auth
+  react:
+    image: react_app:v1
+    build:
+      context: ./react/
+      dockerfile: ./Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./react/:/code
