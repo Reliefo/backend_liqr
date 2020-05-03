@@ -15,8 +15,10 @@ class TableOrder(Document):
 class Staff(Document):
     pass
 
+
 class User(Document):
     pass
+
 
 class Assistance(Document):
     types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
@@ -86,6 +88,11 @@ class User(Document):
             data['personal_cart'][key] = self.personal_cart[key].to_my_mongo()
         return json_util.dumps(data)
 
+    def to_minimal(self):
+        data = {"name": self.name
+                '{"_id": {"$oid": "5ead65c8e1823a4f2132579c"}, "name": "table8", "seats": 6, "staff": [{"$oid": "5ead65e1e1823a4f213257ad"}, {"$oid": "5ead65e1e1823a4f213257ae"}], "users": [{"$oid": "5eae5ee6d59d9cac8fec0263"}, {"$oid": "5eae7dc91c6a18cf77c0125c"}, {"$oid": "5eae7dd81c6a18cf77c0125d"}, {"$oid": "5eaeb4c73fcb5f115ecdc0d5"}, {"$oid": "5eaeb5473fcb5f115ecdc0da"}, {"$oid": "5eaec063792a3686411acc20"}], "table_orders": [{"$oid": "5eaeb87c3fcb5f115ecdc0ef"}, }
+        return data
+
 
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
@@ -128,6 +135,12 @@ class Staff(Document):
             data['assistance_history'][key] = self.assistance_history[key].to_my_mongo()
         for key, assistance in enumerate(self.rej_assistance_history):
             data['rej_assistance_history'][key] = self.rej_assistance_history[key].to_my_mongo()
+        return data
+
+    def to_minimal(self):
+        data = {}
+        data['name'] = self.name
+        data['id'] = self.id
         return data
 
 
@@ -203,6 +216,20 @@ class Table(Document):
             data['users'][key] = self.users[key].to_my_mongo()
 
         return data
+
+    def to_cust_json(self):
+        data = self.to_mongo()
+        for key, table_order in enumerate(self.table_orders):
+            data['table_orders'][key] = self.table_orders[key].to_my_mongo()
+        for key, ass_req in enumerate(self.assistance_reqs):
+            data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
+        for key, user in enumerate(self.users):
+            data['users'][key] = self.users[key].to_minimal()
+        for key, user in enumerate(self.staff):
+            data['staff'][key] = self.staff[key].to_minimal()
+        data['table_cart'] = self.table_cart.to_my_mongo()
+
+        return json_util.dumps(data)
 
     def remove_staff(self, staff_id):
         for staff_ob in self.staff:
