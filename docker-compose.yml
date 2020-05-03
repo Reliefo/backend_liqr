@@ -25,9 +25,9 @@ services:
   react:
     image: react_app:v1
     build:
-      context: ./react/
+      context: ./relief_customer/
       dockerfile: ./Dockerfile
     ports:
       - "3001:3000"
     volumes:
-      - ./react/:/code
+      - ./relief_customer/:/code
