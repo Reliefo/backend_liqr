@@ -350,13 +350,13 @@ def configuring_home_screen(request_type, message):
             message['status'] = "wrong add to"
         restaurant_ob.save()
         return message
-    elif request_type=='attach':
-        FoodItem.objects.get(id=message['food_id']).update(push__tags= message['tag_name'])
-        message['status'] = "Tag "+message['tag_name']+" attached to Food Item"
+    elif request_type == 'attach':
+        FoodItem.objects.get(id=message['food_id']).update(push__tags=message['tag_name'])
+        message['status'] = "Tag " + message['tag_name'] + " attached to Food Item"
         return message
-    elif request_type=='remove':
-        FoodItem.objects.get(id=message['food_id']).update(pull__tags= message['tag_name'])
-        message['status'] = "Tag "+message['tag_name']+" removed from Food Item"
+    elif request_type == 'remove':
+        FoodItem.objects.get(id=message['food_id']).update(pull__tags=message['tag_name'])
+        message['status'] = "Tag " + message['tag_name'] + " removed from Food Item"
         return message
     elif request_type == 'delete':
         restaurant_ob = Restaurant.objects(restaurant_id=message['restaurant_id']).first()
@@ -375,9 +375,9 @@ def configuring_home_screen(request_type, message):
         restaurant_ob.save()
         return message
     elif request_type == 'edit':
-        this_object=FoodItem.objects.get(id=message['food_id'])
+        this_object = FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():
-            if field== 'food_options':
+            if field == 'food_options':
                 this_object[field] = FoodOptions.from_json(json_util.dumps(message['editing_fields'][field]))
             else:
                 this_object[field] = message['editing_fields'][field]
