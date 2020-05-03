@@ -9,6 +9,7 @@ def fetch_rest_customer(message):
     if re.search(",", message):
         user_id, rest_id = message.split(',')
         emit('user_details', return_user_details(user_id))
+        emit('table_details', return_table_details(user_id))
     else:
         rest_id = message
     #TODO Remove this after frontend integraton
