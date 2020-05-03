@@ -9,6 +9,10 @@ def return_user_details(user_id):
     return User.objects.get(id=user_id).to_json()
 
 
+def return_table_details(user_id):
+    return Table.objects(users__in=[user_id]).first().to_cust_json()
+
+
 def return_restaurant(rest_id):
     return Restaurant.objects(restaurant_id=rest_id)[0].to_json()
 
