@@ -72,6 +72,7 @@ def staff_acceptance(message):
             Staff.objects.get(id=input_dict['staff_id']).update(
                 push__rej_assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']).to_dbref())
             push_assistance_request_notification(input_dict)
+            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
         else:
             input_dict['msg'] = "Service has been accepted"
