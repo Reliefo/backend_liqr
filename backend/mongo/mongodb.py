@@ -89,8 +89,7 @@ class User(Document):
         return json_util.dumps(data)
 
     def to_minimal(self):
-        data = {"name": self.name
-                '{"_id": {"$oid": "5ead65c8e1823a4f2132579c"}, "name": "table8", "seats": 6, "staff": [{"$oid": "5ead65e1e1823a4f213257ad"}, {"$oid": "5ead65e1e1823a4f213257ae"}], "users": [{"$oid": "5eae5ee6d59d9cac8fec0263"}, {"$oid": "5eae7dc91c6a18cf77c0125c"}, {"$oid": "5eae7dd81c6a18cf77c0125d"}, {"$oid": "5eaeb4c73fcb5f115ecdc0d5"}, {"$oid": "5eaeb5473fcb5f115ecdc0da"}, {"$oid": "5eaec063792a3686411acc20"}], "table_orders": [{"$oid": "5eaeb87c3fcb5f115ecdc0ef"}, }
+        data = {"name": self.name}
         return data
 
 
