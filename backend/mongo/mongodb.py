@@ -12,8 +12,30 @@ class TableOrder(Document):
     pass
 
 
-class Assistance(Document):
+class Staff(Document):
     pass
+
+
+class Assistance(Document):
+    types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
+    table = StringField()
+    table_id = StringField()
+    user = ReferenceField(User)
+    assistance_type = StringField(choices=types)
+    timestamp = DateTimeField()
+    accepted_by = ReferenceField(Staff, default=None)
+    meta = {'strict': False}
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+
+        return data
+
+    def to_json(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+        return json_util.dumps(data)
 
 
 class UserHistory(Document):
@@ -105,28 +127,6 @@ class Staff(Document):
         for key, assistance in enumerate(self.rej_assistance_history):
             data['rej_assistance_history'][key] = self.rej_assistance_history[key].to_my_mongo()
         return data
-
-
-class Assistance(Document):
-    types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
-    table = StringField()
-    table_id = StringField()
-    user = ReferenceField(User)
-    assistance_type = StringField(choices=types)
-    timestamp = DateTimeField()
-    accepted_by = ReferenceField(Staff, default=None)
-    meta = {'strict': False}
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
-        data['timestamp'] = str(data['timestamp'])
-
-        return data
-
-    def to_json(self):
-        data = self.to_mongo()
-        data['timestamp'] = str(data['timestamp'])
-        return json_util.dumps(data)
 
 
 class FoodOptionsMod(EmbeddedDocument):
