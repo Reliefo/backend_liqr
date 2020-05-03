@@ -6,12 +6,11 @@ from backend.aws_api.sns_pub import push_assistance_request_notification
 
 @socket_io.on('fetch_rest_customer', namespace=our_namespace)
 def fetch_rest_customer(message):
-    if re.search(",", message):
-        user_id, rest_id = message.split(',')
-        emit('user_details', return_user_details(user_id))
-        emit('table_details', return_table_details(user_id))
-    else:
-        rest_id = message
+    user_rest_dets = json_util.loads(message)
+    user_id = user_rest_dets['user_id']
+    rest_id = user_rest_dets['restaurant_id']
+    emit('user_details', return_user_details(user_id))
+    emit('table_details', return_table_details(user_id))
     #TODO Remove this after frontend integraton
     emit('restaurant_object', return_restaurant_customer(rest_id))
     emit('home_screen_lists', home_screen_lists(rest_id))
