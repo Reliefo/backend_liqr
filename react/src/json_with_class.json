@@ -1,0 +1,2367 @@
+{
+  "_id": {
+    "$oid": "5e9826559dec688d4c7bbcdb"
+  },
+  "name": "House of Commons",
+  "restaurant_id": "BNGHSR0001",
+  "food_menu": [
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc23"
+      },
+      "name": "BAR BITES",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc1c"
+          },
+          "name": "NACHOS (Veg/Chicken)",
+          "description": "Crispy Corn Tortillas Topped With Spicy Baked Bean Salsa and Sour Cream",
+          "price": "190/230",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Veg": "190",
+              "Chicken": "230"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc1d"
+          },
+          "name": "CHEESE MASALA PAPAD",
+          "description": "Crispy fried Mini Papads Topped With A Tangy Masala Mixture And Grated Cheese",
+          "price": "160",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc1e"
+          },
+          "name": "H.O.C SIGNATURE MASALA PEANUTS",
+          "description": "A Favorful Version Of Regular Peanuts Tossed In A Variety of Spices",
+          "price": "160",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc1f"
+          },
+          "name": "SPICY TRICOLOUR CHAAT",
+          "description": "Fresh Peas, Corn Kernels & Black Gram Tossed With Chillies & Sirka onions",
+          "price": "180",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc20"
+          },
+          "name": "CHATPATA CHANA CHAAT",
+          "description": "A Delectable Blend Of Bengal Gram And A Tangy Mixture",
+          "price": "160",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc21"
+          },
+          "name": "TANDOORI CHICKEN CHAAT",
+          "description": "Clay Oven Roasted Chicken Blended With Classic Spices",
+          "price": "220",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc22"
+          },
+          "name": "CHEESE DYNABITES",
+          "description": "Classic Cheese Balls Served with New Orleans Dip",
+          "price": "220",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc28"
+      },
+      "name": "SALADS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc24"
+          },
+          "name": "GREEN SALAD",
+          "description": "Traditional Green Cuts With Mint Yoghurt Dip",
+          "price": "170",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc25"
+          },
+          "name": "HOC SALAD (Veg/Chicken)",
+          "description": "Melange Of Crunchy Lettuce, Bell Peppers And Olives With Our Homemade Dressing",
+          "price": "180/210",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Veg": "180",
+              "Chicken": "210"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc26"
+          },
+          "name": "WATERMELON & FETA",
+          "description": "An All Time Classic - With Balsamic Glaze",
+          "price": "210",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc27"
+          },
+          "name": "CAESAR SALAD (Veg/Chicken)",
+          "description": "Crunchy Ice Berg Lettuce, Parmesan With the Classic Caesar Dressing",
+          "price": "190/230",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Veg": "190",
+              "Chicken": "230"
+            },
+            "choices": []
+          }
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc39"
+      },
+      "name": "VEG STARTERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc29"
+          },
+          "name": "CHEESE & CORN TRIANGLE (new)",
+          "description": "Shredded Cheese, Corn & Seasonings Wrapped In Wonton Sheet & Deep Fried",
+          "price": "220",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc2a"
+          },
+          "name": "CHAMPIGNONS FARCIS (new)",
+          "description": "Sauteed Button Mushroom Stuffed With Cheese & Herbs",
+          "price": "230",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc2b"
+          },
+          "name": "CHILLI CHEESE CIGARA (new)",
+          "description": "Deep Fried Rolls With Cheese, Chill & Herbs",
+          "price": "220",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc2c"
+          },
+          "name": "HOC CHIP & DIP BASKET",
+          "description": "Combination Of Onion Rings, Jalapeno Cheese Balls, Greek Potato Wedges, Habanero Green Chili Fries",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc2d"
+          },
+          "name": "FRENCH FRIES",
+          "description": "French Fries Tossed With Hoc Signature Cajun Spice Seasoning",
+          "price": "190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc2e"
+          },
+          "name": "ONION RINGS",
+          "description": "Extra Crispy Onion Rings With A Spicy Salsa",
+          "price": "190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc2f"
+          },
+          "name": "MUSHROOM LOADED FRIES",
+          "description": "Cheesy French Fries Topped With Mushrooms And Herbs",
+          "price": "230",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc30"
+          },
+          "name": "GARLIC BREAD",
+          "description": "Garlic Butter Flavoured Bread Topped With Cheese",
+          "price": "190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc31"
+          },
+          "name": "CHEESE CORN TIKKI",
+          "description": "American Com & Cottage Cheese Patty Served with Mint Chutney",
+          "price": "220",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc32"
+          },
+          "name": "CRISPY CHILLY MUSHROOM",
+          "description": "Crispy Fried Mushrooms Tossed With Oriental Spices",
+          "price": "220",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc33"
+          },
+          "name": "CRISPY CHILLY BABY CORN",
+          "description": "Crispy Fried Babycom Tossed With Oriental Spices",
+          "price": "190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc34"
+          },
+          "name": "CRISPY CORN CHILLY PEPPER",
+          "description": "Fred Undi Lightly Crispy & Seasoned With Lime Juice, Salt, Chilli & Pepper",
+          "price": "240",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc35"
+          },
+          "name": "HONEY CHILLY POTATO",
+          "description": "Crispy Fried Potatoes Tossed With Chilli And Honey",
+          "price": "190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc36"
+          },
+          "name": "SESAME CHILLI PANEER",
+          "description": "Cottage Cheese Cubes Tossed In A Sweet & Spicy Sauce, Finished With Sesame Seeds",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc37"
+          },
+          "name": "PANDAN LEAF COTTAGE CHEESE",
+          "description": "Tender Cottage Cheese Wrapped In Fragrant Pandan Leaves, With Chilli Coriander Sauce",
+          "price": "280",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc38"
+          },
+          "name": "MEZZE BASKET",
+          "description": "A Combination Of Hummus, Mutabal & Labneh, Served With Pita Bread",
+          "price": "340",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc3e"
+      },
+      "name": "VEG FROM THE CLAY OVEN",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc3a"
+          },
+          "name": "MAKHMALI PANEER TIKKA",
+          "description": "Mouth Melting Paneer Cubes Marinated With A Cheese Curd Mixture, Cream And Mild Spices",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc3b"
+          },
+          "name": "ANGARI PANEER TIKKA",
+          "description": "Clay Oven Roasted Spicy Morsels Of Cottage Cheese",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc3c"
+          },
+          "name": "TANDOORI STUFFED MUSHROOMS",
+          "description": "Mushrooms Filled With A Blend Of Indian Spices And Tangy Stuffing Mix, Adding A Unique Taste On The Bite",
+          "price": "250",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc3d"
+          },
+          "name": "TANDOORI VEG MOMOS",
+          "description": "Soft And Juicy Vegetable Momos Marinated With Tandoori Masala And Char Grilled",
+          "price": "220",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc49"
+      },
+      "name": "CHICKEN STARTERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc3f"
+          },
+          "name": "CHICKEN LOADED FRIES",
+          "description": "Cheesy French Fries Topped With Chicken & Herbs",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc40"
+          },
+          "name": "SHANG DONG CHICKEN LOLLY POP",
+          "description": "Crispy Lolly pops Crunched To Perfection & Tossed in our Signature Shang Dong Drip",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc41"
+          },
+          "name": "HOC SIGNATURE CHICKEN WINGS",
+          "description": "Sweet Chilly / Spiced Szechuan",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc42"
+          },
+          "name": "PEPPER GARLIC CHICKEN",
+          "description": "Cubes Of Chicken Tossed With Garlic And Pepper In Oriental Style",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc43"
+          },
+          "name": "GUNTUR JUNCTION CHICKEN",
+          "description": "Chicken Cubes Tossed With Freshly Ground Red Spices And Finished In South Indian Style",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc44"
+          },
+          "name": "ANDHRA CHILLI CHICKEN *VERY HOT*",
+          "description": "All Time Favourite Andhra Style Chicken Cooked With Coriander And Green Chilli Paste And Fresh Green Chillies",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc45"
+          },
+          "name": "LEMON PEPPER CHICKEN",
+          "description": "Slice Chicken Wok Tossed, Finished With Pepper Garlic & Lime",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc46"
+          },
+          "name": "JIANG CHILLI CHICKEN",
+          "description": "Chicken Tossed With Shredded Ginger And Chilli In Jiang Style",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc47"
+          },
+          "name": "CHICKEN GHEE ROAST",
+          "description": "Chicken Roasted With A Fiery Red, Tangy And Spicy With The Flavour Of Ghee",
+          "price": "280",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc48"
+          },
+          "name": "MASALA FRY CHICKEN (new)",
+          "description": "Classic Indian Style With Bone Deep fried Chicken Served With Mint Chutney",
+          "price": "250",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc56"
+      },
+      "name": "NON-VEG FROM THE CLAY OVEN",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc4a"
+          },
+          "name": "JAIPURI MURGH KA SOOLA",
+          "description": "Succulent Pieces Of Chicken Zapped With Red Spices, Cinnamon Flavour & Finished In Tandoor",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc4b"
+          },
+          "name": "TANDOORI MURGH (HALF/FULL)",
+          "description": "Chicken Marinated In Aromatic Indian Spices & Then Cooked In Tandoor",
+          "price": "250/480",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "HALF": "250",
+              "FULL": "480"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc4c"
+          },
+          "name": "TANDOORI POMFRET",
+          "description": "Indian Spices Marinated Whole Pomfret Skewered And Finished In Clay Oven",
+          "price": "590",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc4d"
+          },
+          "name": "FISH TIKKA KALIMIRCH",
+          "description": "Fresh Cubes Of Basa Fish Marinated With Crushed Black Pepper & Indian Spices, Finished In Clay Oven",
+          "price": "320",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc4e"
+          },
+          "name": "AMRITSAR FISH TIKKA",
+          "description": "Spicy Fish Tikka Marinated In Traditional Spices And Char Grilled",
+          "price": "320",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc4f"
+          },
+          "name": "KALMI KEBAB (3pcs)",
+          "description": "Clay Oven Roasted Chicken Drumsticks",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc50"
+          },
+          "name": "ANGARI MURGH TIKKA",
+          "description": "Clay Oven Roasted Spicy Morsels Of Chicken",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc51"
+          },
+          "name": "TANDOORI LOLLIPOPS",
+          "description": "Chicken Lollipops Marinated With Aromatic Indian Spices And Cooked In The Tandoor",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc52"
+          },
+          "name": "MURGH MALAI TIKKA",
+          "description": "Clay Oven Roasted Creamy Chunks Of Chicken",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc53"
+          },
+          "name": "MURGH KASTURI KEBAB",
+          "description": "Boneless Charcoal Smoked Chicken Tikka With Kasturi Methi Flavoured",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc54"
+          },
+          "name": "TANDOORI CHICKEN MOMOS",
+          "description": "Soft And Juicy Chicken Momos Marinated With Tandoori Masala And Char Grilled",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc55"
+          },
+          "name": "TANDOORI KING PRAWNS",
+          "description": "King Prawns Marinated With Yogurt, Lime Juice, Bhatti Spices And Slowly Cooked In Tandoor",
+          "price": "499",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc5b"
+      },
+      "name": "LAMB STARTERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc57"
+          },
+          "name": "ANDHRA LAMB PEPPER FRY",
+          "description": "Tender Mutton Pieces Tossed In South Indian Spices",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc58"
+          },
+          "name": "MUTTON GHEE ROAST",
+          "description": "Mutton Roasted With A Fiery Red And Spicy With The Flavour Of Ghee",
+          "price": "370",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc59"
+          },
+          "name": "LAHORI SEEKH KEBAB",
+          "description": "Succulent Minced Lamb Kebabs In The True Lahori Street Food Style",
+          "price": "370",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc5a"
+          },
+          "name": "RAILWAY MUTTON DRY",
+          "description": "With Bone Mutton Cooked In Rich Indian Spices, As Served In The Railway Canteen Of The British Raj",
+          "price": "350",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc5f"
+      },
+      "name": "EGG STARTERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc5c"
+          },
+          "name": "EGG BHURJI",
+          "description": "Desi Style Scrambled Eggs",
+          "price": "170",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc5d"
+          },
+          "name": "SPICY MASALA OMELETTE",
+          "description": "Slow Cooked Egg Omlet With Masala",
+          "price": "180",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc5e"
+          },
+          "name": "EGG CHILLI",
+          "description": "Spicy Boiled Egg With Chilli Fry",
+          "price": "210",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc64"
+      },
+      "name": "FROM THE GRILL",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc60"
+          },
+          "name": "PERI PERI PANEER/CHICKEN",
+          "description": "Peri Peri Basted Paneer / Chicken Cubes Served With Tzatziki Dip",
+          "price": "260/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PANEER": "260",
+              "CHICKEN": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc61"
+          },
+          "name": "THAI GRILLED FISH IN BANANA LEAF",
+          "description": "Delicately Grilled Fish With Basil Flavour And Served Hot",
+          "price": "330",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc62"
+          },
+          "name": "HARISSA GRILLED FISH",
+          "description": "Fish Marinated In A Spicy Tunisian Harissa Sauce And Grilled To Perfection",
+          "price": "330",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc63"
+          },
+          "name": "THAI GRILLED CHICKEN",
+          "description": "Boneless Chicken Marinated With Thai Spices And Grilled",
+          "price": "270",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc6a"
+      },
+      "name": "SEAFOOD STARTERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc65"
+          },
+          "name": "PAN FRIED CHILLY FISH",
+          "description": "Pan Fried Fish Tossed With Shredded, Onion, Capsicum And Green Chilli",
+          "price": "330",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc66"
+          },
+          "name": "THAI PEPPER GARLIC PRAWNS",
+          "description": "Prawns Prepared In Thai Style With A Flavour Of Lemon Grass",
+          "price": "380",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc67"
+          },
+          "name": "PRAWNS IN RCP SAUCE",
+          "description": "Wok Tossed Prawns Cooked With Roasted Chilli Paste And Seasonings",
+          "price": "380",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc68"
+          },
+          "name": "H.O.C FISH FINGERS",
+          "description": "Classic Crumb fried Served with Tartar Sauce",
+          "price": "330",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc69"
+          },
+          "name": "ASIAN STYLE JUMBO PRAWNS",
+          "description": "Tsing Hol Style / Singapore Chilli Garlic Style",
+          "price": "499",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc6f"
+      },
+      "name": "SANDWICHES/BURGERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc6b"
+          },
+          "name": "TOASTED VEG CLUB SANDWICH",
+          "description": "Double Decker Layered With Lettuce, Cucumber, Cheese, Tomato And Served With Fries",
+          "price": "240",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc6c"
+          },
+          "name": "TOASTED CHICKEN CLUB SANDWICH",
+          "description": "Double Decker Layered With Lettuce, Cheese, Chicken, Fried Egg And Served With Fries",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc6d"
+          },
+          "name": "CLASSIC BURGERS (VEG / CHICKEN / LAMB)",
+          "description": "Tender And Juicy Veg, Chicken Or Lamb Patties, Grilled And Served Fries With",
+          "price": "250/280/300",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "VEG": "250",
+              "CHICKEN": "280",
+              "LAMB": "300"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc6e"
+          },
+          "name": "HOC BURGER- THE BIG ONE",
+          "description": "Double Chicken, Double Cheese And Topped With A Sunny Side Up Fried Egg, Served With Fries",
+          "price": "350",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc77"
+      },
+      "name": "THE GRILL SIZZLERS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc70"
+          },
+          "name": "MIXED VEGETABLE SIZZLER",
+          "description": "Grilled Vegetable Patties, Cottage Cheese And English Vegetables, Served With French Fries",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc71"
+          },
+          "name": "ROSEMARY SCENTED COTTAGE CHEESE STEAKS",
+          "description": "Cottage Cheese Steaks Wth Bell Peppers, Sage Pilaf With Grilled Vegetables & Jalapeno Tomato Coulis",
+          "price": "380",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc72"
+          },
+          "name": "CHICKEN CAFREAL",
+          "description": "Authentic Goan Herb Marinated Chicken, Pan Fried, Stewed And Served With Potato Wedges & Sauteed Vegetables",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc73"
+          },
+          "name": "CHICKEN SIZZLER",
+          "description": "Chicken with red wine sauce, served with saute vegetable and french fries",
+          "price": "380",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc74"
+          },
+          "name": "TEQUILA LIME GRILLED CHICKEN",
+          "description": "Flesh Flamed Tequila Marinated Lime & Chilli Chicken With Herbed Country Mash, Garden Grilled Vegetables Cumin Coffee Scented Jus",
+          "price": "400",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc75"
+          },
+          "name": "GRILLED FISH",
+          "description": "Grilled Fish Fillet, With Lemon butter sauce Served With Herb Rice & saute vegetables",
+          "price": "400",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc76"
+          },
+          "name": "CAPTAIN MORGAN FLAMED LAMB",
+          "description": "Rum Infused Caribbean Lamb & Pine Nut Patty With A Centred Egg, Charred Peppers, Jalapeno Aloll, Smoked Onion Marmalade, English Cheddar Melt, French Fries With A Sage & Onion",
+          "price": "440",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc7d"
+      },
+      "name": "PASTAS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc78"
+          },
+          "name": "BAKED CHEESE MACARONI",
+          "description": "All Time Favourite In A Cheesy Cream Sauce And Baked in The Oven",
+          "price": "300",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc79"
+          },
+          "name": "SPAGHETTI AGLIO OLIO (VEG/ CHICKEN / SHRIMPS)",
+          "description": "NA",
+          "price": "300/340/380",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "VEG": "300",
+              "CHICKEN": "340",
+              "SHRIMPS": "380"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc7a"
+          },
+          "name": "FIERY PENNE PASTA (VEG/ CHICKEN / SHRIMPS)",
+          "description": "NA",
+          "price": "300/340/380",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "VEG": "300",
+              "CHICKEN": "340",
+              "SHRIMPS": "380"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc7b"
+          },
+          "name": "SPICY CAJUN LINGUINE ALFREDO (VEG/ CHICKEN / SHRIMPS)",
+          "description": "NA",
+          "price": "300/340/380",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "VEG": "300",
+              "CHICKEN": "340",
+              "SHRIMPS": "380"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc7c"
+          },
+          "name": "PENNE WITH PESTO (VEG/ CHICKEN / SHRIMPS)",
+          "description": "NA",
+          "price": "300/340/380",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "VEG": "300",
+              "CHICKEN": "340",
+              "SHRIMPS": "380"
+            },
+            "choices": []
+          }
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc87"
+      },
+      "name": "PIZZAS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc7e"
+          },
+          "name": "MARGHERITA",
+          "description": "An All-Time Favourite Of Pomodoro, Water Buffalo Mozzarella And Basil Chiffonade",
+          "price": "290",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc7f"
+          },
+          "name": "FUNGHI",
+          "description": "Shitake, Oyster & Button Mushrooms With Shallots, Chives, Charmed Peppers And White Truffle Oil",
+          "price": "300",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc80"
+          },
+          "name": "PANEER TIKKA & CHARRED PEPPERS",
+          "description": "Tandoori Paneer Mirch Tikka With Green Bell Peppers, Onion roundels, Spring Greens & Mint Coulis",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc81"
+          },
+          "name": "MEDITERRANEAN GARDEN",
+          "description": "Organic Greens With Imported FETA Cheese, Bell Peppers, Zucchini, Asparagus Spears, Artichokes & Sun Dried Tomatoes",
+          "price": "360",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc82"
+          },
+          "name": "TANDOORI MURGH TIKKA WITH KALAMATA OLIVES",
+          "description": "Chicken Tikka With Shallots, Capers, Charred Peppers, Kalamata Olives & Sweet Chilli Treacle",
+          "price": "380",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc83"
+          },
+          "name": "BARBEQUED GERMAN CHICKEN SAUSAGES",
+          "description": "BBQ Glazed Chicken Sausages With Caramelized Shallots, Bell Peppers, Jalapenos & Capers",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc84"
+          },
+          "name": "MUTTON MASALA KEEMA PIZZA",
+          "description": "Minced Mutton Cooked In Indian Spices & Herbs Topped With Chillies & Assorted Bell peppers",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc85"
+          },
+          "name": "FRUITS OF THE SEA",
+          "description": "Fruits Of The Sea - Calamari, Shrimps, Sea Bream Dices Served With Maple Butter & Fresh Red Chile",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc86"
+          },
+          "name": "MIXED MEAT MAGIC",
+          "description": "Age Old English Cheddar Topped With Roast Chicken Slvers, Apple Glazed Chicken Ham, Lamb Mince, Calamari & Shrimps",
+          "price": "420",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbc9a"
+      },
+      "name": "MAIN COURSE",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc88"
+          },
+          "name": "FISH AND CHIPS",
+          "description": "Crumb Fried Fish In Hoc Signature Marination, Served With French Fries",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc89"
+          },
+          "name": "CHICKEN BASKET",
+          "description": "Crumb Fried Chicken Supreme In Hoc Signature Marination, Served With French Fries",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc8a"
+          },
+          "name": "THAI CURRY [Red/Green]",
+          "description": "Basil Flavoured Thal Curry/bird-eye Chillies Flavoured Thai Curry Cooked With Garden Fresh Vegetables/chicken/prawns, Served With Steamed Rice",
+          "price": "250/280/300",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Vegetables": "250",
+              "chicken": "280",
+              "prawns": "300"
+            },
+            "choices": [
+              "Red",
+              "Green"
+            ]
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc8b"
+          },
+          "name": "CHINESE CHOPSUEY",
+          "description": "Vegetables/chicken Tossed In Celery Sauce, Served On A Bed Of Crispy Noodles",
+          "price": "280/300",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Vegetables": "280",
+              "chicken": "300"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc8c"
+          },
+          "name": "AMERICAN CHOPSUEY",
+          "description": "Vegetables/chicken Tossed In A Sweet & Sour Sauce, Served On A Bed Of Crispy Noodles",
+          "price": "280/300",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Vegetables": "280",
+              "chicken": "300"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc8d"
+          },
+          "name": "EXOTIC VEGETABLES WITH SAUCE OF YOUR CHOICE",
+          "description": "Hot Garlic, Chili Basil, Sichuan",
+          "price": "250",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc8e"
+          },
+          "name": "CHICKEN WITH SAUCE OF YOUR CHOICE",
+          "description": "Hunan, Sichuan, Black Pepper",
+          "price": "280",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc8f"
+          },
+          "name": "BASA FISH/PRAWNS WITH CHOICE OF YOUR CHOICE",
+          "description": "Ginger Chilli, Sichuan, Pepper Garlic",
+          "price": "270/300",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "FISH": "270",
+              "PRAWNS": "300"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc90"
+          },
+          "name": "TIKKA MASALA GRAVY",
+          "description": "Paneer/chicken Cooked In A Spicy Onion Tomato Base Gravy",
+          "price": "250/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Paneer": "250",
+              "chicken": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc91"
+          },
+          "name": "PALAK PANEER",
+          "description": "Cottage Cheese Cooked In Spinach Puree, Tempered Cumin And Ginger Garlic Paste",
+          "price": "260",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc92"
+          },
+          "name": "DAL MAKHANI",
+          "description": "Slow Cooked Lentils Finished With White Butter",
+          "price": "240",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc93"
+          },
+          "name": "MAKHANI GRAVY",
+          "description": "Paneer/Chicken Cooked In A Creamy Tomato Base Gravy",
+          "price": "250/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "Paneer": "250",
+              "Chicken": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc94"
+          },
+          "name": "KHUMB HARA PYAZA",
+          "description": "Vintage Mushrooms & Spring Onions Cooked To Perfection",
+          "price": "270",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc95"
+          },
+          "name": "DAL TADKA",
+          "description": "Yellow Lentil Tempered With Garlic And Cumin Seeds, Punished With Chopped Onion And Tomato",
+          "price": "190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc96"
+          },
+          "name": "BUTTER CHICKEN",
+          "description": "All-Time Favorite",
+          "price": "280",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc97"
+          },
+          "name": "KADAI VEG/CHICKEN",
+          "description": "Mix Veg/Chicken Pleces Tossed With Onion, Capsicum And Garnished With Onion Tomato Gravy",
+          "price": "250/270",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "VEG": "250",
+              "CHICKEN": "270"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc98"
+          },
+          "name": "MURGH METHI KHAS",
+          "description": "Tender Chicken Cooked In Cream Based Onion And Tomato Gravy With Aromatic Spices And Flavor",
+          "price": "280",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc99"
+          },
+          "name": "DUM KA GHOST",
+          "description": "Slow Cooked Mutton In A Spicy Onion & Tomato Gravy",
+          "price": "330",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbca0"
+      },
+      "name": "RICE & NOODLES",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc9b"
+          },
+          "name": "STIR FRIED RICE",
+          "description": "(veg/egg/chicken/prawns)",
+          "price": "200/220/250/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "veg": "200",
+              "egg": "220",
+              "chicken": "250",
+              "prawns": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc9c"
+          },
+          "name": "STIR FRIED NOODLES",
+          "description": "(veg/egg/chicken/prawns)",
+          "price": "200/220/250/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "veg": "200",
+              "egg": "220",
+              "chicken": "250",
+              "prawns": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc9d"
+          },
+          "name": "SICHUAN FRIED RICE",
+          "description": "(veg/egg/chicken/prawns)",
+          "price": "200/220/250/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "veg": "200",
+              "egg": "220",
+              "chicken": "250",
+              "prawns": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc9e"
+          },
+          "name": "SICHUAN FRIED NOODLES",
+          "description": "(veg/egg/chicken/prawns)",
+          "price": "200/220/250/280",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "veg": "200",
+              "egg": "220",
+              "chicken": "250",
+              "prawns": "280"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbc9f"
+          },
+          "name": "CHILLY GARLIC NOODLES",
+          "description": "(veg/egg/chiden/prawns)",
+          "price": "230/250/270/290",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "veg": "230",
+              "egg": "250",
+              "chiden": "270",
+              "prawns": "290"
+            },
+            "choices": []
+          }
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbca8"
+      },
+      "name": "ACCOMPANIMENTS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca1"
+          },
+          "name": "JEERA RICE",
+          "description": "NA",
+          "price": "160",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca2"
+          },
+          "name": "STEAMED RICE",
+          "description": "NA",
+          "price": "130",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca3"
+          },
+          "name": "ROTI PLAIN/BUTTER",
+          "description": "NA",
+          "price": "35/40",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PLAIN": "35",
+              "BUTTER": "40"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca4"
+          },
+          "name": "KULCHA PLAIN/BUTTER",
+          "description": "NA",
+          "price": "35/40",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PLAIN": "35",
+              "BUTTER": "40"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca5"
+          },
+          "name": "NAAN PLAIN/BUTTER",
+          "description": "NA",
+          "price": "40/45",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PLAIN": "40",
+              "BUTTER": "45"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca6"
+          },
+          "name": "GARLIC NAAN",
+          "description": "NA",
+          "price": "50",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca7"
+          },
+          "name": "LACCHA PARATHA",
+          "description": "NA",
+          "price": "45",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcad"
+      },
+      "name": "DESSERTS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbca9"
+          },
+          "name": "GULAB JAMUN",
+          "description": "Cardamom Flavoured Milk Dumplings Soaked In Sugar Syrup",
+          "price": "90",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcaa"
+          },
+          "name": "WALNUT BROWNIE",
+          "description": "Warm Chocolate Brownie Served With Vanilla ice cream",
+          "price": "170",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcab"
+          },
+          "name": "CARAMEL CUSTARD",
+          "description": "Custard Dessert With A Layer Of Soft Caramel Glazed On Top",
+          "price": "150",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcac"
+          },
+          "name": "CHOICE OF ICE CREAMS-2 Scoops",
+          "description": "Ask for the Flavours",
+          "price": "90",
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "bar_menu": [
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcb6"
+      },
+      "name": "MARTINIS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcae"
+          },
+          "name": "CLASSIC MARTINI ",
+          "description": "GIN & CHOICE OF VERMOUTH",
+          "price": "290",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcaf"
+          },
+          "name": "APPLE & CUCUMBER MARTINI ",
+          "description": "VODKA GREEN APPLE & CUCUMBER",
+          "price": "290 ",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb0"
+          },
+          "name": "CHILLI BASIL MARTINI ",
+          "description": "VODKA, BASIL, CHILLI & FRESH LIME",
+          "price": "290 ",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb1"
+          },
+          "name": "WHITE LADY",
+          "description": "GIN, TRIPLE SEC, SWEET & SOUR",
+          "price": "290",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb2"
+          },
+          "name": "ESPRESSO MARTINI ",
+          "description": "SMIRNOFF ESPRESSO & KAHLUA",
+          "price": "290 ",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb3"
+          },
+          "name": "WATERMELON BASIL MARTINI ",
+          "description": "FRESH WATERMELON, BASIL & VOOKA ",
+          "price": "290",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb4"
+          },
+          "name": "TURKISH CHOCOLATINI",
+          "description": "VODKA, CHOCOLATE MADE EXOTIC WITH A MINT OF ROSE",
+          "price": "290",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb5"
+          },
+          "name": "ORANGE MARMALADE MARTINI ",
+          "description": "VODKA, ORANGE, MARMALADE",
+          "price": "290 ",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcc4"
+      },
+      "name": "CLASSICS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb7"
+          },
+          "name": "COSMOPOLITAN ",
+          "description": "VODKA ,TRIPLE SEC & CRANBERRY JUICE",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb8"
+          },
+          "name": "SEX ON THE BEACH ",
+          "description": "VODKA, PEACH, ORANGE & CRANBERRY",
+          "price": "420/620",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PLAIN": "420",
+              "BUTTER": "620"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcb9"
+          },
+          "name": "TEQUILA SUNRISE ",
+          "description": "TEQUILA, ORANGE JUICE & GRENADINE",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcba"
+          },
+          "name": "PINA COLADA ",
+          "description": "WHITE RUM, COCONUT & PINEAPPLE",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcbb"
+          },
+          "name": "SCREWDRIVER ",
+          "description": "VODKA & ORANGE JUICE",
+          "price": "370",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcbc"
+          },
+          "name": "MAI TAI",
+          "description": "WHITE RUM, DARK RUM, TRIPLE SEC, ALMOND SYRUP, ORANGE & PINEAPPLE",
+          "price": "350/520",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PLAIN": "350",
+              "BUTTER": "520"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcbd"
+          },
+          "name": "WHISKY SOUR",
+          "description": "WHISKY, FRESH LIME & SUGAR",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcbe"
+          },
+          "name": "LONG ISLAND ICED TEA ",
+          "description": "VODKA, GIN, RUM, TEQUILA, TRIPLE SEC & COKE",
+          "price": "420/620",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "PLAIN": "420",
+              "BUTTER": "620"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcbf"
+          },
+          "name": "MARGARITA ",
+          "description": "REGULAR/FLAVOUR /FROZEN STRAWBERRY, LITCHI, GREEN APPLE, ORANGE, KIWI. ASK FOR YOUR CHOICE",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc0"
+          },
+          "name": "MOJITO ",
+          "description": "ASK FOR YOUR FLAVOUR. WHITE RUM, FRESH MINT, SUGAR FRESH LIME & SODA",
+          "price": "370",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc1"
+          },
+          "name": "CAIPIROSKA ",
+          "description": "ASK FOR YOUR FLAVOUR. VODKA, FRESH LIME & SUGAR",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc2"
+          },
+          "name": "SANGRIA RED/WHITE ",
+          "description": "WHITE/RED WINE, TRIPLE SEC, BRANDY & DICED FRUITS",
+          "price": "370/520",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "RED": "370",
+              "WHITE": "520"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc3"
+          },
+          "name": "BLOODY MARY ",
+          "description": "VODKA, TOMATO JUICE, WORCESTERSHIRE, TABASCO & FRESH LIME",
+          "price": "370",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbccc"
+      },
+      "name": "SIGNATURE",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc5"
+          },
+          "name": "RED GIANT",
+          "description": "VODKA, BACARDI LEMON, THYMES WATERMELON JUICE, PEACH & SPRITE ",
+          "price": "350/590",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "RED": "350",
+              "WHITE": "590"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc6"
+          },
+          "name": "BANGALORE SUNSET ",
+          "description": "VODKA, RUM, GIN, TEQUILA, RED WINE, PEACH, LEMONADE",
+          "price": "420/620 ",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "RED": "420",
+              "WHITE": "620 "
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc7"
+          },
+          "name": "ELECTRIC LEMONADE ",
+          "description": "GIN, VODKA, RUM, BLUE CURACAO, LEMONADE",
+          "price": "390/590 ",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "RED": "390",
+              "WHITE": "590 "
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc8"
+          },
+          "name": "AON KIWI ",
+          "description": "WHITE RUM, FRESH KIWI, PINEAPPLE JUICE, LIME JUICE & EGG WHITE",
+          "price": "370 ",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcc9"
+          },
+          "name": "HOC SPECIAL MARGARITA ",
+          "description": "TEQUILA, PASSION FRUIT, LIME, BEER",
+          "price": "420",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcca"
+          },
+          "name": "HELLO YELLOW",
+          "description": "VODKA, ORANGE JUICE, PEACH & APRICOT, MINT SPRIGS & FRESH LIME ",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbccb"
+          },
+          "name": "LOVE BITES ",
+          "description": "WHITE RUM, PINEAPPLE JUICE, LIME JUICE, BITTER GOURD, ORANGE OIL, CUCUMBER, LEMONGRASS SYRUP",
+          "price": "390",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcd3"
+      },
+      "name": "BIG GUNS",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbccd"
+          },
+          "name": "LIIT PITCHER ",
+          "description": "VODKA, GIN, RUM, TEQUILA, TRIPLE SEC, COKE",
+          "price": "1250",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcce"
+          },
+          "name": "BEER MOJITO PITCHER ",
+          "description": "WHITE RUM, LEMON, MINT SPRIGS, BEER",
+          "price": "1050 ",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbccf"
+          },
+          "name": "ELECTRIC LEMONADE PITCHER ",
+          "description": "VODKA, RUM, GIN, BLUE CURACAO, SPRITE",
+          "price": "1150",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd0"
+          },
+          "name": "BEACH ICE TEA PITCHER ",
+          "description": "VODKA, RUM, GIN, TEQUILA, TRIPLE SEC, CRANBERRY",
+          "price": "1190",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd1"
+          },
+          "name": "SANGRIA PITCHER ",
+          "description": "RED WINE, BRANDY, FRESH CHOPPED FRUITS",
+          "price": "1090 ",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd2"
+          },
+          "name": "HOC SUNSET PITCHER",
+          "description": "VODKA, RUM,GIN, TEQUILA, RED WINE, PEACH, LEMONADE",
+          "price": "1190",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcda"
+      },
+      "name": "SUN DOWNER’S",
+      "description": "",
+      "food_list": [
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd4"
+          },
+          "name": "SPIN FLIP ",
+          "description": "VODKA FRESH LEMON GRASS, GINGER, LEMON GRASS SYRUP,ORANGE OIL SWEET & SOUR",
+          "price": "370",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd5"
+          },
+          "name": "LOBLOLLY BAY ",
+          "description": "WHITE RUM, PINEAPPLE JUICE, BASIL LEAVES,MAPLE SYRUP, VANILLA & LIME JUICE",
+          "price": "370",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd6"
+          },
+          "name": "SHAMROCK SHILLELAGH ",
+          "description": "WHISKY, BAILEYS, KAHLUA, HAZELNUT SYRUP, ESPRESSO & FRESH CREAM ",
+          "price": "390",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd7"
+          },
+          "name": "BULL FROG ",
+          "description": "VODKA, GIN, TEQUILA RUM, BLUE CURACAO, RED BULL",
+          "price": "420/620",
+          "tags": [],
+          "food_options": {
+            "options": {
+              "RED": "420",
+              "WHITE": "620"
+            },
+            "choices": []
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd8"
+          },
+          "name": "GREEN HORN ",
+          "description": "GIN, AQUILA LEAVES, SPINACH, PINEAPPLE JUICE, HOMEMADE CUMIN BITTERS,SWEET & SOUR",
+          "price": "350",
+          "tags": []
+        },
+        {
+          "_id": {
+            "$oid": "5e9826559dec688d4c7bbcd9"
+          },
+          "name": "RED VELVET ",
+          "description": "GIN, FRESH POMEGRANATE, GRENADINE.FRESH BASIL, SWEET & SOUR",
+          "price": "350",
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcdc"
+      },
+      "name": "table1",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf1"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf2"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcdd"
+      },
+      "name": "table2",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf1"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf2"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcde"
+      },
+      "name": "table3",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf1"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf2"
+        }
+      ],
+      "users": [
+        {
+          "$oid": "5e9826559dec688d4c7bbced"
+        },
+        {
+          "$oid": "5e9826559dec688d4c7bbcee"
+        },
+        {
+          "$oid": "5e9826559dec688d4c7bbcef"
+        },
+        {
+          "$oid": "5e9826559dec688d4c7bbcf0"
+        },
+        {
+          "$oid": "5e9826559dec688d4c7bbcec"
+        }
+      ],
+      "no_of_users": 1,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcdf"
+      },
+      "name": "table4",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf3"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf4"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce0"
+      },
+      "name": "table5",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf3"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf4"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce1"
+      },
+      "name": "table6",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf3"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf4"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce2"
+      },
+      "name": "table7",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf5"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf6"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce3"
+      },
+      "name": "table8",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf5"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf6"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce4"
+      },
+      "name": "table9",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf5"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf6"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce5"
+      },
+      "name": "table10",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf7"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf8"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce6"
+      },
+      "name": "table11",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf7"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf8"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce7"
+      },
+      "name": "table12",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf7"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcf8"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce8"
+      },
+      "name": "table13",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf9"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcfa"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbce9"
+      },
+      "name": "table14",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf9"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcfa"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    },
+    {
+      "_id": {
+        "$oid": "5e9826559dec688d4c7bbcea"
+      },
+      "name": "table15",
+      "seats": 6,
+      "staff": [
+        {
+          "$oid": "5e9826569dec688d4c7bbcf9"
+        },
+        {
+          "$oid": "5e9826569dec688d4c7bbcfa"
+        }
+      ],
+      "users": [],
+      "no_of_users": 0,
+      "table_orders": [],
+      "assistance_reqs": []
+    }
+  ],
+  "staff": [
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf1"
+      },
+      "name": "Nandita",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf2"
+      },
+      "name": "Draupadi",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf3"
+      },
+      "name": "Antrija",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf4"
+      },
+      "name": "Mohana",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf5"
+      },
+      "name": "Lila",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf6"
+      },
+      "name": "Jagannatha",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf7"
+      },
+      "name": "Mitul",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf8"
+      },
+      "name": "Kshitij",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcf9"
+      },
+      "name": "Kanda",
+      "assistance_history": {},
+      "order_history": {}
+    },
+    {
+      "_id": {
+        "$oid": "5e9826569dec688d4c7bbcfa"
+      },
+      "name": "Dhaval",
+      "assistance_history": {},
+      "order_history": {}
+    }
+  ],
+  "table_orders": [],
+  "assistance_reqs": []
+}

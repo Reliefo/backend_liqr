@@ -130,4 +130,4 @@ def clear_orders():
 @main.route('/table/<string:table_id>', methods=['GET'])
 def scanned_table(table_id):
 
-    return redirect("http://192.168.0.9:3000/?table_id="+table_id)
+    return redirect("ec2-13-232-202-63.ap-south-1.compute.amazonaws.com:3000/?table_id="+table_id)

@@ -1,0 +1,91 @@
+/* @import url('https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700|Roboto:400,500,700,900&display=swap'); */
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Raleway:400,500,600,700|Roboto:400,500,700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #2d2d2d;
+  /* background-color: #f8f9fa!important; */
+  background-color: #f4f4f2;
+  font-family: "Montserrat", "Roboto", "Raleway", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+@media only screen and (min-width: 772px) {
+  #root {
+    display: none;
+  }
+}
+.card {
+  background-color: rgb(240, 239, 239);
+  box-shadow: 0 4px 6px -6px rgba(0, 0, 0, 0.5098039215686274);
+}
+
+.Login {
+  padding: 11%;
+}
+
+.signup-button {
+  padding: 10%;
+  text-align: center;
+}
+
+.main-home-card {
+  min-height: 300px;
+  margin-bottom: 5%;
+  margin-right: 2%;
+  margin-left: 2%;
+  background: #fdf8f8 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 8px;
+  opacity: 1;
+}
+
+.home-title {
+  padding: 3%;
+}
+
+.home-title-font {
+  min-height: 76px;
+  font-family: "Montserrat", "Roboto", "Raleway", sans-serif;
+  text-align: left;
+  font-size: 16px;
+  letter-spacing: 0.04px;
+  color: #707070;
+  opacity: 1;
+}
+
+.desc-home-body {
+  min-height: 100px;
+  font-family: "Montserrat", "Roboto", "Raleway", sans-serif;
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: 0.04px;
+  color: #707070;
+  opacity: 1;
+}
+
+.home-item {
+  border-radius:8px;
+  text-transform: capitalize;
+  background: white;
+  border: none !important;
+  margin-left: 6% !important;
+  width: 85% !important;
+  min-height: 250px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black !important;
+}

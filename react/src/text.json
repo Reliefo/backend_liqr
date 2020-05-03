@@ -1,0 +1,571 @@
+{
+  "_id": { "$oid": "5e74d1dfbd417b6b2aec32ed" },
+  "_cls": "Restaurant",
+  "name": "House of Commons",
+  "restaurant_id": "BNGHSR0001",
+  "unique_id": "0000000001",
+  "menu": [
+    {
+      "_id": { "$oid": "5e74d1debd417b6b2aec32a8" },
+      "name": "BAR BITES",
+      "description": "",
+      "main_cat_id": "BNGHSR000100",
+      "sub_category": [
+        {
+          "_id": { "$oid": "5e74d1debd417b6b2aec32a7" },
+          "_cls": "SubCategory",
+          "name": "BAR BITES",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010000",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1ddbd417b6b2aec32a0" },
+              "name": "NACHOS (Veg/Chicken)",
+              "description": "Crispy Corn Tortillas Topped With Spicy Baked Bean Salsa and Sour Cream",
+              "price": "190/230",
+              "food_id": "BNGHSR0001000000"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a1" },
+              "name": "CHEESE MASALA PAPAD",
+              "description": "Crispy fried Mini Papads Topped With A Tangy Masala Mixture And Grated Cheese",
+              "price": "160",
+              "food_id": "BNGHSR0001000001"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a2" },
+              "name": "H.O.C SIGNATURE MASALA PEANUTS",
+              "description": "A Favorful Version Of Regular Peanuts Tossed In A Variety of Spices",
+              "price": "160",
+              "food_id": "BNGHSR0001000002"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a3" },
+              "name": "SPICY TRICOLOUR CHAAT",
+              "description": "Fresh Peas, Corn Kernels & Black Gram Tossed With Chillies & Sirka onions",
+              "price": "180",
+              "food_id": "BNGHSR0001000003"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a4" },
+              "name": "CHATPATA CHANA CHAAT",
+              "description": "A Delectable Blend Of Bengal Gram And A Tangy Mixture",
+              "price": "160",
+              "food_id": "BNGHSR0001000004"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a5" },
+              "name": "TANDOORI CHICKEN CHAAT",
+              "description": "Clay Oven Roasted Chicken Blended With Classic Spices",
+              "price": "220",
+              "food_id": "BNGHSR0001000005"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a6" },
+              "name": "CHEESE DYNABITES",
+              "description": "Classic Cheese Balls Served with New Orleans Dip",
+              "price": "220",
+              "food_id": "BNGHSR0001000006"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_id": { "$oid": "5e74d1debd417b6b2aec32ae" },
+      "name": "SALADS",
+      "description": "",
+      "main_cat_id": "BNGHSR000101",
+      "sub_category": [
+        {
+          "_id": { "$oid": "5e74d1debd417b6b2aec32ad" },
+          "_cls": "SubCategory",
+          "name": "SALADS",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010100",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32a9" },
+              "name": "GREEN SALAD",
+              "description": "Traditional Green Cuts With Mint Yoghurt Dip",
+              "price": "170",
+              "food_id": "BNGHSR0001010000"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32aa" },
+              "name": "HOC SALAD (Veg/Chicken)",
+              "description": "Melange Of Crunchy Lettuce, Bell Peppers And Olives With Our Homemade Dressing",
+              "price": "180/210",
+              "food_id": "BNGHSR0001010001"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32ab" },
+              "name": "WATERMELON & FETA",
+              "description": "An All Time Classic - With Balsamic Glaze",
+              "price": "210",
+              "food_id": "BNGHSR0001010002"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32ac" },
+              "name": "CAESAR SALAD (Veg/Chicken)",
+              "description": "Crunchy Ice Berg Lettuce, Parmesan With the Classic Caesar Dressing",
+              "price": "190/230",
+              "food_id": "BNGHSR0001010003"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_id": { "$oid": "5e74d1dfbd417b6b2aec32c5" },
+      "name": "VEG STARTERS",
+      "description": "",
+      "main_cat_id": "BNGHSR000102",
+      "sub_category": [
+        {
+          "_id": { "$oid": "5e74d1debd417b6b2aec32bf" },
+          "_cls": "SubCategory",
+          "name": "VEG STARTERS",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010200",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32af" },
+              "name": "CHEESE & CORN TRIANGLE (new)",
+              "description": "Shredded Cheese, Corn & Seasonings Wrapped In Wonton Sheet & Deep Fried",
+              "price": "220",
+              "food_id": "BNGHSR0001020000"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b0" },
+              "name": "CHAMPIGNONS FARCIS (new)",
+              "description": "Sauteed Button Mushroom Stuffed With Cheese & Herbs",
+              "price": "230",
+              "food_id": "BNGHSR0001020001"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b1" },
+              "name": "CHILLI CHEESE CIGARA (new)",
+              "description": "Deep Fried Rolls With Cheese, Chill & Herbs",
+              "price": "220",
+              "food_id": "BNGHSR0001020002"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b2" },
+              "name": "HOC CHIP & DIP BASKET",
+              "description": "Combination Of Onion Rings, Jalapeno Cheese Balls, Greek Potato Wedges, Habanero Green Chili Fries",
+              "price": "390",
+              "food_id": "BNGHSR0001020003"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b3" },
+              "name": "FRENCH FRIES",
+              "description": "French Fries Tossed With Hoc Signature Cajun Spice Seasoning",
+              "price": "190",
+              "food_id": "BNGHSR0001020004"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b4" },
+              "name": "ONION RINGS",
+              "description": "Extra Crispy Onion Rings With A Spicy Salsa",
+              "price": "190",
+              "food_id": "BNGHSR0001020005"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b5" },
+              "name": "MUSHROOM LOADED FRIES",
+              "description": "Cheesy French Fries Topped With Mushrooms And Herbs",
+              "price": "230",
+              "food_id": "BNGHSR0001020006"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b6" },
+              "name": "GARLIC BREAD",
+              "description": "Garlic Butter Flavoured Bread Topped With Cheese",
+              "price": "190",
+              "food_id": "BNGHSR0001020007"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b7" },
+              "name": "CHEESE CORN TIKKI",
+              "description": "American Com & Cottage Cheese Patty Served with Mint Chutney",
+              "price": "220",
+              "food_id": "BNGHSR0001020008"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b8" },
+              "name": "CRISPY CHILLY MUSHROOM",
+              "description": "Crispy Fried Mushrooms Tossed With Oriental Spices",
+              "price": "220",
+              "food_id": "BNGHSR0001020009"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32b9" },
+              "name": "CRISPY CHILLY BABY CORN",
+              "description": "Crispy Fried Babycom Tossed With Oriental Spices",
+              "price": "190",
+              "food_id": "BNGHSR0001020010"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32ba" },
+              "name": "CRISPY CORN CHILLY PEPPER",
+              "description": "Fred Undi Lightly Crispy & Seasoned With Lime Juice, Salt, Chilli & Pepper",
+              "price": "240",
+              "food_id": "BNGHSR0001020011"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32bb" },
+              "name": "HONEY CHILLY POTATO",
+              "description": "Crispy Fried Potatoes Tossed With Chilli And Honey",
+              "price": "190",
+              "food_id": "BNGHSR0001020012"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32bc" },
+              "name": "SESAME CHILLI PANEER",
+              "description": "Cottage Cheese Cubes Tossed In A Sweet & Spicy Sauce, Finished With Sesame Seeds",
+              "price": "270",
+              "food_id": "BNGHSR0001020013"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32bd" },
+              "name": "PANDAN LEAF COTTAGE CHEESE",
+              "description": "Tender Cottage Cheese Wrapped In Fragrant Pandan Leaves, With Chilli Coriander Sauce",
+              "price": "280",
+              "food_id": "BNGHSR0001020014"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32be" },
+              "name": "MEZZE BASKET",
+              "description": "A Combination Of Hummus, Mutabal & Labneh, Served With Pita Bread",
+              "price": "340",
+              "food_id": "BNGHSR0001020015"
+            }
+          ]
+        },
+        {
+          "_id": { "$oid": "5e74d1dfbd417b6b2aec32c4" },
+          "_cls": "SubCategory",
+          "name": "FROM THE CLAY OVEN",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010201",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32c0" },
+              "name": "MAKHMALI PANEER TIKKA",
+              "description": "Mouth Melting Paneer Cubes Marinated With A Cheese Curd Mixture, Cream And Mild Spices",
+              "price": "270",
+              "food_id": "BNGHSR0001020100"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32c1" },
+              "name": "ANGARI PANEER TIKKA",
+              "description": "Clay Oven Roasted Spicy Morsels Of Cottage Cheese",
+              "price": "270",
+              "food_id": "BNGHSR0001020101"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32c2" },
+              "name": "TANDOORI STUFFED MUSHROOMS",
+              "description": "Mushrooms Filled With A Blend Of Indian Spices And Tangy Stuffing Mix, Adding A Unique Taste On The Bite",
+              "price": "250",
+              "food_id": "BNGHSR0001020102"
+            },
+            {
+              "_id": { "$oid": "5e74d1debd417b6b2aec32c3" },
+              "name": "TANDOORI VEG MOMOS",
+              "description": "Soft And Juicy Vegetable Momos Marinated With Tandoori Masala And Char Grilled",
+              "price": "220",
+              "food_id": "BNGHSR0001020103"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_id": { "$oid": "5e74d1dfbd417b6b2aec32ec" },
+      "name": "NON-VEG STARTERS",
+      "description": "",
+      "main_cat_id": "BNGHSR000103",
+      "sub_category": [
+        {
+          "_id": { "$oid": "5e74d1dfbd417b6b2aec32d0" },
+          "_cls": "SubCategory",
+          "name": "CHICKEN STARTERS",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010300",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32c6" },
+              "name": "CHICKEN LOADED FRIES",
+              "description": "Cheesy French Fries Topped With Chicken & Herbs",
+              "price": "260",
+              "food_id": "BNGHSR0001030000"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32c7" },
+              "name": "SHANG DONG CHICKEN LOLLY POP",
+              "description": "Crispy Lolly pops Crunched To Perfection & Tossed in our Signature Shang Dong Drip",
+              "price": "260",
+              "food_id": "BNGHSR0001030001"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32c8" },
+              "name": "HOC SIGNATURE CHICKEN WINGS",
+              "description": "Sweet Chilly / Spiced Szechuan",
+              "price": "260",
+              "food_id": "BNGHSR0001030002"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32c9" },
+              "name": "PEPPER GARLIC CHICKEN",
+              "description": "Cubes Of Chicken Tossed With Garlic And Pepper In Oriental Style",
+              "price": "260",
+              "food_id": "BNGHSR0001030003"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32ca" },
+              "name": "GUNTUR JUNCTION CHICKEN",
+              "description": "Chicken Cubes Tossed With Freshly Ground Red Spices And Finished In South Indian Style",
+              "price": "270",
+              "food_id": "BNGHSR0001030004"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32cb" },
+              "name": "ANDHRA CHILLI CHICKEN *VERY HOT*",
+              "description": "All Time Favourite Andhra Style Chicken Cooked With Coriander And Green Chilli Paste And Fresh Green Chillies",
+              "price": "270",
+              "food_id": "BNGHSR0001030005"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32cc" },
+              "name": "LEMON PEPPER CHICKEN",
+              "description": "Slice Chicken Wok Tossed, Finished With Pepper Garlic & Lime",
+              "price": "260",
+              "food_id": "BNGHSR0001030006"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32cd" },
+              "name": "JIANG CHILLI CHICKEN",
+              "description": "Chicken Tossed With Shredded Ginger And Chilli In Jiang Style",
+              "price": "260",
+              "food_id": "BNGHSR0001030007"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32ce" },
+              "name": "CHICKEN GHEE ROAST",
+              "description": "Chicken Roasted With A Fiery Red, Tangy And Spicy With The Flavour Of Ghee",
+              "price": "280",
+              "food_id": "BNGHSR0001030008"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32cf" },
+              "name": "MASALA FRY CHICKEN (new)",
+              "description": "Classic Indian Style With Bone Deep fried Chicken Served With Mint Chutney",
+              "price": "250",
+              "food_id": "BNGHSR0001030009"
+            }
+          ]
+        },
+        {
+          "_id": { "$oid": "5e74d1dfbd417b6b2aec32dd" },
+          "_cls": "SubCategory",
+          "name": "FROM THE CLAY OVEN",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010301",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d1" },
+              "name": "JAIPURI MURGH KA SOOLA",
+              "description": "Succulent Pieces Of Chicken Zapped With Red Spices, Cinnamon Flavour & Finished In Tandoor",
+              "price": "270",
+              "food_id": "BNGHSR0001030100"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d2" },
+              "name": "TANDOORI MURGH (HALF/FULL)",
+              "description": "Chicken Marinated In Aromatic Indian Spices & Then Cooked In Tandoor",
+              "price": "250/480",
+              "food_id": "BNGHSR0001030101"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d3" },
+              "name": "TANDOORI POMFRET",
+              "description": "Indian Spices Marinated Whole Pomfret Skewered And Finished In Clay Oven",
+              "price": "590",
+              "food_id": "BNGHSR0001030102"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d4" },
+              "name": "FISH TIKKA KALIMIRCH",
+              "description": "Fresh Cubes Of Basa Fish Marinated With Crushed Black Pepper & Indian Spices, Finished In Clay Oven",
+              "price": "320",
+              "food_id": "BNGHSR0001030103"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d5" },
+              "name": "AMRITSAR FISH TIKKA",
+              "description": "Spicy Fish Tikka Marinated In Traditional Spices And Char Grilled",
+              "price": "320",
+              "food_id": "BNGHSR0001030104"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d6" },
+              "name": "KALMI KEBAB (3pcs)",
+              "description": "Clay Oven Roasted Chicken Drumsticks",
+              "price": "260",
+              "food_id": "BNGHSR0001030105"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d7" },
+              "name": "ANGARI MURGH TIKKA",
+              "description": "Clay Oven Roasted Spicy Morsels Of Chicken",
+              "price": "260",
+              "food_id": "BNGHSR0001030106"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d8" },
+              "name": "TANDOORI LOLLIPOPS",
+              "description": "Chicken Lollipops Marinated With Aromatic Indian Spices And Cooked In The Tandoor",
+              "price": "270",
+              "food_id": "BNGHSR0001030107"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32d9" },
+              "name": "MURGH MALAI TIKKA",
+              "description": "Clay Oven Roasted Creamy Chunks Of Chicken",
+              "price": "260",
+              "food_id": "BNGHSR0001030108"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32da" },
+              "name": "MURGH KASTURI KEBAB",
+              "description": "Boneless Charcoal Smoked Chicken Tikka With Kasturi Methi Flavoured",
+              "price": "260",
+              "food_id": "BNGHSR0001030109"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32db" },
+              "name": "TANDOORI CHICKEN MOMOS",
+              "description": "Soft And Juicy Chicken Momos Marinated With Tandoori Masala And Char Grilled",
+              "price": "260",
+              "food_id": "BNGHSR0001030110"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32dc" },
+              "name": "TANDOORI KING PRAWNS",
+              "description": "King Prawns Marinated With Yogurt, Lime Juice, Bhatti Spices And Slowly Cooked In Tandoor",
+              "price": "499",
+              "food_id": "BNGHSR0001030111"
+            }
+          ]
+        },
+        {
+          "_id": { "$oid": "5e74d1dfbd417b6b2aec32e2" },
+          "_cls": "SubCategory",
+          "name": "LAMB STARTERS",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010302",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32de" },
+              "name": "ANDHRA LAMB PEPPER FRY",
+              "description": "Tender Mutton Pieces Tossed In South Indian Spices",
+              "price": "350",
+              "food_id": "BNGHSR0001030200"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32df" },
+              "name": "MUTTON GHEE ROAST",
+              "description": "Mutton Roasted With A Fiery Red And Spicy With The Flavour Of Ghee",
+              "price": "370",
+              "food_id": "BNGHSR0001030201"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e0" },
+              "name": "LAHORI SEEKH KEBAB",
+              "description": "Succulent Minced Lamb Kebabs In The True Lahori Street Food Style",
+              "price": "370",
+              "food_id": "BNGHSR0001030202"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e1" },
+              "name": "RAILWAY MUTTON DRY",
+              "description": "With Bone Mutton Cooked In Rich Indian Spices, As Served In The Railway Canteen Of The British Raj",
+              "price": "350",
+              "food_id": "BNGHSR0001030203"
+            }
+          ]
+        },
+        {
+          "_id": { "$oid": "5e74d1dfbd417b6b2aec32e6" },
+          "_cls": "SubCategory",
+          "name": "EGG STARTERS",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010303",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e3" },
+              "name": "EGG BHURJI",
+              "description": "Desi Style Scrambled Eggs",
+              "price": "170",
+              "food_id": "BNGHSR0001030300"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e4" },
+              "name": "SPICY MASALA OMELETTE",
+              "description": "Slow Cooked Egg Omlet With Masala",
+              "price": "180",
+              "food_id": "BNGHSR0001030301"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e5" },
+              "name": "EGG CHILLI",
+              "description": "Spicy Boiled Egg With Chilli Fry",
+              "price": "210",
+              "food_id": "BNGHSR0001030302"
+            }
+          ]
+        },
+        {
+          "_id": { "$oid": "5e74d1dfbd417b6b2aec32eb" },
+          "_cls": "SubCategory",
+          "name": "FROM THE GRILL",
+          "description": "",
+          "sub_cat_id": "BNGHSR00010304",
+          "foodlist": [
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e7" },
+              "name": "PERI PERI PANEER/CHICKEN",
+              "description": "Peri Peri Basted Paneer / Chicken Cubes Served With Tzatziki Dip",
+              "price": "260/280",
+              "food_id": "BNGHSR0001030400"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e8" },
+              "name": "THAI GRILLED FISH IN BANANA LEAF",
+              "description": "Delicately Grilled Fish With Basil Flavour And Served Hot",
+              "price": "330",
+              "food_id": "BNGHSR0001030401"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32e9" },
+              "name": "HARISSA GRILLED FISH",
+              "description": "Fish Marinated In A Spicy Tunisian Harissa Sauce And Grilled To Perfection",
+              "price": "330",
+              "food_id": "BNGHSR0001030402"
+            },
+            {
+              "_id": { "$oid": "5e74d1dfbd417b6b2aec32ea" },
+              "name": "THAI GRILLED CHICKEN",
+              "description": "Boneless Chicken Marinated With Thai Spices And Grilled",
+              "price": "270",
+              "food_id": "BNGHSR0001030403"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "address": ""
+}
