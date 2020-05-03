@@ -29,7 +29,7 @@ const Cart = props => {
 
   React.useEffect(() => {
     console.log("Cart screen");
-    dispatch({ type: TYPES.SET_GENERAL_DATA, payload: { searchValue: '' } });
+    dispatch({ type: TYPES.SET_GENERAL_DATA, payload: { searchValue: "" } });
     dispatch({
       type: TYPES.SET_GENERAL_DATA,
       payload: { searchClicked: false }
@@ -47,7 +47,7 @@ const Cart = props => {
   };
 
   const setOrderTable = () => {
-    const body = { table_id: localStorage.getItem('table_id') };
+    const body = { table_id: localStorage.getItem("table_id") };
     props.socket.emit("place_table_order", JSON.stringify(body));
     props.socket.off("new_orders").on("new_orders", msg => {
       dispatch({ type: TYPES.UPDATE_SUCCESS_ORDER, payload: JSON.parse(msg) });
@@ -61,14 +61,16 @@ const Cart = props => {
       item.food_id = item._id.$oid;
       delete item.open;
       delete item.food_options;
-      item.food_options = {};
-      item.food_options.options = [];
       delete item.restaurant;
       delete item.showCustomize;
       delete item.showPopup;
       delete item.showOptionsAgain;
-      item.food_options.options.push(item.options)
       delete item.foodOptions;
+      if (item.options) {
+        item.food_options = {};
+        item.food_options.options = [];
+        item.food_options.options.push(item.options);
+      }
       delete item.options;
       delete item.food_option;
       delete item.tags;
@@ -76,8 +78,10 @@ const Cart = props => {
     });
 
     const body = {
-      table: tableId,
-      orders: [{ placed_by: localStorage.getItem('user_id'), food_list: cartClone }]
+      table: localStorage.getItem("table_id"),
+      orders: [
+        { placed_by: localStorage.getItem("user_id"), food_list: cartClone }
+      ]
     };
 
     props.socket.emit("place_personal_order", JSON.stringify(body));
@@ -92,12 +96,14 @@ const Cart = props => {
       item.food_id = item._id.$oid;
       delete item.open;
       delete item.showPopup;
-      delete item.food_options
+      delete item.food_options;
       delete item.showCustomize;
       delete item.restaurant;
-      item.food_options = {};
-      item.food_options.options = [];
-      item.food_options.options.push(item.options)
+      if (item.options) {
+        item.food_options = {};
+        item.food_options.options = [];
+        item.food_options.options.push(item.options);
+      }
       delete item.showOptionsAgain;
       delete item.options;
       delete item.foodOptions;
@@ -107,8 +113,10 @@ const Cart = props => {
     });
 
     const body = {
-      table: tableId,
-      orders: [{ placed_by: localStorage.getItem('user_id'), food_list: cartClone }]
+      table: localStorage.getItem("table_id"),
+      orders: [
+        { placed_by: localStorage.getItem("user_id"), food_list: cartClone }
+      ]
     };
     props.socket.emit("push_to_table_cart", JSON.stringify(body));
     props.socket.off("table_cart_orders").on("table_cart_orders", msg => {
@@ -131,7 +139,10 @@ const Cart = props => {
               allData={item}
             />
             <p style={{ margin: 0, width: "15%" }}>
-              &#8377; {item.options ? parseInt(item.options.option_price * item.quantity) : item.price * item.quantity}
+              &#8377;{" "}
+              {item.options
+                ? parseInt(item.options.option_price * item.quantity)
+                : item.price * item.quantity}
             </p>
             <div
               style={{ padding: ".5rem" }}
@@ -181,11 +192,15 @@ const Cart = props => {
   //TODO: useEffect for this
   const orderTotal =
     cart.length !== 0
-      ? cart.reduce((total, item) => total + (item.options ? parseInt(item.options.option_price) * item.quantity: item.price * item.quantity), 0)
+      ? cart.reduce(
+          (total, item) =>
+            total +
+            (item.options
+              ? parseInt(item.options.option_price) * item.quantity
+              : item.price * item.quantity),
+          0
+        )
       : "";
-
- 
- 
 
   let sum = 0;
   tableOrders.length !== 0
