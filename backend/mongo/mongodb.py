@@ -15,6 +15,8 @@ class TableOrder(Document):
 class Staff(Document):
     pass
 
+class User(Document):
+    pass
 
 class Assistance(Document):
     types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
