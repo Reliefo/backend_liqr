@@ -1,6 +1,3 @@
-[submodule "react/relief_customer"]
-	path = react/relief_customer
-	url = https://github.com/akshay-bizz/relief_customer/
 [submodule "relief_customer"]
 	path = relief_customer
 	url = https://github.com/akshay-bizz/relief_customer/
