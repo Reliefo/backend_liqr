@@ -39,9 +39,11 @@ def send_new_orders(message):
     else:
         order_status_completed(status_tuple)
 
+    table_order = TableOrder.objects.get(id=status_tuple[0])
+
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
-                    'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id'],
-                    'timestamp': str(datetime.now())}
+                    'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id'], "table": table_order.table,
+                    'table_id': table_order.table_id,'timestamp': str(datetime.now())}
 
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
@@ -107,4 +109,4 @@ def fetch_staff_details(message):
     staff_id = user_rest_dets['staff_id']
     rest_id = user_rest_dets['restaurant_id']
     emit('staff_details', return_staff_details(staff_id))
-    emit('restaurant_object', return_restaurant_customer(rest_id))
+    emit('restaurant_object', return_restaurant(rest_id))

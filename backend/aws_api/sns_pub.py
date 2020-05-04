@@ -10,9 +10,8 @@ client = boto3.client(
 
 
 def push_order_complete_notification(request_dict):
-    pub_data_dict = {'table_order_id': request_dict['table_order_id'], 'request_type': request_dict['request_type'], 'type': request_dict['type'],
-                     'order_id': request_dict['order_id'], 'food_id': request_dict['food_id'],  'timestamp': request_dict['timestamp'],
-                     'click_action': "FLUTTER_NOTIFICATION_CLICK"}
+
+    pub_data_dict = {**request_dict, **{'click_action': "FLUTTER_NOTIFICATION_CLICK"}}
 
     gcm_dict = {'data': pub_data_dict,
                 'notification': {'text': 'We have something to be delivered from some table to someone!',
@@ -30,10 +29,7 @@ def push_order_complete_notification(request_dict):
 
 
 def push_assistance_request_notification(request_dict):
-    pub_data_dict = {'assistance_req_id': str(request_dict['assistance_req_id']), 'request_type': request_dict['request_type'], 'assistance_type': request_dict['assistance_type'],
-                     'user_id': str(request_dict['user_id']), 'timestamp': request_dict['timestamp'],
-                     'table_id': request_dict['table_id'],
-                     'click_action': "FLUTTER_NOTIFICATION_CLICK"}
+    pub_data_dict = {**request_dict, **{'click_action': "FLUTTER_NOTIFICATION_CLICK"}}
 
     gcm_dict = {'data': pub_data_dict,
                 'notification': {'text': 'Someone asked for '+request_dict['assistance_type']+' from '+request_dict['table'],
