@@ -7,3 +7,4 @@ backend/config.py
 blue_api/__pycache__
 blue_api/main/__pycache__
 react/node_modules
+local_pull.sh
