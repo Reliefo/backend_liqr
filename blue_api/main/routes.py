@@ -82,7 +82,7 @@ def assist_them():
     socket_io.emit('assist', assistance_ob.to_json(), namespace=our_namespace)
     staff_name = send_assistance_req(str(assistance_ob.id))
     returning_message = assistance_ob.to_json()
-    returning_dict=json_util.loads(returning_message)
+    returning_dict = json_util.loads(returning_message)
     returning_dict['msg'] = "Service has been acceptewafnsdovn"
     socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
     time.sleep(1)
@@ -129,5 +129,9 @@ def clear_orders():
 
 @main.route('/table/<string:table_id>', methods=['GET'])
 def scanned_table(table_id):
+    return redirect("http://ec2-13-232-202-63.ap-south-1.compute.amazonaws.com:3001/?table_id=" + table_id)
 
-    return redirect("ec2-13-232-202-63.ap-south-1.compute.amazonaws.com:3001/?table_id="+table_id)
+
+@main.route('/table_no/<int:table_no>', methods=['GET'])
+def scanned_table_no(table_no):
+    return redirect("http://ec2-13-232-202-63.ap-south-1.compute.amazonaws.com:3001/?table_id=" + str(Table.objects[table_no].id))
