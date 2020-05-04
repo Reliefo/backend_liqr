@@ -44,6 +44,8 @@ def send_new_orders(message):
                     'timestamp': str(datetime.now())}
 
     if sending_dict['type'] == 'completed':
+        sending_dict['request_type'] = "pickup_request"
+        Staff.objects[2].update(push__requests_queue=sending_dict)
         push_order_complete_notification(sending_dict)
 
     sending_json = json_util.dumps(sending_dict)
@@ -55,6 +57,14 @@ def send_new_orders(message):
 def staff_acceptance(message):
     input_dict = json_util.loads(message)
     if input_dict['request_type'] == 'pickup_request':
+        curr_staff = Staff.objects.get(id=input_dict['staff_id'])
+        requests_queue = curr_staff.requests_queue
+        for n, request in enumerate(requests_queue):
+            if request['request_type'] == 'pickup_request':
+                if request['order_id'] == input_dict['order_id'] and request['food_id'] == input_dict['food_id']:
+                    requests_queue.pop(n)
+        curr_staff.requests_queue = requests_queue
+        curr_staff.save()
         if input_dict['status'] == "rejected":
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             order_history = {k: input_dict[k] for k in ["table_order_id", "order_id", "food_id", "timestamp"]}
@@ -68,6 +78,14 @@ def staff_acceptance(message):
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             return
     if input_dict['request_type'] == 'assistance_request':
+        curr_staff = Staff.objects.get(id=input_dict['staff_id'])
+        requests_queue = curr_staff.requests_queue
+        for n, request in enumerate(requests_queue):
+            if request['request_type'] == 'assistance_request':
+                if request['assistance_req_id'] == input_dict['assistance_req_id']:
+                    requests_queue.pop(n)
+        curr_staff.requests_queue = requests_queue
+        curr_staff.save()
         if input_dict['status'] == "rejected":
             Staff.objects.get(id=input_dict['staff_id']).update(
                 push__rej_assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']).to_dbref())
@@ -80,3 +98,13 @@ def staff_acceptance(message):
                 push__assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']).to_dbref())
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
+
+
+@socket_io.on('fetch_staff_details', namespace=our_namespace)
+def fetch_staff_details(message):
+    socket_io.emit('fetch', message, namespace=our_namespace)
+    user_rest_dets = json_util.loads(message)
+    staff_id = user_rest_dets['staff_id']
+    rest_id = user_rest_dets['restaurant_id']
+    emit('staff_details', return_staff_details(staff_id))
+    emit('restaurant_object', return_restaurant_customer(rest_id))

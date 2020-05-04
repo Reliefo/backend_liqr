@@ -123,6 +123,7 @@ class TempUser(User):
 
 class Staff(Document):
     name = StringField()
+    requests_queue = ListField(DynamicField())
     assistance_history = ListField(ReferenceField(Assistance))
     rej_assistance_history = ListField(ReferenceField(Assistance))
     order_history = ListField(DictField())

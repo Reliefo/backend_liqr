@@ -5,6 +5,10 @@ li = [(i, j) for i, j in zip(range(10), [k for k in range(10)])]
 np.random.shuffle(li)
 
 
+def return_staff_details(staff_id):
+    return Staff.objects.get(id=staff_id).to_json()
+
+
 def return_user_details(user_id):
     return User.objects.get(id=user_id).to_json()
 

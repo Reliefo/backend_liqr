@@ -60,6 +60,8 @@ def assistance_requests(message):
     assistance_req_id = str(returning_dict.pop('_id'))
     returning_dict['user_id'] = user_id
     returning_dict['assistance_req_id'] = assistance_req_id
+    returning_dict['request_type'] = "assistance_request"
+    Staff.objects[2].update(push__requests_queue=returning_dict)
     push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
