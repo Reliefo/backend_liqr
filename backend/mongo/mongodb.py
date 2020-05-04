@@ -213,7 +213,6 @@ class Table(Document):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
         for key, user in enumerate(self.users):
             data['users'][key] = self.users[key].to_my_mongo()
-
         return data
 
     def to_cust_json(self):
@@ -226,8 +225,8 @@ class Table(Document):
             data['users'][key] = self.users[key].to_minimal()
         for key, user in enumerate(self.staff):
             data['staff'][key] = self.staff[key].to_minimal()
-        data['table_cart'] = self.table_cart.to_my_mongo()
-
+        if (self.table_cart):
+            data['table_cart'] = self.table_cart.to_my_mongo()
         return json_util.dumps(data)
 
     def remove_staff(self, staff_id):
