@@ -6,8 +6,8 @@ from backend.aws_api.sns_pub import push_assistance_request_notification
 
 @socket_io.on('fetch_rest_customer', namespace=our_namespace)
 def fetch_rest_customer(message):
-    user_rest_dets = json_util.loads(message)
     socket_io.emit('fetch', message, namespace=our_namespace)
+    user_rest_dets = json_util.loads(message)
     user_id = user_rest_dets['user_id']
     rest_id = user_rest_dets['restaurant_id']
     emit('user_details', return_user_details(user_id))
