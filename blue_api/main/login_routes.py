@@ -25,7 +25,7 @@ def user_register():
         name = request.form['name']
         table_id = request.form['table_id']
         hash_pass = generate_password_hash(request.form["password"], method='sha256')
-        if len(User.objects(email_id=email_id))>0:
+        if len(User.objects(email_id=email_id)) > 0:
             return json_util.dumps({"status": "User alreadt registered"})
         if re.search("\$", unique_id):
             tempuser_ob = TempUser.objects(unique_id=unique_id).first()
@@ -34,7 +34,7 @@ def user_register():
             reguser_ob.save()
             tempuser_ob.reguser_ob = str(reguser_ob.id)
             tempuser_ob.save()
-            the_user = user_scan(table_id , unique_id, email_id)
+            the_user = user_scan(table_id, unique_id, email_id)
             app_user = AppUser.objects(rest_user__in=[tempuser_ob.id]).first()
             app_user.rest_user = reguser_ob.to_dbref()
             app_user.password = hash_pass
@@ -42,10 +42,11 @@ def user_register():
         else:
             reguser_ob = RegisteredUser(name=name, email_id=email_id)
             reguser_ob.save()
-            the_user = user_scan(table_id , unique_id, email_id)
+            the_user = user_scan(table_id, unique_id, email_id)
             existing_no = len(AppUser.objects(user_type__in=['customer']))
             username = "CID" + str_n(existing_no + 1, 6)
-            app_user = AppUser(username=username, password=hash_pass, room="cust_room", rest_user=reguser_ob.to_dbref()).save()
+            app_user = AppUser(username=username, password=hash_pass, room="cust_room",
+                               rest_user=reguser_ob.to_dbref()).save()
             login_user(app_user)
         access_token = create_access_token(identity=app_user["username"])
         refresh_token = create_refresh_token(identity=app_user["username"])
@@ -62,14 +63,16 @@ def user_login():
         email_id = request.form['email_id']
         password = request.form['password']
         table_id = request.form['table_id']
-        if re.search("\$", unique_id):
+        if re.search("\$", unique_id) and User.objects.filter(unique_id=unique_id)>0:
             if email_id == "dud":
-                the_user = user_scan(table_id , unique_id)
+                the_user = user_scan(table_id, unique_id)
                 check_user = AppUser.objects(rest_user__in=[the_user.id]).first()
                 password = "temp_pass" + check_user['username']
             else:
                 the_user = user_scan(table_id, unique_id, email_id)
         else:
+            if re.search("\$",unique_id):
+                unique_id = unique_id.split("$")[0]
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
                 existing_no = len(AppUser.objects(user_type__in=['customer']))
@@ -86,7 +89,7 @@ def user_login():
                 login_user(check_user)
                 access_token = create_access_token(identity=check_user["username"])
                 refresh_token = create_refresh_token(identity=check_user["username"])
-                if the_user._cls=="User.RegisteredUser":
+                if the_user._cls == "User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
                          "name": the_user.name, "unique_id": the_user.email_id, "user_id": str(the_user.id)})
