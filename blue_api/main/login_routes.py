@@ -110,7 +110,7 @@ def register():
     if request.method == 'POST':
         if AppUser.objects.filter(username=request.form["username"]):
             return json_util.dumps({"status": "Already Registered"})
-        hash_pass = generate_password_hash(request.form["password"], method='sha255')
+        hash_pass = generate_password_hash(request.form["password"], method='sha256')
         assigned_room = "kids_room" if request.form["username"][:2] == "KID" else "adults_room"
         print(request.form["username"], " joined ", assigned_room)
         hey = AppUser(username=request.form["username"], password=hash_pass, room=assigned_room).save()
