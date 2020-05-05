@@ -63,7 +63,7 @@ def user_login():
         email_id = request.form['email_id']
         password = request.form['password']
         table_id = request.form['table_id']
-        if re.search("\$", unique_id) and User.objects.filter(unique_id=unique_id)>0:
+        if re.search("\$", unique_id) and len(User.objects.filter(unique_id=unique_id))>0:
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
                 check_user = AppUser.objects(rest_user__in=[the_user.id]).first()
