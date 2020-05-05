@@ -8,7 +8,7 @@ from . import main
 from .. import login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import (
-    get_jwt_identity, create_access_token, create_refresh_token, jwt_refresh_token_required
+    get_jwt_identity, jwt_required, create_access_token, create_refresh_token, jwt_refresh_token_required
 )
 
 
@@ -63,7 +63,7 @@ def user_login():
         email_id = request.form['email_id']
         password = request.form['password']
         table_id = request.form['table_id']
-        if re.search("\$", unique_id) and len(User.objects.filter(unique_id=unique_id))>0:
+        if re.search("\$", unique_id) and len(User.objects.filter(unique_id=unique_id)) > 0:
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
                 check_user = AppUser.objects(rest_user__in=[the_user.id]).first()
@@ -71,7 +71,7 @@ def user_login():
             else:
                 the_user = user_scan(table_id, unique_id, email_id)
         else:
-            if re.search("\$",unique_id):
+            if re.search("\$", unique_id):
                 unique_id = unique_id.split("$")[0]
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
@@ -116,6 +116,32 @@ def register():
         hey = AppUser(username=request.form["username"], password=hash_pass, room=assigned_room).save()
         login_user(hey)
         return json_util.dumps({"status": "Registration successful"})
+    return json_util.dumps({"status": "Registration failed"})
+
+
+@main.route('/register_with_auth', methods=['GET', 'POST'])
+@jwt_required
+def register_with_auth():
+    if request.method == 'POST':
+        auth_user = AppUser.objects(username=request.form["auth_username"]).first()
+        if auth_user:
+            rest_name = request.form['restaurant_name']
+            name = request.form['name']
+            hash_pass = generate_password_hash(request.form["password"], method='sha255')
+            assigned_room = "kids_room" if request.form["username"][:2] == "KID" else "adults_room"
+            if request.form['user_type'] == "staff":
+                AppUser(username=request.form["username"], password=hash_pass, room=assigned_room,
+                        user_type=request.form['user_type'],
+                        staff_user=Staff.objects.get(id=request.form['object_id'])).save()
+            elif request.form['user_type'] == "kitchen":
+                AppUser(username=request.form["username"], password=hash_pass, room=assigned_room,
+                        user_type=request.form['user_type'],
+                        kitchen_user=KitchenUser.objects.get(id=request.form['object_id'])).save()
+            else:
+                return json_util.dumps({"status": "Registration failed"})
+            request_dict = dict(request.form)
+            request_dict['status'] = 'Registration successful'
+            return jsonify(request_dict)
     return json_util.dumps({"status": "Registration failed"})
 
 

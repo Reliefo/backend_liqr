@@ -33,7 +33,6 @@ class Assistance(Document):
     def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
-
         return data
 
     def to_json(self):
@@ -62,6 +61,10 @@ class UserHistory(Document):
             data['personal_orders'][key] = self.personal_orders[key].to_my_mongo()
 
         return data
+
+
+class KitchenUser(Document):
+    pass
 
 
 class User(Document):
@@ -95,12 +98,14 @@ class User(Document):
 
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
-    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen'])
+    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin'])
     password = StringField()
     sid = StringField()
     room = StringField()
     timestamp = DateTimeField(default=datetime.now())
     rest_user = ReferenceField(User, reverse_delete_rule=CASCADE)
+    staff_user = ReferenceField(Staff, reverse_delete_rule=CASCADE)
+    kitchen_user = ReferenceField(KitchenUser, reverse_delete_rule=CASCADE)
 
 
 class TempUser(User):
@@ -114,7 +119,7 @@ class RegisteredUser(User):
 
 
 class TempUser(User):
-    planet_choices = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Lt_Pluto']
+    planet_choices = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Neptune']
     planet = StringField(choices=planet_choices)
     planet_no = IntField()
     unique_id = StringField(required=True)
@@ -124,23 +129,17 @@ class TempUser(User):
 class Staff(Document):
     name = StringField()
     requests_queue = ListField(DynamicField())
-    assistance_history = ListField(ReferenceField(Assistance))
-    rej_assistance_history = ListField(ReferenceField(Assistance))
+    assistance_history = ListField(DictField())
+    rej_assistance_history = ListField(DictField())
     order_history = ListField(DictField())
     rej_order_history = ListField(DictField())
 
     def to_my_mongo(self):
         data = self.to_mongo()
-        for key, assistance in enumerate(self.assistance_history):
-            data['assistance_history'][key] = self.assistance_history[key].to_my_mongo()
-        for key, assistance in enumerate(self.rej_assistance_history):
-            data['rej_assistance_history'][key] = self.rej_assistance_history[key].to_my_mongo()
         return data
 
     def to_minimal(self):
-        data = {}
-        data['name'] = self.name
-        data['id'] = self.id
+        data = {'name': self.name, 'id': self.id}
         return data
 
 
@@ -163,7 +162,7 @@ class FoodItemMod(EmbeddedDocument):
 class Order(Document):
     placed_by = ReferenceField(User)
     food_list = ListField(EmbeddedDocumentField(FoodItemMod))
-    status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
+    status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
 
     def fetch_food_item(self, food_id):
         for food_item in self.food_list:
@@ -177,7 +176,7 @@ class TableOrder(Document):
     table_id = StringField()
     orders = ListField(ReferenceField(Order))
     personal_order = BooleanField()
-    status = StringField(choices=['queued', 'juststarted', 'cooking', 'almostdone', 'completed'], default='queued')
+    status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
     timestamp = DateTimeField(default=datetime.now())
 
     def to_my_mongo(self):

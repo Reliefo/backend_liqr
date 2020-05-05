@@ -40,11 +40,12 @@ def send_new_orders(message):
         order_status_completed(status_tuple)
 
     table_order = TableOrder.objects.get(id=status_tuple[0])
+    ordered_by = Order.objects.get(id=status_tuple[1]).placed_by.name
     food_name = FoodItem.objects.get(id=status_tuple[2]).name
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
                     'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id'], "table": table_order.table,
-                    'table_id': table_order.table_id, 'timestamp': str(datetime.now()), 'food_name': food_name}
+                    'table_id': table_order.table_id, 'user':ordered_by, 'timestamp': str(datetime.now()), 'food_name': food_name}
 
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
@@ -70,14 +71,12 @@ def staff_acceptance(message):
         curr_staff.save()
         if input_dict['status'] == "rejected":
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
-            order_history = {k: input_dict[k] for k in ["table_order_id", "order_id", "food_id", "timestamp"]}
-            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=order_history)
+            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=input_dict)
             push_order_complete_notification(input_dict)
             return
         else:
             input_dict['type'] = 'on_the_way'
-            order_history = {k: input_dict[k] for k in ["table_order_id", "order_id", "food_id", "timestamp"]}
-            Staff.objects.get(id=input_dict['staff_id']).update(push__order_history=order_history)
+            Staff.objects.get(id=input_dict['staff_id']).update(push__order_history=input_dict)
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             return
     if input_dict['request_type'] == 'assistance_request':
@@ -90,15 +89,13 @@ def staff_acceptance(message):
         curr_staff.requests_queue = requests_queue
         curr_staff.save()
         if input_dict['status'] == "rejected":
-            Staff.objects.get(id=input_dict['staff_id']).update(
-                push__rej_assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']).to_dbref())
+            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
             push_assistance_request_notification(input_dict)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
         else:
             input_dict['msg'] = "Service has been accepted"
-            Staff.objects.get(id=input_dict['staff_id']).update(
-                push__assistance_history=Assistance.objects.get(id=input_dict['assistance_req_id']).to_dbref())
+            Staff.objects.get(id=input_dict['staff_id']).update(push__assistance_history=input_dict)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
 
