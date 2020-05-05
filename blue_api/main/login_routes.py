@@ -119,32 +119,6 @@ def register():
     return json_util.dumps({"status": "Registration failed"})
 
 
-@main.route('/register_with_auth', methods=['GET', 'POST'])
-@jwt_required
-def register_with_auth():
-    if request.method == 'POST':
-        auth_user = AppUser.objects(username=request.form["auth_username"]).first()
-        if auth_user:
-            rest_name = request.form['restaurant_name']
-            name = request.form['name']
-            hash_pass = generate_password_hash(request.form["password"], method='sha255')
-            assigned_room = "kids_room" if request.form["username"][:2] == "KID" else "adults_room"
-            if request.form['user_type'] == "staff":
-                AppUser(username=request.form["username"], password=hash_pass, room=assigned_room,
-                        user_type=request.form['user_type'],
-                        staff_user=Staff.objects.get(id=request.form['object_id'])).save()
-            elif request.form['user_type'] == "kitchen":
-                AppUser(username=request.form["username"], password=hash_pass, room=assigned_room,
-                        user_type=request.form['user_type'],
-                        kitchen_user=KitchenUser.objects.get(id=request.form['object_id'])).save()
-            else:
-                return json_util.dumps({"status": "Registration failed"})
-            request_dict = dict(request.form)
-            request_dict['status'] = 'Registration successful'
-            return jsonify(request_dict)
-    return json_util.dumps({"status": "Registration failed"})
-
-
 @main.route('/login', methods=['POST'])
 def login():
     if current_user.is_authenticated:

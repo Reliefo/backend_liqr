@@ -3,6 +3,7 @@ import traceback
 from flask_socketio import emit
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
+from werkzeug.security import generate_password_hash
 from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification
 
 
@@ -45,7 +46,8 @@ def send_new_orders(message):
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
                     'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id'], "table": table_order.table,
-                    'table_id': table_order.table_id, 'user':ordered_by, 'timestamp': str(datetime.now()), 'food_name': food_name}
+                    'table_id': table_order.table_id, 'user': ordered_by, 'timestamp': str(datetime.now()),
+                    'food_name': food_name}
 
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
@@ -108,3 +110,26 @@ def fetch_staff_details(message):
     rest_id = user_rest_dets['restaurant_id']
     emit('staff_details', return_staff_details(staff_id))
     emit('restaurant_object', return_restaurant(rest_id))
+
+
+@socket_io.on('register_your_people', namespace=our_namespace)
+def register_your_people(message):
+    input_dict = json_util.loads(message)
+    auth_user = AppUser.objects(username=input_dict["auth_username"]).first()
+    if auth_user:
+        rest_name = input_dict['restaurant_name']
+        name = input_dict['name']
+        hash_pass = generate_password_hash(input_dict["password"], method='sha255')
+        assigned_room = "kids_room" if input_dict["username"][:2] == "KID" else "adults_room"
+        if input_dict['user_type'] == "staff":
+            AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
+                    user_type=input_dict['user_type'],
+                    staff_user=Staff.objects.get(id=input_dict['object_id'])).save()
+        elif input_dict['user_type'] == "kitchen":
+            AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
+                    user_type=input_dict['user_type'],
+                    kitchen_user=KitchenUser.objects.get(id=input_dict['object_id'])).save()
+        else:
+            return json_util.dumps({"status": "Registration failed"})
+        input_dict['status'] = 'Registration successful'
+        return json_util.dumps(input_dict)

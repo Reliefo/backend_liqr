@@ -54,6 +54,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
             if temp_user[0].current_table_id == str(scanned_table.id):
                 return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
+            Table.objects(users__in=[temp_user[0]]).first().update(pull__users=temp_user[0])
             scanned_table.update(push__users=temp_user[0].to_dbref())
             return temp_user[0]
         else:
@@ -64,7 +65,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 planet_no = len(TempUser.objects.filter(planet__in=[planet])) + 1
             name = planet + "_" + str(planet_no)
             temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
-                                 planet=planet, planet_no=planet_no, name=name, timestamp=datetime.now()).save()
+                                 planet=planet, planet_no=planet_no, name=name).save()
             scanned_table.update(push__users=temp_user.to_dbref())
             return temp_user
     else:
@@ -72,7 +73,6 @@ def user_scan(table_id, unique_id, email_id='dud'):
         scanned_table.update(push__users=reg_user)
         reg_user.update(set__current_table_id=str(scanned_table.id))
         return reg_user
-
 
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
