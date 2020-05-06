@@ -121,13 +121,10 @@ def register():
 
 @main.route('/login', methods=['POST'])
 def login():
-    if current_user.is_authenticated:
-        return json_util.dumps({"status": "You're logged in ", "code": "202"})
     if request.method == 'POST':
         check_user = AppUser.objects(username=request.form["username"]).first()
         if check_user:
             if check_password_hash(check_user['password'], request.form["password"]):
-                login_user(check_user)
                 access_token = create_access_token(identity=request.form["username"])
                 refresh_token = create_refresh_token(identity=request.form["username"])
                 return json_util.dumps(
