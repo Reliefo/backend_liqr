@@ -1,7 +1,7 @@
-FROM python:3.8-slim
+FROM python:3.8-slim-buster
 
-RUN apt-get update -y && \
-    apt-get install -y python-pip python-dev
+RUN apt update -y && \
+    apt install -y python3-pip
 
 ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

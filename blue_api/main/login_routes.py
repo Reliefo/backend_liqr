@@ -124,12 +124,44 @@ def login():
     if request.method == 'POST':
         check_user = AppUser.objects(username=request.form["username"]).first()
         if check_user:
-            if check_password_hash(check_user['password'], request.form["password"]):
+            if check_user.temp_password:
+                if check_password_hash(check_user['password'], request.form["password"]):
+                    return json_util.dumps({"status": "Authentication Success, change temporary password"}), 201
+                else:
+                    return json_util.dumps({"status": "Authentication Failed, wrong temp password"}), 403
+
+            elif check_password_hash(check_user['password'], request.form["password"]):
                 access_token = create_access_token(identity=request.form["username"])
                 refresh_token = create_refresh_token(identity=request.form["username"])
+                if check_user.user_type == "staff":
+                    object_id = str(check_user.staff_user.id)
+                elif check_user.user_type == "manager":
+                    object_id = str(check_user.room)
+                # TODO create manager h=shit and go tfo rit
+                elif check_user.user_type == "kitchen":
+                    object_id = str(check_user.kitchen_staff.id)
+                else:
+                    object_id = "nto shiths fas"
                 return json_util.dumps(
-                    {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200"})
-    return json_util.dumps({"status": "Authentication Failed", "code": "401"})
+                    {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
+                     "object_id": object_id, "restaurant_id": check_user.restaurant_id}), 200
+    return json_util.dumps({"status": "Authentication Failed"}), 403
+
+
+@main.route('/change_password', methods=['POST'])
+def change_password():
+    if request.method == 'POST':
+        check_user = AppUser.objects(username=request.form["username"]).first()
+        if check_user:
+            if check_password_hash(check_user['password'], request.form["old_password"]):
+                hash_pass = generate_password_hash(request.form["new_password"], method='sha256')
+                check_user.password = hash_pass
+                check_user.temp_password = False
+                check_user.save()
+                return json_util.dumps({"status": "Password changed successfully"}), 200
+            return json_util.dumps({"status": "Authentication Failed, wrong old password"}), 201
+        return json_util.dumps({"status": "Authentication Failed, User doesn't exist"}), 401
+    return json_util.dumps({"status": "Authentication Failed, bad request"}), 403
 
 
 @main.route('/refresh', methods=['POST'])

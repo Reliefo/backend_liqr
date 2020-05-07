@@ -63,7 +63,7 @@ class UserHistory(Document):
         return data
 
 
-class KitchenUser(Document):
+class KitchenStaff(Document):
     pass
 
 
@@ -94,18 +94,6 @@ class User(Document):
     def to_minimal(self):
         data = {"name": self.name}
         return data
-
-
-class AppUser(UserMixin, Document):
-    username = StringField(max_length=30)
-    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin'])
-    password = StringField()
-    sid = StringField()
-    room = StringField()
-    timestamp = DateTimeField(default=datetime.now())
-    rest_user = ReferenceField(User, reverse_delete_rule=CASCADE)
-    staff_user = ReferenceField(Staff, reverse_delete_rule=CASCADE)
-    kitchen_user = ReferenceField(KitchenUser, reverse_delete_rule=CASCADE)
 
 
 class TempUser(User):
@@ -141,6 +129,20 @@ class Staff(Document):
     def to_minimal(self):
         data = {'name': self.name, 'id': self.id}
         return data
+
+
+class AppUser(UserMixin, Document):
+    username = StringField(max_length=30)
+    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin'])
+    password = StringField()
+    sid = StringField()
+    room = StringField()
+    timestamp = DateTimeField(default=datetime.now())
+    rest_user = ReferenceField(User, reverse_delete_rule=CASCADE)
+    staff_user = ReferenceField(Staff, reverse_delete_rule=CASCADE)
+    kitchen_staff = ReferenceField(KitchenStaff, reverse_delete_rule=CASCADE)
+    restaurant_id = StringField()
+    temp_password = BooleanField()
 
 
 class FoodOptionsMod(EmbeddedDocument):

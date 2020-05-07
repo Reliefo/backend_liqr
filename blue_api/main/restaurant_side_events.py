@@ -118,6 +118,7 @@ def register_your_people(message):
     auth_user = AppUser.objects(username=input_dict["auth_username"]).first()
     if auth_user:
         rest_name = input_dict['restaurant_name']
+        rest_id = input_dict['restaurant_id']
         name = input_dict['name']
         user_no = 0
         username = "SID" + rest_name[:3].upper() + name[:3].upper() + str(user_no)
@@ -131,12 +132,12 @@ def register_your_people(message):
         assigned_room = "kids_room" if input_dict["username"][:2] == "KID" else "adults_room"
         if input_dict['user_type'] == "staff":
             AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
-                    user_type=input_dict['user_type'],
+                    user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
                     staff_user=Staff.objects.get(id=input_dict['object_id']).to_dbref()).save()
         elif input_dict['user_type'] == "kitchen":
             AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
-                    user_type=input_dict['user_type'],
-                    kitchen_user=KitchenUser.objects.get(id=input_dict['object_id']).to_dbref()).save()
+                    user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
+                    kitchen_user=KitchenStaff.objects.get(id=input_dict['object_id']).to_dbref()).save()
         else:
             emit('receive_your_people', json_util.dumps({"status": "Registration failed"}))
             return
