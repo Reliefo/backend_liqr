@@ -28,6 +28,6 @@ services:
       context: ./relief_customer/
       dockerfile: ./Dockerfile
     ports:
-      - "80:80"
+      - "81:81"
     volumes:
       - ./relief_customer/:/code
