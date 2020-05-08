@@ -1,5 +1,15 @@
 version: "3"
 services:
+  reverse:
+    container_name: reverse
+    hostname: reverse
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - <path/to/your/config>:/etc/nginx
+      - <path/to/your/certs>:/etc/ssl/private
   backend:
     image: datascientist69/reliefo:relief_web
     build:

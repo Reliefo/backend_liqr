@@ -129,9 +129,9 @@ def clear_orders():
 
 @main.route('/table/<string:table_id>', methods=['GET'])
 def scanned_table(table_id):
-    return redirect("http://ec2-13-232-202-63.ap-south-1.compute.amazonaws.com/?table_id=" + table_id)
+    return redirect("https://order.liqr.cc/?table_id=" + table_id)
 
 
 @main.route('/table_no/<int:table_no>', methods=['GET'])
 def scanned_table_no(table_no):
-    return redirect("http://ec2-13-232-202-63.ap-south-1.compute.amazonaws.com/?table_id=" + str(Table.objects[table_no].id))
+    return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
