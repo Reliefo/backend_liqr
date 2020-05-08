@@ -51,6 +51,7 @@ def send_new_orders(message):
 
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
+        KitchenStaff.objects[0].update(push__orders_cooked=sending_dict)
         Staff.objects[2].update(push__requests_queue=sending_dict)
         push_order_complete_notification(sending_dict)
 
