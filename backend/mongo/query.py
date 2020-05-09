@@ -74,6 +74,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
         reg_user.update(set__current_table_id=str(scanned_table.id))
         return reg_user
 
+
 def order_placement(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=True,
@@ -212,6 +213,8 @@ def configuring_restaurant(message):
         return configuring_tables(request_type, message)
     elif element_type == 'staff':
         return configuring_staff(request_type, message)
+    elif element_type == 'kitchen_staff':
+        return configuring_kitchen_staff(request_type, message)
     elif element_type == 'food_category':
         return configuring_food_category(request_type, message)
     elif element_type == 'bar_category':
@@ -279,6 +282,32 @@ def configuring_staff(request_type, message):
         return {**message, **{'status': 'Staff Withdrawn'}}
     else:
         return {'status': 'command type not recognized'}
+
+
+def configuring_kitchen_staff(request_type, message):
+    if request_type == 'add':
+        staff_objects = []
+        staff_dict_list = []
+        for staff_pair in message['kitchen_staff']:
+            new_staff = KitchenStaff(name=staff_pair['name']).save()
+            staff_objects.append(new_staff.to_dbref())
+            staff_dict_list.append({**{'kitchen_staff_id': str(new_staff.id)}, **staff_pair})
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__kitchen_staff=staff_objects)
+        message['kitchen_staff'] = staff_dict_list
+        return message
+    elif request_type == 'delete':
+        KitchenStaff.objects.get(id=message['kitchen_staff_id']).delete()
+        message['status'] = "Staff Deleted"
+        return message
+    elif request_type == 'edit':
+        this_object=KitchenStaff.objects.get(id=message['kitchen_staff_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
+        return message
+    else:
+        return {'status': 'command type not recognized'}
+
 
 
 def configuring_food_category(request_type, message):

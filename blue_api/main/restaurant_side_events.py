@@ -122,11 +122,12 @@ def register_your_people(message):
         rest_id = input_dict['restaurant_id']
         name = input_dict['name']
         user_no = 0
-        username = "SID" + rest_name[:3].upper() + name[:3].upper() + str(user_no)
+        username_prefix = "SID" if input_dict['user_type'] == "staff" else "KID"
+        username = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(user_no)
         while len(AppUser.objects(username=username)) > 0:
             user_no += 1
-            username = "SID" + rest_name[:3].upper() + name[:3].upper() + str(user_no)
-        password = "SID" + rest_name[:3].upper() + name[:3].upper() + str(np.random.randint(420))
+            username = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(user_no)
+        password = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(np.random.randint(420))
         input_dict['username'] = username
         input_dict['password'] = password
         hash_pass = generate_password_hash(password, method='sha256')
@@ -138,7 +139,7 @@ def register_your_people(message):
         elif input_dict['user_type'] == "kitchen":
             AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
                     user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
-                    kitchen_user=KitchenStaff.objects.get(id=input_dict['object_id']).to_dbref()).save()
+                    kitchen_staff=KitchenStaff.objects.get(id=input_dict['object_id']).to_dbref()).save()
         else:
             emit('receive_your_people', json_util.dumps({"status": "Registration failed"}))
             return

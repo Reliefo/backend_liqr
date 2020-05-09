@@ -67,6 +67,10 @@ class KitchenStaff(Document):
     name = StringField()
     orders_cooked = ListField(DictField())
 
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        return data
+
 
 class User(Document):
     name = StringField(required=True)
@@ -308,6 +312,8 @@ class Restaurant(Document):
             data['bar_menu'][key] = self.bar_menu[key].to_my_mongo()
         for key, staff in enumerate(self.staff):
             data['staff'][key] = self.staff[key].to_my_mongo()
+        for key, staff in enumerate(self.kitchen_staff):
+            data['kitchen_staff'][key] = self.kitchen_staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
             data['tables'][key] = self.tables[key].to_my_mongo()
         for key, table_order in enumerate(self.table_orders):

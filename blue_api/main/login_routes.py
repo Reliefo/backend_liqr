@@ -108,14 +108,19 @@ def user_login():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        if AppUser.objects.filter(username=request.form["username"]):
-            return json_util.dumps({"status": "Already Registered"})
-        hash_pass = generate_password_hash(request.form["password"], method='sha256')
-        assigned_room = "kids_room" if request.form["username"][:2] == "KID" else "adults_room"
-        print(request.form["username"], " joined ", assigned_room)
-        hey = AppUser(username=request.form["username"], password=hash_pass, room=assigned_room).save()
-        login_user(hey)
-        return json_util.dumps({"status": "Registration successful"})
+        check_user = AppUser.objects(username=request.form["admin_username"]).first()
+        if check_user:
+            if check_user.user_type == 'admin':
+                if check_password_hash(check_user['password'], request.form["admin_password"]):
+                    if AppUser.objects.filter(username=request.form["username"]):
+                        return json_util.dumps({"status": "Already Registered"})
+                    hash_pass = generate_password_hash(request.form["password"], method='sha256')
+                    AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
+                            restaurant_id=request.form["restaurant_id"], user_type=request.form["user_type"]).save()
+                    return json_util.dumps({"status": "Registration successful"})
+                return json_util.dumps({"status": "Registration failed, admin credentials wrong"})
+            return json_util.dumps({"status": "User is not admin"})
+        return json_util.dumps({"status": "Admin username doesn't exist'"})
     return json_util.dumps({"status": "Registration failed"})
 
 
@@ -136,8 +141,10 @@ def login():
                 if check_user.user_type == "staff":
                     object_id = str(check_user.staff_user.id)
                 elif check_user.user_type == "manager":
-                    object_id = str(check_user.room)
-                # TODO create manager h=shit and go tfo rit
+                    rest_id_name = str(check_user.restaurant_id).split('$')
+                    return json_util.dumps(
+                        {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
+                         "restaurant_id": rest_id_name[0], "manager_name" : rest_id_name[1]}), 200
                 elif check_user.user_type == "kitchen":
                     object_id = str(check_user.kitchen_staff.id)
                 else:
