@@ -25,7 +25,7 @@ class FoodItemMod(EmbeddedDocument):
 
 
 class Order(Document):
-    placed_by = ReferenceField(User)
+    placed_by = DictField()
     food_list = ListField(EmbeddedDocumentField(FoodItemMod))
     status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
 

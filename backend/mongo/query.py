@@ -82,8 +82,9 @@ def order_placement(input_order):
     for order in input_order['orders']:
         food_list = [FoodItemMod.from_json(json_util.dumps({**food_dict, **{'status': "queued"}})) for food_dict in
                      order['food_list']]
+        user = User.objects.get(id=order['placed_by'])
         table_order.orders.append(
-            Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(), food_list=food_list).save().to_dbref())
+            Order(placed_by={"id": str(user.id), "name": user.name}, food_list=food_list).save().to_dbref())
     table_order.save()
     ordered_table.update(push__table_orders=table_order.to_dbref())
     Restaurant.objects(tables__in=[str(ordered_table.id)]).update(push__table_orders=table_order.to_dbref())
@@ -96,19 +97,19 @@ def push_to_table_cart(input_order):
     if ordered_table.table_cart:
         food_list = [FoodItemMod.from_json(json_util.dumps({**food_dict, **{'status': "queued"}})) for food_dict in
                      order['food_list']]
+        user = User.objects.get(id=order['placed_by'])
         TableOrder.objects.get(id=ordered_table.table_cart.id).update(
-            push__orders=Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(),
-                               food_list=food_list).save().to_dbref())
+            push__orders={"id": str(user.id), "name": user.name}, food_list=food_list).save().to_dbref()
     else:
-        table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=False,
+        table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
                                  timestamp=datetime.now())
         food_list = [FoodItemMod.from_json(json_util.dumps({**food_dict, **{'status': "queued"}})) for food_dict in
                      order['food_list']]
-        table_order.orders.append(
-            Order(placed_by=User.objects.get(id=order['placed_by']).to_dbref(), food_list=food_list).save().to_dbref())
+        table_order.orders.append(Order(placed_by={"id": str(User.objects.get(id=order['placed_by']).id),
+                                                   "name": User.objects.get(id=order['placed_by']).name},
+                                        food_list=food_list).save().to_dbref())
         table_order.save()
         Table.objects.get(id=input_order['table']).update(set__table_cart=table_order)
-    return Table.objects.get(id=input_order['table']).table_cart.to_json()
 
 
 def order_placement_table(table_id):
@@ -300,14 +301,13 @@ def configuring_kitchen_staff(request_type, message):
         message['status'] = "Staff Deleted"
         return message
     elif request_type == 'edit':
-        this_object=KitchenStaff.objects.get(id=message['kitchen_staff_id'])
+        this_object = KitchenStaff.objects.get(id=message['kitchen_staff_id'])
         for field in message['editing_fields'].keys():
             this_object[field] = message['editing_fields'][field]
         this_object.save()
         return message
     else:
         return {'status': 'command type not recognized'}
-
 
 
 def configuring_food_category(request_type, message):

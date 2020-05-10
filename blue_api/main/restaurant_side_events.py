@@ -41,7 +41,7 @@ def send_new_orders(message):
         order_status_completed(status_tuple)
 
     table_order = TableOrder.objects.get(id=status_tuple[0])
-    ordered_by = Order.objects.get(id=status_tuple[1]).placed_by.name
+    ordered_by = Order.objects.get(id=status_tuple[1]).placed_by['name']
     food_name = FoodItem.objects.get(id=status_tuple[2]).name
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
