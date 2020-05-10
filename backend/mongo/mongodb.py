@@ -97,7 +97,7 @@ class User(Document):
         return json_util.dumps(data)
 
     def to_minimal(self):
-        data = {"name": self.name}
+        data = {"name": self.name, 'id': self.id}
         return data
 
 
