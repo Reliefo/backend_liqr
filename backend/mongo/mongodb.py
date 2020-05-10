@@ -8,8 +8,56 @@ conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud',
                authentication_source='reliefo')
 
 
+class FoodOptionsMod(EmbeddedDocument):
+    options = ListField(DictField())
+    choices = ListField()
+
+
+class FoodItemMod(EmbeddedDocument):
+    food_id = StringField()
+    name = StringField()
+    description = StringField()
+    price = StringField()
+    instructions = StringField()
+    quantity = IntField()
+    status = StringField(choices=['queued', 'cooking', 'completed'])
+    food_options = EmbeddedDocumentField(FoodOptionsMod)
+
+
+class Order(Document):
+    placed_by = ReferenceField(User)
+    food_list = ListField(EmbeddedDocumentField(FoodItemMod))
+    status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
+
+    def fetch_food_item(self, food_id):
+        for food_item in self.food_list:
+            if food_item.food_id == food_id:
+                return food_item.to_json()
+        return "Food item not found"
+
+
 class TableOrder(Document):
-    pass
+    table = StringField()
+    table_id = StringField()
+    orders = ListField(ReferenceField(Order))
+    personal_order = BooleanField()
+    status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
+    timestamp = DateTimeField(default=datetime.now())
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+        for key, order in enumerate(self.orders):
+            data['orders'][key] = json_util.loads(self.orders[key].to_json())
+
+        return data
+
+    def to_json(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+        for key, order in enumerate(self.orders):
+            data['orders'][key] = json_util.loads(self.orders[key].to_json())
+        return json_util.dumps(data)
 
 
 class Staff(Document):
@@ -150,58 +198,6 @@ class AppUser(UserMixin, Document):
     temp_password = BooleanField()
 
 
-class FoodOptionsMod(EmbeddedDocument):
-    options = ListField(DictField())
-    choices = ListField()
-
-
-class FoodItemMod(EmbeddedDocument):
-    food_id = StringField()
-    name = StringField()
-    description = StringField()
-    price = StringField()
-    instructions = StringField()
-    quantity = IntField()
-    status = StringField(choices=['queued', 'cooking', 'completed'])
-    food_options = EmbeddedDocumentField(FoodOptionsMod)
-
-
-class Order(Document):
-    placed_by = ReferenceField(User)
-    food_list = ListField(EmbeddedDocumentField(FoodItemMod))
-    status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
-
-    def fetch_food_item(self, food_id):
-        for food_item in self.food_list:
-            if food_item.food_id == food_id:
-                return food_item.to_json()
-        return "Food item not found"
-
-
-class TableOrder(Document):
-    table = StringField()
-    table_id = StringField()
-    orders = ListField(ReferenceField(Order))
-    personal_order = BooleanField()
-    status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
-    timestamp = DateTimeField(default=datetime.now())
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
-        data['timestamp'] = str(data['timestamp'])
-        for key, order in enumerate(self.orders):
-            data['orders'][key] = json_util.loads(self.orders[key].to_json())
-
-        return data
-
-    def to_json(self):
-        data = self.to_mongo()
-        data['timestamp'] = str(data['timestamp'])
-        for key, order in enumerate(self.orders):
-            data['orders'][key] = json_util.loads(self.orders[key].to_json())
-        return json_util.dumps(data)
-
-
 class Table(Document):
     name = StringField(required=True)
     seats = IntField(required=True)
@@ -297,8 +293,8 @@ class Restaurant(Document):
     bar_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
     address = StringField()
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
-    staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
+    staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance))
     home_screen_tags = ListField(StringField())
