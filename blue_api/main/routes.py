@@ -1,4 +1,4 @@
-from flask import session, request, jsonify, redirect
+from flask import render_template, request, jsonify, redirect
 
 from backend.mongo.mongo_setup import setup_mongo
 from . import main
@@ -8,7 +8,7 @@ from .. import socket_io, our_namespace
 
 @main.route('/')
 def hello_world():
-    return 'Hey, we have Flask in a Docker container! To fetch the menu go to /menu and to place an order go to /order'
+    return render_template("index.html")
 
 
 @main.route('/rest')
