@@ -8,7 +8,7 @@ from .. import socket_io, our_namespace
 
 @main.route('/')
 def hello_world():
-    redirect("https://solutions.liqr.cc/")
+    return redirect("https://solutions.liqr.cc/")
 
 
 @main.route('/rest')
