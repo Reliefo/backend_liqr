@@ -11,10 +11,9 @@ login_manager = LoginManager()
 
 def create_app(debug=False):
     """Create an application."""
-    app = Flask(__name__, template_folder="../templates", static_folder="../static")
+    app = Flask(__name__)
     CORS(app)
     app.debug = debug
-    app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['SECRET_KEY'] = '69#js32%_d4-!xd$'
     app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15000

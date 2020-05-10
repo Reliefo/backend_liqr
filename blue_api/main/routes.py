@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, redirect
+from flask import request, jsonify, redirect
 
 from backend.mongo.mongo_setup import setup_mongo
 from . import main
@@ -8,7 +8,7 @@ from .. import socket_io, our_namespace
 
 @main.route('/')
 def hello_world():
-    return render_template("index.html")
+    redirect("https://solutions.liqr.cc/")
 
 
 @main.route('/rest')
