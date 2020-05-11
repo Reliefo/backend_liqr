@@ -23,7 +23,7 @@ services:
       - /tmp/mongodb/db:/data/db
     command: --quiet --auth
   react:
-    image: react_app:v1
+    image: liqr_react:latest
     build:
       context: ./relief_customer/
       dockerfile: ./Dockerfile
