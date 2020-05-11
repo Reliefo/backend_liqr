@@ -99,7 +99,7 @@ def push_to_table_cart(input_order):
                      order['food_list']]
         user = User.objects.get(id=order['placed_by'])
         TableOrder.objects.get(id=ordered_table.table_cart.id).update(
-            push__orders={"id": str(user.id), "name": user.name}, food_list=food_list).save().to_dbref()
+            push__orders=Order(placed_by={"id": str(user.id), "name": user.name}, food_list=food_list).save().to_dbref())
     else:
         table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
                                  timestamp=datetime.now())
