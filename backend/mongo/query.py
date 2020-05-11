@@ -110,6 +110,7 @@ def push_to_table_cart(input_order):
                                         food_list=food_list).save().to_dbref())
         table_order.save()
         Table.objects.get(id=input_order['table']).update(set__table_cart=table_order)
+    return ordered_table.table_cart.to_json()
 
 
 def order_placement_table(table_id):
