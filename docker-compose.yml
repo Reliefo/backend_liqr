@@ -23,10 +23,10 @@ services:
       - /tmp/mongodb/db:/data/db
     command: --quiet --auth
   react:
-    image: react_app:v1
-    build:
-      context: ./relief_customer/
-      dockerfile: ./Dockerfile
+    image: 020452232211.dkr.ecr.ap-south-1.amazonaws.com/liqr_react:latest
+    #    build:
+    #  context: ./relief_customer/
+    #  dockerfile: ./Dockerfile
     ports:
       - "81:81"
     volumes:
