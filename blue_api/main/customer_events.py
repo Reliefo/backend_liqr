@@ -69,5 +69,4 @@ def assistance_requests(message):
     Staff.objects[2].update(push__requests_queue=returning_dict)
     push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
-    #socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
-    socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
+    socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
