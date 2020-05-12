@@ -60,12 +60,13 @@ def assistance_requests(message):
     returning_dict = json_util.loads(returning_message)
     user_id = str(returning_dict.pop('user'))
     assistance_req_id = str(returning_dict.pop('_id'))
+    user_obj = User.objects.get(id=user_id)
     returning_dict['user_id'] = user_id
-    returning_dict['user'] = User.objects.get(id=user_id).name
+    returning_dict['user'] = user_obj.name
     returning_dict['assistance_req_id'] = assistance_req_id
     returning_dict['request_type'] = "assistance_request"
 
     Staff.objects[2].update(push__requests_queue=returning_dict)
     push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
-    socket_io.emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
+    socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
