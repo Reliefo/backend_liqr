@@ -52,7 +52,12 @@ def user_scan(table_id, unique_id, email_id='dud'):
         temp_user = TempUser.objects.filter(unique_id=unique_id)
         if len(temp_user) > 0:
             if temp_user[0].current_table_id == str(scanned_table.id):
-                return temp_user[0]
+                if Table.objects(users__in=[temp_user[0].id]):
+                    return temp_user[0]
+                else:
+                    scanned_table.users.append(temp_user[0].to_dbref())
+                    scanned_table.save()
+                    return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
             Table.objects(users__in=[temp_user[0]]).first().update(pull__users=temp_user[0])
             scanned_table.users.append(temp_user[0].to_dbref())
