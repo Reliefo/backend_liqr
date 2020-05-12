@@ -55,7 +55,8 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
             Table.objects(users__in=[temp_user[0]]).first().update(pull__users=temp_user[0])
-            scanned_table.update(push__users=temp_user[0].to_dbref())
+            scanned_table.users.append(temp_user[0].to_dbref())
+            scanned_table.save()
             return temp_user[0]
         else:
             planet = np.random.choice(TempUser.planet_choices)
@@ -66,12 +67,15 @@ def user_scan(table_id, unique_id, email_id='dud'):
             name = planet + "_" + str(planet_no)
             temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
                                  planet=planet, planet_no=planet_no, name=name).save()
-            scanned_table.update(push__users=temp_user.to_dbref())
+            scanned_table.users.append(temp_user.to_dbref())
+            scanned_table.save()
             return temp_user
     else:
         reg_user = RegisteredUser.objects.filter(email_id=email_id)[0]
-        scanned_table.update(push__users=reg_user)
-        reg_user.update(set__current_table_id=str(scanned_table.id))
+        scanned_table.users.append(reg_user.to_dbref())
+        scanned_table.save()
+        reg_user.current_table_id=str(scanned_table.id)
+        reg_user.save()
         return reg_user
 
 
