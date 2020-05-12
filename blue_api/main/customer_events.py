@@ -57,6 +57,8 @@ def assistance_requests(message):
     assistance_ob = assistance_req(input_dict)
     returning_message = assistance_ob.to_json()
 
+    restaurant_object=Restaurant.objects.filter(tables__in=[message['table']]).first()
+
     returning_dict = json_util.loads(returning_message)
     user_id = str(returning_dict.pop('user'))
     assistance_req_id = str(returning_dict.pop('_id'))
@@ -70,3 +72,4 @@ def assistance_requests(message):
     push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
+    socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room, namespace=our_namespace)
