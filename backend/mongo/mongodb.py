@@ -195,6 +195,7 @@ class AppUser(UserMixin, Document):
     staff_user = ReferenceField(Staff, reverse_delete_rule=CASCADE)
     kitchen_staff = ReferenceField(KitchenStaff, reverse_delete_rule=CASCADE)
     restaurant_id = StringField()
+    manager_name = StringField()
     temp_password = BooleanField()
 
 
@@ -205,7 +206,7 @@ class Table(Document):
     users = ListField(ReferenceField(User, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
-    assistance_reqs = ListField(ReferenceField(Assistance))
+    assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     meta = {'strict': False}
 
     def to_my_mongo(self):
@@ -296,9 +297,11 @@ class Restaurant(Document):
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
-    assistance_reqs = ListField(ReferenceField(Assistance))
+    assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     home_screen_tags = ListField(StringField())
     navigate_better_tags = ListField(StringField())
+    manager_room = StringField()
+    kitchen_room = StringField()
 
     def to_json(self):
         data = self.to_mongo()

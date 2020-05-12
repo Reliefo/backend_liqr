@@ -141,10 +141,9 @@ def login():
                 if check_user.user_type == "staff":
                     object_id = str(check_user.staff_user.id)
                 elif check_user.user_type == "manager":
-                    rest_id_name = str(check_user.restaurant_id).split('$')
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
-                         "restaurant_id": rest_id_name[0], "manager_name" : rest_id_name[1]}), 200
+                         "restaurant_id": check_user.restaurant_id, "manager_name" : check_user.manager_name}), 200
                 elif check_user.user_type == "kitchen":
                     object_id = str(check_user.kitchen_staff.id)
                 else:

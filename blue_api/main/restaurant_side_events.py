@@ -34,6 +34,7 @@ def configuring_restaurant_event(message):
 
 @socket_io.on('kitchen_updates', namespace=our_namespace)
 def send_new_orders(message):
+    restaurant_object = Restaurant.objects.filter(table_orders__in=[message['table_order_id']]).first()
     status_tuple = (message['table_order_id'], message['order_id'], message['food_id'])
     if message['type'] == 'cooking':
         order_status_cooking(status_tuple)
@@ -56,7 +57,9 @@ def send_new_orders(message):
         push_order_complete_notification(sending_dict)
 
     sending_json = json_util.dumps(sending_dict)
-    socket_io.emit('order_updates', sending_json, namespace=our_namespace)
+    socket_io.emit('order_updates', sending_json, room=restaurant_object.manager_room, namespace=our_namespace)
+    socket_io.emit('order_updates', sending_json, room=restaurant_object.kitchen_room, namespace=our_namespace)
+    socket_io.emit('order_updates', sending_json, room=table_order.table_id, namespace=our_namespace)
     emit('fetch', {'msg': message})
 
 
