@@ -59,7 +59,8 @@ def user_scan(table_id, unique_id, email_id='dud'):
                     scanned_table.save()
                     return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
-            Table.objects(users__in=[temp_user[0]]).first().update(pull__users=temp_user[0])
+            if Table.objects(users__in=[temp_user[0].id]):
+                Table.objects(users__in=[temp_user[0].id]).first().update(pull__users=temp_user[0])
             scanned_table.users.append(temp_user[0].to_dbref())
             scanned_table.save()
             return temp_user[0]
