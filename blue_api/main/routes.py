@@ -36,12 +36,8 @@ def receive_order():
 
 @main.route('/send_orders', methods=['GET'])
 def fetch_orders2():
-    # new_order = fetch_order(np.random.randint(len(TableOrder.objects)))
-    new_order = order_placement(generate_order())
-    socket_io.emit('new_orders', new_order, namespace=our_namespace)
-    # socket_io.emit('fetch',{'hey':'asdfsdf'},namespace=our_namespace)
-    print("Sending")
-    return new_order
+    billed_cleaned('5eb41b91adb66da6f5312125')
+    return "Sending"
 
 
 @main.route('/send_cooking_updates', methods=['POST'])

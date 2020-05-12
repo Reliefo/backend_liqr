@@ -79,7 +79,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
         reg_user = RegisteredUser.objects.filter(email_id=email_id)[0]
         scanned_table.users.append(reg_user.to_dbref())
         scanned_table.save()
-        reg_user.current_table_id=str(scanned_table.id)
+        reg_user.current_table_id = str(scanned_table.id)
         reg_user.save()
         return reg_user
 
@@ -432,3 +432,29 @@ def configuring_home_screen(request_type, message):
         return message
     else:
         return {'status': 'command type not recognized'}
+
+
+def billed_cleaned(table_id):
+    table_ob = Table.objects.get(id=table_id)
+    for user in table_ob.users:
+        user_history = UserHistory()
+        restaurant = Restaurant.objects(tables__in=[table_id]).first()
+        user_history.restaurant_id = str(restaurant.id)
+        user_history.restaurant_name = str(restaurant.name)
+        for table_ord in table_ob.table_orders:
+            if (table_ord.personal_order):
+                if (table_ord.orders[0].placed_by['id'] == user.id):
+                    user_history.personal_orders.append(table_ord.to_dbref())
+            else:
+                user_history.table_orders.append(table_ord.to_dbref())
+        user_history.users.extend([str(user.id) for user in table_ob.users])
+        user_history.assistance_reqs.extend([ass_req.to_dbref() for ass_req in table_ob.assistance_reqs])
+        user_history.save()
+        user.dine_in_history.append(user_history.to_dbref())
+        user.current_table_id = None
+        user.save()
+    table_ob.table_orders = []
+    table_ob.assistance_reqs = []
+    table_ob.users = []
+    table_ob.save()
+    return
