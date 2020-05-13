@@ -17,10 +17,10 @@ services:
       logging:
       driver: awslogs
       options:
-       awslogs-region: ap-south-1
-       awslogs-group: agent_007
-       awslogs-create-group: 'true'
-       awslogs-stream: stdout
+        awslogs-region: ap-south-1
+        awslogs-group: agent_007
+        awslogs-create-group: 'true'
+        awslogs-stream: backend_logs
   mongo:
     image: mongo
 #    restart: always
