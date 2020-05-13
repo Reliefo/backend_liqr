@@ -14,7 +14,7 @@ services:
       - .:/code
     environment:
       FLASK_ENV: development
-    loggings:
+    logging:
       driver: awslogs
       options:
         awslogs-region: ap-south-1
