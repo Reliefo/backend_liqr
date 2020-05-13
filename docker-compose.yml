@@ -14,6 +14,12 @@ services:
       - .:/code
     environment:
       FLASK_ENV: development
+    loggings:
+      driver: awslogs
+      options:
+        awslogs-region: ap-south-1
+        awslogs-group: agent_007
+        awslogs-create-group: true
   mongo:
     image: mongo
 #    restart: always
