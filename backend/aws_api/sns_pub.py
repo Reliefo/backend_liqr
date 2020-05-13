@@ -20,7 +20,7 @@ def push_order_complete_notification(request_dict):
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
     response = sns_client.publish(
-        TopicArn='arn:aws:sns:ap-south-1:020452232211:Reliefo-Topic',
+        TopicArn='arn:aws:sns:ap-south-1:020452232211:liqr_topic',
         Message=json_util.dumps(final_message_dict),
         Subject='Thsi is subejct',
         MessageStructure="json"
@@ -38,7 +38,7 @@ def push_assistance_request_notification(request_dict):
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
     response = sns_client.publish(
-        TopicArn='arn:aws:sns:ap-south-1:020452232211:Reliefo-Topic',
+        TopicArn='arn:aws:sns:ap-south-1:020452232211:liqr_topic',
         Message=json_util.dumps(final_message_dict),
         Subject='Thsi is subejct',
         MessageStructure="json"
