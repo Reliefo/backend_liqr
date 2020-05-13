@@ -124,7 +124,7 @@ class User(Document):
     name = StringField(required=True)
     dine_in_history = ListField(ReferenceField(UserHistory, reverse_delete_rule=PULL))
     current_table_id = StringField()
-    personal_cart = ListField(ReferenceField(TableOrder))
+    personal_cart = ListField(ReferenceField(TableOrder), reverse_delete_rule=PULL)
     timestamp = DateTimeField(default=datetime.now())
     meta = {'allow_inheritance': True}
 
