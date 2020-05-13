@@ -10,6 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import (
     get_jwt_identity, jwt_required, create_access_token, create_refresh_token, jwt_refresh_token_required
 )
+from backend.aws_api.sns_registration import update_staff_endpoint
 
 
 @login_manager.user_loader
@@ -137,17 +138,18 @@ def login():
 
             elif check_password_hash(check_user['password'], request.form["password"]):
                 if request.form['app'] != check_user.user_type:
-                    return json_util.dumps({"status":"Wrong app. The username and the application you're using don't match"}), 405
+                    return json_util.dumps(
+                        {"status": "Wrong app. The username and the application you're using don't match"}), 405
                 access_token = create_access_token(identity=request.form["username"])
                 refresh_token = create_refresh_token(identity=request.form["username"])
                 if check_user.user_type == "staff":
                     device_token = request.form['device_token']
-                    print(device_token)
+                    update_staff_endpoint(device_token, check_user.staff_user)
                     object_id = str(check_user.staff_user.id)
                 elif check_user.user_type == "manager":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
-                         "restaurant_id": check_user.restaurant_id, "manager_name" : check_user.manager_name}), 200
+                         "restaurant_id": check_user.restaurant_id, "manager_name": check_user.manager_name}), 200
                 elif check_user.user_type == "kitchen":
                     object_id = str(check_user.kitchen_staff.id)
                 else:

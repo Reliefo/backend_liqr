@@ -1,7 +1,7 @@
 import boto3
 from bson import json_util
 
-client = boto3.client(
+sns_client = boto3.client(
     "sns",
     aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
     aws_secret_access_key="Xcor+sVRczxXR3mwHs84YcB8R27FIdWxooEXkQ6U",
@@ -19,7 +19,7 @@ def push_order_complete_notification(request_dict):
 
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
-    response = client.publish(
+    response = sns_client.publish(
         TopicArn='arn:aws:sns:ap-south-1:020452232211:Reliefo-Topic',
         Message=json_util.dumps(final_message_dict),
         Subject='Thsi is subejct',
@@ -37,7 +37,7 @@ def push_assistance_request_notification(request_dict):
 
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
-    response = client.publish(
+    response = sns_client.publish(
         TopicArn='arn:aws:sns:ap-south-1:020452232211:Reliefo-Topic',
         Message=json_util.dumps(final_message_dict),
         Subject='Thsi is subejct',
