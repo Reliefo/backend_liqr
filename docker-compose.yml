@@ -19,7 +19,7 @@ services:
       options:
         awslogs-region: ap-south-1
         awslogs-group: agent_007
-        awslogs-create-group: true
+        awslogs-create-group: 'true'
   mongo:
     image: mongo
 #    restart: always
