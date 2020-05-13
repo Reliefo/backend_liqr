@@ -60,7 +60,7 @@ def send_new_orders(message):
     socket_io.emit('order_updates', sending_json, room=restaurant_object.manager_room, namespace=our_namespace)
     socket_io.emit('order_updates', sending_json, room=restaurant_object.kitchen_room, namespace=our_namespace)
     socket_io.emit('order_updates', sending_json, room=table_order.table_id, namespace=our_namespace)
-    emit('fetch', {'msg': message})
+    emit('logger', {'msg': message})
 
 
 @socket_io.on('staff_acceptance', namespace=our_namespace)
@@ -80,6 +80,12 @@ def staff_acceptance(message):
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=input_dict)
             push_order_complete_notification(input_dict)
             return
+        elif input_dict['status'] == "accepted_rejected":
+            input_dict['status'] = 'accepted'
+            Staff.objects.get(id=input_dict['staff_id']).update(pull__order_history=input_dict)
+            input_dict['status'] = 'rejected'
+            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=input_dict)
+            push_order_complete_notification(input_dict)
         else:
             input_dict['type'] = 'on_the_way'
             Staff.objects.get(id=input_dict['staff_id']).update(push__order_history=input_dict)
@@ -100,6 +106,12 @@ def staff_acceptance(message):
             push_assistance_request_notification(input_dict)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
+        elif input_dict['status'] == "accepted_rejected":
+            input_dict['status'] = 'accepted'
+            Staff.objects.get(id=input_dict['staff_id']).update(pull__assistance_history=input_dict)
+            input_dict['status'] = 'rejected'
+            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
+            push_assistance_request_notification(input_dict)
         else:
             input_dict['msg'] = "Service has been accepted"
             Staff.objects.get(id=input_dict['staff_id']).update(push__assistance_history=input_dict)
@@ -109,7 +121,7 @@ def staff_acceptance(message):
 
 @socket_io.on('fetch_staff_details', namespace=our_namespace)
 def fetch_staff_details(message):
-    socket_io.emit('fetch', message, namespace=our_namespace)
+    socket_io.emit('logger', message, namespace=our_namespace)
     user_rest_dets = json_util.loads(message)
     staff_id = user_rest_dets['staff_id']
     rest_id = user_rest_dets['restaurant_id']
@@ -120,32 +132,30 @@ def fetch_staff_details(message):
 @socket_io.on('register_your_people', namespace=our_namespace)
 def register_your_people(message):
     input_dict = json_util.loads(message)
-    auth_user = AppUser.objects(username=input_dict["auth_username"]).first()
-    if auth_user:
-        rest_name = input_dict['restaurant_name']
-        rest_id = input_dict['restaurant_id']
-        name = input_dict['name']
-        user_no = 0
-        username_prefix = "SID" if input_dict['user_type'] == "staff" else "KID"
+    rest_name = input_dict['restaurant_name']
+    rest_id = input_dict['restaurant_id']
+    name = input_dict['name']
+    user_no = 0
+    username_prefix = "SID" if input_dict['user_type'] == "staff" else "KID"
+    username = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(user_no)
+    while len(AppUser.objects(username=username)) > 0:
+        user_no += 1
         username = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(user_no)
-        while len(AppUser.objects(username=username)) > 0:
-            user_no += 1
-            username = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(user_no)
-        password = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(np.random.randint(420))
-        input_dict['username'] = username
-        input_dict['password'] = password
-        hash_pass = generate_password_hash(password, method='sha256')
-        assigned_room = "kids_room" if input_dict["username"][:2] == "KID" else "adults_room"
-        if input_dict['user_type'] == "staff":
-            AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
-                    user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
-                    staff_user=Staff.objects.get(id=input_dict['object_id']).to_dbref()).save()
-        elif input_dict['user_type'] == "kitchen":
-            AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
-                    user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
-                    kitchen_staff=KitchenStaff.objects.get(id=input_dict['object_id']).to_dbref()).save()
-        else:
-            emit('receive_your_people', json_util.dumps({"status": "Registration failed"}))
-            return
-        input_dict['status'] = 'Registration successful'
-        emit('receive_your_people', json_util.dumps(input_dict))
+    password = username_prefix + rest_name[:3].upper() + name[:3].upper() + str(np.random.randint(420))
+    input_dict['username'] = username
+    input_dict['password'] = password
+    hash_pass = generate_password_hash(password, method='sha256')
+    assigned_room = "kids_room" if input_dict["username"][:2] == "KID" else "adults_room"
+    if input_dict['user_type'] == "staff":
+        AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
+                user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
+                staff_user=Staff.objects.get(id=input_dict['object_id']).to_dbref()).save()
+    elif input_dict['user_type'] == "kitchen":
+        AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
+                user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
+                kitchen_staff=KitchenStaff.objects.get(id=input_dict['object_id']).to_dbref()).save()
+    else:
+        emit('receive_your_people', json_util.dumps({"status": "Registration failed"}))
+        return
+    input_dict['status'] = 'Registration successful'
+    emit('receive_your_people', json_util.dumps(input_dict))

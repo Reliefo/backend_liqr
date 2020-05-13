@@ -18,23 +18,7 @@ def fetch_restaurant():
     return rest_json
 
 
-@main.route('/rest2')
-def fetch_restaurant2():
-    rest_json = return_restaurant_customer("BNGHSR0001")
-    # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
-    return rest_json
-
-
-@main.route('/order', methods=['POST'])
-def receive_order():
-    input_order = request.json
-    if order_placement(input_order):
-        return jsonify({'status': "Hell yeah buddy, order placed"})
-    else:
-        return jsonify({'status': "Error, couldn't place the order"})
-
-
-@main.route('/send_orders', methods=['GET'])
+@main.route('/bill', methods=['GET'])
 def fetch_orders2():
     billed_cleaned('5eb41b91adb66da6f5312125')
     return "Sending"
@@ -86,13 +70,6 @@ def assist_them():
     socket_io.emit('assist_updates', {'assistance_id': str(assistance_ob.id), 'staff_name': staff_name},
                    namespace=our_namespace)
     return str(assistance_ob.to_json()) + ' ' + staff_name
-
-
-@main.route('/send_room_messages', methods=['POST'])
-def disconnect_user():
-    data = request.json
-    socket_io.emit('order_lists', Restaurant.objects[0].fetch_order_lists(), room=data['room'], namespace=our_namespace)
-    return request.json
 
 
 @main.route('/mongo_setup', methods=['GET'])

@@ -136,9 +136,13 @@ def login():
                     return json_util.dumps({"status": "Authentication Failed, wrong temp password"}), 403
 
             elif check_password_hash(check_user['password'], request.form["password"]):
+                if request.form['app'] != check_user.user_type:
+                    return json_util.dumps({"status":"Wrong app. The username and the application you're using don't match"}), 405
                 access_token = create_access_token(identity=request.form["username"])
                 refresh_token = create_refresh_token(identity=request.form["username"])
                 if check_user.user_type == "staff":
+                    device_token = request.form['device_token']
+                    print(device_token)
                     object_id = str(check_user.staff_user.id)
                 elif check_user.user_type == "manager":
                     return json_util.dumps(
