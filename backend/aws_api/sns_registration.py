@@ -18,14 +18,14 @@ def update_staff_endpoint(device_token, staff):
             platform_endpoint.delete()
             platform_application = sns.PlatformApplication(platform_application_arn)
             platform_endpoint = platform_application.create_platform_endpoint(Token=device_token,
-                                                                              CustomUserData=str(staff.id))
+                                                                              CustomUserData=staff.name+"$"+str(staff.id))
             staff.endpoint_arn = platform_endpoint.arn
             staff.save()
             return
     else:
         platform_application = sns.PlatformApplication(platform_application_arn)
         platform_endpoint = platform_application.create_platform_endpoint(Token=device_token,
-                                                                          CustomUserData=str(staff.id))
+                                                                          CustomUserData=staff.name+"$"+str(staff.id))
         staff.endpoint_arn = platform_endpoint.arn
         staff.save()
         return
