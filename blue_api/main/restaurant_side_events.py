@@ -25,7 +25,7 @@ def fetch_order_lists(message):
 @socket_io.on('configuring_restaurant', namespace=our_namespace)
 def configuring_restaurant_event(message):
     restaurant_id = AppUser.objects(sid=request.sid).first().restaurant_id
-    manager_room = Restaurant.objects.filter(restaurant_id=restaurant_id).manager_room
+    manager_room = Restaurant.objects.filter(restaurant_id=restaurant_id).first().manager_room
     output = configuring_restaurant(json_util.loads(message))
     emit('updating_config', json_util.dumps(output),
          room=manager_room)
