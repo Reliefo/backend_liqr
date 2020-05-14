@@ -116,6 +116,15 @@ def register():
                     if AppUser.objects.filter(username=request.form["username"]):
                         return json_util.dumps({"status": "Already Registered"})
                     hash_pass = generate_password_hash(request.form["password"], method='sha256')
+                    if request.form['user_type'] == "manager":
+                        restaurant_object = Restaurant(name=request.form['restaurant_name'],
+                                                       restaurant_id=request.form['restaurant_id'],
+                                                       ).save()
+                        AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
+                                manager_name=request.form['manager_name'],
+                                restaurant_id=restaurant_object.restaurant_id,
+                                user_type=request.form["user_type"]).save()
+
                     AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
                             restaurant_id=request.form["restaurant_id"], user_type=request.form["user_type"]).save()
                     return json_util.dumps({"status": "Registration successful"})
@@ -150,6 +159,7 @@ def login():
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
                          "restaurant_id": check_user.restaurant_id, "manager_name": check_user.manager_name}), 200
+
                 elif check_user.user_type == "kitchen":
                     object_id = str(check_user.kitchen_staff.id)
                 else:

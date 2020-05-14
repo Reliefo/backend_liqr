@@ -15,13 +15,9 @@ def fetch_rest_object(message):
 
 @socket_io.on('fetch_order_lists', namespace=our_namespace)
 def fetch_order_lists(message):
-    try:
-        lists_json = Restaurant.objects[0].fetch_order_lists()
-    except NameError:
-        try:
-            emit('order_lists', str(traceback.format_exc()))
-        except TypeError:
-            emit('order_lists', 'Nothing is working')
+    input_dict = json_util.loads(message)
+    restaurant_id = input_dict['restaurant_id']
+    lists_json = Restaurant.objects.filter(restaurant_id=restaurant_id).first().fetch_order_lists()
 
     emit('order_lists', lists_json)
 
