@@ -1,5 +1,5 @@
 import traceback
-
+from flask import request
 from flask_socketio import emit
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
@@ -24,8 +24,11 @@ def fetch_order_lists(message):
 
 @socket_io.on('configuring_restaurant', namespace=our_namespace)
 def configuring_restaurant_event(message):
+    restaurant_id = AppUser.objects(sid=request.sid).first().restaurant_id
+    manager_room = Restaurant.objects.filter(restaurant_id=restaurant_id).manager_room
     output = configuring_restaurant(json_util.loads(message))
-    emit('updating_config', json_util.dumps(output))
+    emit('updating_config', json_util.dumps(output),
+         room=manager_room)
 
 
 @socket_io.on('kitchen_updates', namespace=our_namespace)

@@ -22,7 +22,7 @@ def connect():
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
-        Restaurant.objects(restaurant_id=app_user.restaurant_id).first().update(set__manager_room=request.sid)
+        Restaurant.objects(restaurant_id=app_user.restaurant_id).first().update(set__manager_room=app_user.restaurant_id)
     elif app_user.user_type == "kitchen":
         join_room(app_user.restaurant_id+"_kitchen")
         Restaurant.objects(restaurant_id=app_user.restaurant_id).first().update(set__kitchen_room=app_user.restaurant_id+"_kitchen")
