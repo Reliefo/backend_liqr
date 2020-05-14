@@ -16,13 +16,10 @@ active_clients = []
 @socket_io.on('connect', namespace=our_namespace)
 @jwt_required
 def connect():
-    print('connected')
-    print(request.args)
     username = get_jwt_identity()
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
     if previous_sid:
-        print("I have it here", previous_sid)
         disconnect(previous_sid)
     if app_user.user_type == "manager":
         Restaurant.objects(restaurant_id=app_user.restaurant_id).first().update(set__manager_room=request.sid)

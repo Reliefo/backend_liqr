@@ -92,22 +92,29 @@ class Assistance(Document):
 class UserHistory(Document):
     restaurant_name = StringField()
     restaurant_id = StringField()
-    table_orders = ListField(ReferenceField(TableOrder))
-    personal_orders = ListField(ReferenceField(TableOrder))
-    users = ListField(StringField())
-    assistance_reqs = ListField(ReferenceField(Assistance))
+    table_orders = ListField(DictField())
+    personal_orders = ListField(DictField())
+    users = ListField(DictField())
+    assistance_reqs = ListField()
     timestamp = DateTimeField(default=datetime.now())
-    table = StringField()
+    table_id = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
-        for key, table_order in enumerate(self.table_orders):
-            data['table_orders'][key] = self.table_orders[key].to_my_mongo()
-        for key, ass_req in enumerate(self.assistance_reqs):
-            data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
-        for key, user in enumerate(self.personal_orders):
-            data['personal_orders'][key] = self.personal_orders[key].to_my_mongo()
 
+        return data
+
+
+class OrderHistory(Document):
+    table_orders = ListField(DictField())
+    personal_orders = ListField(DictField())
+    users = ListField(DictField())
+    assistance_reqs = ListField(DictField())
+    timestamp = DateTimeField(default=datetime.now())
+    table_id = StringField()
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
         return data
 
 

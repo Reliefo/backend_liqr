@@ -159,3 +159,11 @@ def register_your_people(message):
         return
     input_dict['status'] = 'Registration successful'
     emit('receive_your_people', json_util.dumps(input_dict))
+
+
+@socket_io.on('bill_the_table', namespace=our_namespace)
+def bill_the_table(message):
+    input_dict = json_util.loads(message)
+    table_id = input_dict['table_id']
+    billed_cleaned(table_id)
+    emit('billing', json_util.dumps({"status": "Billed and cleared"}))
