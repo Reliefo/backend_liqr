@@ -437,25 +437,43 @@ def configuring_home_screen(request_type, message):
 
 def billed_cleaned(table_id):
     table_ob = Table.objects.get(id=table_id)
+    if len(table_ob.table_orders) == 0:
+        return "Table is empty"
     for user in table_ob.users:
         user_history = UserHistory()
         restaurant = Restaurant.objects(tables__in=[table_id]).first()
+        user_history.table_id = table_id
         user_history.restaurant_id = str(restaurant.id)
         user_history.restaurant_name = str(restaurant.name)
         for table_ord in table_ob.table_orders:
-            if (table_ord.personal_order):
-                if (table_ord.orders[0].placed_by['id'] == user.id):
-                    user_history.personal_orders.append(table_ord.to_dbref())
+            if table_ord.personal_order:
+                if table_ord.orders[0].placed_by['id'] == user.id:
+                    user_history.personal_orders.append(json_util.loads(table_ord.to_json()))
             else:
-                user_history.table_orders.append(table_ord.to_dbref())
-        user_history.users.extend([str(user.id) for user in table_ob.users])
-        user_history.assistance_reqs.extend([ass_req.to_dbref() for ass_req in table_ob.assistance_reqs])
+                user_history.table_orders.append(json_util.loads(table_ord.to_json()))
+        user_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
+        user_history.assistance_reqs.extend(
+            [json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
+        user_history.timestamp = datetime.now()
         user_history.save()
         user.dine_in_history.append(user_history.to_dbref())
         user.current_table_id = None
         user.save()
+
+    order_history = OrderHistory()
+    order_history.table_id = table_id
+    for table_ord in table_ob.table_orders:
+        if table_ord.personal_order:
+            order_history.personal_orders.append(json_util.loads(table_ord.to_json()))
+        else:
+            order_history.table_orders.append(json_util.loads(table_ord.to_json()))
+    order_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
+    order_history.assistance_reqs.extend([json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
+    order_history.timestamp = datetime.now()
+    order_history.save()
+    Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)
     table_ob.table_orders = []
     table_ob.assistance_reqs = []
     table_ob.users = []
     table_ob.save()
-    return
+    return "Billed and cleared table"
