@@ -310,6 +310,7 @@ class Restaurant(Document):
     navigate_better_tags = ListField(StringField())
     manager_room = StringField()
     kitchen_room = StringField()
+    order_history = ListField(ReferenceField(OrderHistory))
 
     def to_json(self):
         data = self.to_mongo()
