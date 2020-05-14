@@ -7,10 +7,15 @@ from werkzeug.security import generate_password_hash
 from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification
 
 
-@socket_io.on('rest_with_id', namespace=our_namespace)
+@socket_io.on('fetch_rest_manager', namespace=our_namespace)
 def fetch_rest_object(message):
-    rest_json = return_restaurant(message)
+    input_dict = json_util.loads(message)
+    restaurant_id = input_dict['restaurant_id']
+    rest_json = return_restaurant(restaurant_id)
     emit('restaurant_object', rest_json)
+    lists_json = Restaurant.objects.filter(restaurant_id=restaurant_id).first().fetch_order_lists()
+
+    emit('order_lists', lists_json)
 
 
 @socket_io.on('fetch_order_lists', namespace=our_namespace)
