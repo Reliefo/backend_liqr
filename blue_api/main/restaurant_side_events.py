@@ -59,7 +59,8 @@ def send_new_orders(message):
         KitchenStaff.objects[0].update(push__orders_cooked=sending_dict)
         for staff in Table.objects.get(id=table_order.table_id).staff:
             staff.requests_queue.append(sending_dict)
-            push_order_complete_notification(sending_dict, staff.endpoint_arn)
+            if staff.endpoint_arn:
+                push_order_complete_notification(sending_dict, staff.endpoint_arn)
             staff.save()
 
     sending_json = json_util.dumps(sending_dict)
