@@ -57,8 +57,8 @@ def send_new_orders(message):
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
         KitchenStaff.objects[0].update(push__orders_cooked=sending_dict)
-        Staff.objects[2].update(push__requests_queue=sending_dict)
-        push_order_complete_notification(sending_dict)
+        for staff in Table.objects.get(id=table_order.table_id).staff:
+            push_order_complete_notification(sending_dict, staff.endpoint_arn)
 
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, room=restaurant_object.manager_room, namespace=our_namespace)
@@ -78,22 +78,25 @@ def staff_acceptance(message):
                 if request['order_id'] == input_dict['order_id'] and request['food_id'] == input_dict['food_id']:
                     requests_queue.pop(n)
         curr_staff.requests_queue = requests_queue
-        curr_staff.save()
         if input_dict['status'] == "rejected":
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
-            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=input_dict)
-            push_order_complete_notification(input_dict)
+            curr_staff.rej_order_history.append(input_dict)
+            push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
+            curr_staff.save()
             return
         elif input_dict['status'] == "accepted_rejected":
             input_dict['status'] = 'accepted'
-            Staff.objects.get(id=input_dict['staff_id']).update(pull__order_history=input_dict)
+            curr_staff.order_history.remove(input_dict)
             input_dict['status'] = 'rejected'
-            Staff.objects.get(id=input_dict['staff_id']).update(push__rej_order_history=input_dict)
-            push_order_complete_notification(input_dict)
+            curr_staff.rej_order_history.append(input_dict)
+            push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
+            curr_staff.save()
+            return
         else:
             input_dict['type'] = 'on_the_way'
-            Staff.objects.get(id=input_dict['staff_id']).update(push__order_history=input_dict)
+            curr_staff.order_history.append(input_dict)
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            curr_staff.save()
             return
     if input_dict['request_type'] == 'assistance_request':
         curr_staff = Staff.objects.get(id=input_dict['staff_id'])
@@ -104,22 +107,25 @@ def staff_acceptance(message):
                 if request['assistance_req_id'] == input_dict['assistance_req_id']:
                     requests_queue.pop(n)
         curr_staff.requests_queue = requests_queue
-        curr_staff.save()
         if input_dict['status'] == "rejected":
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
-            push_assistance_request_notification(input_dict)
+            push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            curr_staff.save()
             return
         elif input_dict['status'] == "accepted_rejected":
             input_dict['status'] = 'accepted'
             Staff.objects.get(id=input_dict['staff_id']).update(pull__assistance_history=input_dict)
             input_dict['status'] = 'rejected'
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
-            push_assistance_request_notification(input_dict)
+            push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
+            curr_staff.save()
+            return
         else:
             input_dict['msg'] = "Service has been accepted"
             Staff.objects.get(id=input_dict['staff_id']).update(push__assistance_history=input_dict)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            curr_staff.save()
             return
 
 
