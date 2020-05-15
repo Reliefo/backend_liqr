@@ -71,7 +71,7 @@ def assistance_requests(message):
     for staff in Table.objects.get(id=input_dict['table']).staff:
         staff.requests_queue.append(returning_dict)
         if staff.endpoint_arn:
-            push_assistance_request_notification(input_dict, staff.endpoint_arn)
+            push_assistance_request_notification(returning_dict, staff.endpoint_arn)
         staff.save()
 
     Staff.objects[2].update(push__requests_queue=returning_dict)
