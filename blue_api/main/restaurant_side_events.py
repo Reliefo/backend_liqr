@@ -27,6 +27,16 @@ def fetch_order_lists(message):
     emit('order_lists', lists_json)
 
 
+@socket_io.on('fetch_kitchen_details', namespace=our_namespace)
+def fetch_kitchen_details(message):
+    input_dict = json_util.loads(message)
+    restaurant_id = input_dict['restaurant_id']
+    kitchen_staff_id = input_dict['kitchen_staff_id']
+    emit('kitchen_staff_object', KitchenStaff.objects.get(id=kitchen_staff_id).exclude('orders_cooked').to_json())
+    lists_json = Restaurant.objects.filter(restaurant_id=restaurant_id).first().fetch_order_lists()
+    emit('order_lists', lists_json)
+
+
 @socket_io.on('configuring_restaurant', namespace=our_namespace)
 def configuring_restaurant_event(message):
     restaurant_id = AppUser.objects(sid=request.sid).first().restaurant_id
@@ -50,13 +60,13 @@ def send_new_orders(message):
     food_name = FoodItem.objects.get(id=status_tuple[2]).name
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
-                    'food_id': status_tuple[2], 'kitchen_app_id': message['kitchen_app_id'], "table": table_order.table,
+                    'food_id': status_tuple[2], 'kitchen_staff_id': message['kitchen_staff_id'], "table": table_order.table,
                     'table_id': table_order.table_id, 'user': ordered_by, 'timestamp': str(datetime.now()),
                     'food_name': food_name}
 
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
-        KitchenStaff.objects[0].update(push__orders_cooked=sending_dict)
+        KitchenStaff.objects.get(id=message['kitchen_staff_id']).update(push__orders_cooked=sending_dict)
         for staff in Table.objects.get(id=table_order.table_id).staff:
             staff.requests_queue.append(sending_dict)
             if staff.endpoint_arn:
