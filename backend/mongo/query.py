@@ -22,7 +22,7 @@ def return_restaurant(rest_id):
 
 
 def home_screen_lists(rest_id):
-    home_screen = {}
+    home_screen = { 'navigate_better' : {}}
     for tag in Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags:
         home_screen[tag] = [str(food.id) for food in
                             FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
