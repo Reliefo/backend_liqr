@@ -64,6 +64,7 @@ def user_login():
         email_id = request.form['email_id']
         password = request.form['password']
         table_id = request.form['table_id']
+        restaurant_id = Restaurant.objects.filter(tables__in=[table_id])[0].restaurant_id
         if re.search("\$", unique_id) and len(User.objects.filter(unique_id=unique_id)) > 0:
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
@@ -93,11 +94,13 @@ def user_login():
                 if the_user._cls == "User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "unique_id": the_user.email_id, "user_id": str(the_user.id)})
+                         "name": the_user.name, "unique_id": the_user.email_id, "user_id": str(the_user.id),
+                         "restaurant_id": restaurant_id})
                 else:
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "unique_id": the_user.unique_id, "user_id": str(the_user.id)})
+                         "name": the_user.name, "unique_id": the_user.unique_id, "user_id": str(the_user.id),
+                         "restaurant_id": restaurant_id})
 
             else:
                 return json_util.dumps({"status": "Wrong Password", "code": "401"})
