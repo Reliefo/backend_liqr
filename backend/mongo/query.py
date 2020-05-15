@@ -89,9 +89,9 @@ def order_placement(input_order):
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=True,
                              timestamp=datetime.now())
     for order in input_order['orders']:
-        food_list = [FoodItemMod.from_json(
-            json_util.dumps({**{key: food_dict[key] for key in fooditem_fields_to_capture}, **{'status': "queued"}}))
-                     for food_dict in order['food_list']]
+        food_list = [FoodItemMod.from_json(json_util.dumps(
+            {**{key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture},
+             **{'status': "queued"}})) for food_dict in order['food_list']]
         user = User.objects.get(id=order['placed_by'])
         table_order.orders.append(
             Order(placed_by={"id": str(user.id), "name": user.name}, food_list=food_list).save().to_dbref())
@@ -106,9 +106,9 @@ def push_to_table_cart(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
     order = input_order['orders'][0]
     if ordered_table.table_cart:
-        food_list = [FoodItemMod.from_json(
-            json_util.dumps({**{key: food_dict[key] for key in fooditem_fields_to_capture}, **{'status': "queued"}}))
-                     for food_dict in
+        food_list = [FoodItemMod.from_json(json_util.dumps(
+            {**{key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture},
+             **{'status': "queued"}})) for food_dict in
                      order['food_list']]
         user = User.objects.get(id=order['placed_by'])
         TableOrder.objects.get(id=ordered_table.table_cart.id).update(
@@ -117,9 +117,9 @@ def push_to_table_cart(input_order):
     else:
         table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
                                  timestamp=datetime.now())
-        food_list = [FoodItemMod.from_json(
-            json_util.dumps({**{key: food_dict[key] for key in fooditem_fields_to_capture}, **{'status': "queued"}}))
-                     for food_dict in
+        food_list = [FoodItemMod.from_json(json_util.dumps(
+            {**{key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture},
+             **{'status': "queued"}})) for food_dict in
                      order['food_list']]
         table_order.orders.append(Order(placed_by={"id": str(User.objects.get(id=order['placed_by']).id),
                                                    "name": User.objects.get(id=order['placed_by']).name},
