@@ -58,7 +58,9 @@ def send_new_orders(message):
         sending_dict['request_type'] = "pickup_request"
         KitchenStaff.objects[0].update(push__orders_cooked=sending_dict)
         for staff in Table.objects.get(id=table_order.table_id).staff:
+            staff.requests_queue.append(sending_dict)
             push_order_complete_notification(sending_dict, staff.endpoint_arn)
+            staff.save()
 
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, room=restaurant_object.manager_room, namespace=our_namespace)

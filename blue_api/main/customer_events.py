@@ -12,7 +12,7 @@ def fetch_rest_customer(message):
     rest_id = user_rest_dets['restaurant_id']
     emit('user_details', return_user_details(user_id))
     emit('table_details', return_table_details(user_id))
-    #TODO Remove this after frontend integraton
+    # TODO Remove this after frontend integraton
     emit('restaurant_object', return_restaurant_customer(rest_id))
     emit('home_screen_lists', home_screen_lists(rest_id))
 
@@ -57,7 +57,7 @@ def assistance_requests(message):
     assistance_ob = assistance_req(input_dict)
     returning_message = assistance_ob.to_json()
 
-    restaurant_object=Restaurant.objects.filter(tables__in=[input_dict['table']]).first()
+    restaurant_object = Restaurant.objects.filter(tables__in=[input_dict['table']]).first()
 
     returning_dict = json_util.loads(returning_message)
     user_id = str(returning_dict.pop('user'))
@@ -68,8 +68,13 @@ def assistance_requests(message):
     returning_dict['assistance_req_id'] = assistance_req_id
     returning_dict['request_type'] = "assistance_request"
 
+    for staff in Table.objects.get(id=input_dict['table']).staff:
+        staff.requests_queue.append(returning_dict)
+        push_assistance_request_notification(input_dict, staff.endpoint_arn)
+        staff.save()
+
     Staff.objects[2].update(push__requests_queue=returning_dict)
-    push_assistance_request_notification(returning_dict)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
-    socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room, namespace=our_namespace)
+    socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
+                   namespace=our_namespace)
