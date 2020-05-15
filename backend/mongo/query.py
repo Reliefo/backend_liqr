@@ -27,10 +27,10 @@ def home_screen_lists(rest_id):
                        'available_tags': Restaurant.objects(restaurant_id=rest_id).first().navigate_better_tags}}
 
     for tag in home_screen['available_tags']:
-        home_screen[tag] = [str(food.id) for food in FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
+        home_screen[tag] = [str(food.id) for food in FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
     for tag in home_screen['navigate better']['available_tags']:
         home_screen['navigate better'][tag] = [str(food.id) for food in
-                                               FoodItem.objects.filter(restaurant=rest_id).filter(tags__in=[tag])]
+                                               FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
 
     return json.dumps(home_screen)
 
