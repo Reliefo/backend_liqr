@@ -66,6 +66,7 @@ def send_new_orders(message):
 
     if sending_dict['type'] == 'completed':
         sending_dict['request_type'] = "pickup_request"
+        sending_dict['status'] = "pending"
         KitchenStaff.objects.get(id=message['kitchen_staff_id']).update(push__orders_cooked=sending_dict)
         for staff in Table.objects.get(id=table_order.table_id).staff:
             staff.requests_queue.append(sending_dict)

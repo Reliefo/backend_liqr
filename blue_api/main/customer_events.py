@@ -67,14 +67,15 @@ def assistance_requests(message):
     returning_dict['user'] = user_obj.name
     returning_dict['assistance_req_id'] = assistance_req_id
     returning_dict['request_type'] = "assistance_request"
+    returning_dict['status'] = "pending"
 
     for staff in Table.objects.get(id=input_dict['table']).staff:
         staff.requests_queue.append(returning_dict)
         if staff.endpoint_arn:
+            staff.requests_queue.append(returning_dict)
             push_assistance_request_notification(returning_dict, staff.endpoint_arn)
         staff.save()
 
-    Staff.objects[2].update(push__requests_queue=returning_dict)
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
     socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
