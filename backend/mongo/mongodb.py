@@ -98,6 +98,7 @@ class UserHistory(Document):
     assistance_reqs = ListField()
     timestamp = DateTimeField(default=datetime.now())
     table_id = StringField()
+    table = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -113,6 +114,7 @@ class OrderHistory(Document):
     assistance_reqs = ListField(DictField())
     timestamp = DateTimeField(default=datetime.now())
     table_id = StringField()
+    table = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
