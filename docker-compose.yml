@@ -14,7 +14,7 @@ services:
       - .:/code
     environment:
       FLASK_ENV: development
-      logging:
+    logging:
       driver: awslogs
       options:
         awslogs-region: ap-south-1
@@ -27,8 +27,16 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /tmp/mongodb/db:/data/db
+      - /mongo/mongodb/db:/data/db
     command: --quiet --auth
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-south-1
+        awslogs-group: agent_007
+        awslogs-create-group: 'true'
+        awslogs-stream: mongo_logs
+
   react:
     image: 020452232211.dkr.ecr.ap-south-1.amazonaws.com/liqr_react:latest
     #    build:
@@ -38,3 +46,10 @@ services:
       - "81:81"
     volumes:
       - ./relief_customer/:/code
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-south-1
+        awslogs-group: agent_007
+        awslogs-create-group: 'true'
+        awslogs-stream: react_logs
