@@ -472,8 +472,11 @@ def billed_cleaned(table_id):
             order_history.personal_orders.append(json_util.loads(table_ord.to_json()))
         else:
             order_history.table_orders.append(json_util.loads(table_ord.to_json()))
+        table_ord.delete()
     order_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
     order_history.assistance_reqs.extend([json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
+    for ass_req in table_ob.assistance_reqs:
+        ass_req.delete()
     order_history.timestamp = datetime.now()
     order_history.save()
     Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)
