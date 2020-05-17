@@ -79,3 +79,7 @@ def assistance_requests(message):
     socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
     socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
                    namespace=our_namespace)
+
+
+@socket_io.on('fetch_the_bill', namespace=our_namespace)
+def fetch_the_bill(message):

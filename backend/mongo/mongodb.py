@@ -101,6 +101,7 @@ class UserHistory(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
 
         return data
 
@@ -115,6 +116,7 @@ class OrderHistory(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
         return data
 
 
