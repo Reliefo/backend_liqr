@@ -83,3 +83,9 @@ def assistance_requests(message):
 
 @socket_io.on('fetch_the_bill', namespace=our_namespace)
 def fetch_the_bill(message):
+    input_dict = json_util.loads(message)
+    user_id = input_dict['user_id']
+    if input_dict['table_bill']:
+        return json_util.dumps({'status': "asking"})
+    else:
+        return json_util.dumps({'status': "asking"})
