@@ -5,7 +5,7 @@ from backend.mongo.utils import str_n
 import re
 from flask_login import current_user, login_user, login_required, logout_user
 from . import main
-from .. import login_manager
+from .. import socket_io, our_namespace, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import (
     get_jwt_identity, jwt_required, create_access_token, create_refresh_token, jwt_refresh_token_required
@@ -25,6 +25,7 @@ def user_register():
         email_id = request.form['email_id']
         name = request.form['name']
         table_id = request.form['table_id']
+        restaurant_object = Restaurant.objects.filter(tables__in=[table_id]).first()
         hash_pass = generate_password_hash(request.form["password"], method='sha256')
         if len(User.objects(email_id=email_id)) > 0:
             return json_util.dumps({"status": "User alreadt registered"})
@@ -49,11 +50,13 @@ def user_register():
             app_user = AppUser(username=username, password=hash_pass, room="cust_room",
                                rest_user=reguser_ob.to_dbref()).save()
             login_user(app_user)
+
+        socket_io.emit('user_scan', the_user.to_json(), room=restaurant_object.manager_room, namespace=our_namespace)
         access_token = create_access_token(identity=app_user["username"])
         refresh_token = create_refresh_token(identity=app_user["username"])
         return json_util.dumps(
             {"status": "Registration successful", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-             "name": the_user.name, "email": the_user.email_id, "user_id": str(the_user.id)})
+             "name": the_user.name, "email": the_user.email_id, "user_id": str(the_user.id), "restaurant_id": restaurant_object.restaurant_id})
     return json_util.dumps({"status": "Registration failed"})
 
 
@@ -64,7 +67,7 @@ def user_login():
         email_id = request.form['email_id']
         password = request.form['password']
         table_id = request.form['table_id']
-        restaurant_id = Restaurant.objects.filter(tables__in=[table_id])[0].restaurant_id
+        restaurant_object = Restaurant.objects.filter(tables__in=[table_id])[0]
         if re.search("\$", unique_id) and len(User.objects.filter(unique_id=unique_id)) > 0:
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
@@ -89,18 +92,20 @@ def user_login():
         if check_user:
             if check_password_hash(check_user['password'], password):
                 login_user(check_user)
+                socket_io.emit('user_scan', the_user.to_json(), room=restaurant_object.manager_room,
+                               namespace=our_namespace)
                 access_token = create_access_token(identity=check_user["username"])
                 refresh_token = create_refresh_token(identity=check_user["username"])
                 if the_user._cls == "User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
                          "name": the_user.name, "unique_id": the_user.email_id, "user_id": str(the_user.id),
-                         "restaurant_id": restaurant_id})
+                         "restaurant_id": restaurant_object.restaurant_id})
                 else:
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
                          "name": the_user.name, "unique_id": the_user.unique_id, "user_id": str(the_user.id),
-                         "restaurant_id": restaurant_id})
+                         "restaurant_id": restaurant_object.restaurant_id})
 
             else:
                 return json_util.dumps({"status": "Wrong Password", "code": "401"})

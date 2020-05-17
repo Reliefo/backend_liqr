@@ -69,8 +69,8 @@ def send_new_orders(message):
         sending_dict['status'] = "pending"
         KitchenStaff.objects.get(id=message['kitchen_staff_id']).update(push__orders_cooked=sending_dict)
         for staff in Table.objects.get(id=table_order.table_id).staff:
-            staff.requests_queue.append(sending_dict)
             if staff.endpoint_arn:
+                staff.requests_queue.append(sending_dict)
                 push_order_complete_notification(sending_dict, staff.endpoint_arn)
             staff.save()
 
@@ -136,6 +136,7 @@ def staff_acceptance(message):
             curr_staff.save()
             return
         else:
+            Assistance.objects.get(id=input_dict['assistance_req_id']).update(set__staff_id=input_dict['staff_id'])
             input_dict['msg'] = "Service has been accepted"
             Staff.objects.get(id=input_dict['staff_id']).update(push__assistance_history=input_dict)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
@@ -190,4 +191,4 @@ def bill_the_table(message):
     input_dict = json_util.loads(message)
     table_id = input_dict['table_id']
     billed_cleaned(table_id)
-    emit('billing', json_util.dumps({"status": "Billed and cleared"}))
+    emit('billing', json_util.dumps({"status": "Billed"}))

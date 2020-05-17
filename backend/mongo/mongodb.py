@@ -75,7 +75,7 @@ class Assistance(Document):
     user = ReferenceField(User)
     assistance_type = StringField(choices=types)
     timestamp = DateTimeField()
-    accepted_by = ReferenceField(Staff, default=None)
+    staff_id = StringField()
     meta = {'strict': False}
 
     def to_my_mongo(self):
@@ -241,11 +241,6 @@ class Table(Document):
             data['table_cart'] = self.table_cart.to_my_mongo()
         return json_util.dumps(data)
 
-    def remove_staff(self, staff_id):
-        for staff_ob in self.staff:
-            print(staff_ob.id)
-            self.staff.pop()
-
 
 class FoodOptions(EmbeddedDocument):
     options = ListField(DictField())
@@ -326,6 +321,10 @@ class Restaurant(Document):
             data['tables'][key] = self.tables[key].to_my_mongo()
         for key, table_order in enumerate(self.table_orders):
             data['table_orders'][key] = self.table_orders[key].to_my_mongo()
+        for key, order_his in enumerate(self.order_history):
+            data['order_history'][key] = self.order_history[key].to_my_mongo()
+        for key, ass_req in enumerate(self.assistance_reqs):
+            data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
 
         return json_util.dumps(data)
 

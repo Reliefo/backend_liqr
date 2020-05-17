@@ -68,13 +68,8 @@ def assistance_requests(message):
     returning_dict['assistance_req_id'] = assistance_req_id
     returning_dict['request_type'] = "assistance_request"
     returning_dict['status'] = "pending"
-
+    restaurant_object.assistance_reqs.append(returning_dict)
     for staff in Table.objects.get(id=input_dict['table']).staff:
-        socket_io.emit('logger', staff.name, namespace=our_namespace)
-        socket_io.emit('logger', staff.requests_queue, namespace=our_namespace)
-        staff.requests_queue.append(returning_dict)
-        socket_io.emit('logger', staff.name, namespace=our_namespace)
-        socket_io.emit('logger', staff.requests_queue, namespace=our_namespace)
         if staff.endpoint_arn:
             staff.requests_queue.append(returning_dict)
             push_assistance_request_notification(returning_dict, staff.endpoint_arn)
