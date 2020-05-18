@@ -194,5 +194,9 @@ def register_your_people(message):
 def bill_the_table(message):
     input_dict = json_util.loads(message)
     table_id = input_dict['table_id']
-    billed_cleaned(table_id)
-    emit('billing', message)
+    if billed_cleaned(table_id):
+        input_dict['status'] = 'billed'
+        emit('billing', json_util.dumps(input_dict))
+    else:
+        input_dict['status'] = 'failed'
+        emit('billing', json_util.dumps(input_dict))

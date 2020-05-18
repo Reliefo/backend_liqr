@@ -443,7 +443,9 @@ def configuring_home_screen(request_type, message):
 def billed_cleaned(table_id):
     table_ob = Table.objects.get(id=table_id)
     if len(table_ob.table_orders) == 0:
-        return "Table is empty"
+        table_ob.users = []
+        table_ob.save()
+        return False
     for user in table_ob.users:
         user_history = UserHistory()
         restaurant = Restaurant.objects(tables__in=[table_id]).first()
@@ -452,8 +454,8 @@ def billed_cleaned(table_id):
         user_history.restaurant_id = str(restaurant.id)
         user_history.restaurant_name = str(restaurant.name)
         for table_ord in table_ob.table_orders:
-            if (table_ord.personal_order):
-                if (table_ord.orders[0].placed_by['id'] == user.id):
+            if table_ord.personal_order:
+                if table_ord.orders[0].placed_by['id'] == user.id:
                     user_history.personal_orders.append(json_util.loads(table_ord.to_json()))
             else:
                 user_history.table_orders.append(json_util.loads(table_ord.to_json()))
@@ -470,7 +472,7 @@ def billed_cleaned(table_id):
     order_history.table_id = table_id
     order_history.table = table_ob.name
     for table_ord in table_ob.table_orders:
-        if (table_ord.personal_order):
+        if table_ord.personal_order:
             order_history.personal_orders.append(json_util.loads(table_ord.to_json()))
         else:
             order_history.table_orders.append(json_util.loads(table_ord.to_json()))
@@ -486,4 +488,4 @@ def billed_cleaned(table_id):
     table_ob.assistance_reqs = []
     table_ob.users = []
     table_ob.save()
-    return "Billed and cleared table"
+    return True
