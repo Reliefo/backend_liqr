@@ -60,7 +60,8 @@ def send_new_orders(message):
     food_name = FoodItem.objects.get(id=status_tuple[2]).name
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
-                    'food_id': status_tuple[2], 'kitchen_staff_id': message['kitchen_staff_id'], "table": table_order.table,
+                    'food_id': status_tuple[2], 'kitchen_staff_id': message['kitchen_staff_id'],
+                    "table": table_order.table,
                     'table_id': table_order.table_id, 'user': ordered_by, 'timestamp': str(datetime.now()),
                     'food_name': food_name}
 
@@ -136,9 +137,12 @@ def staff_acceptance(message):
             curr_staff.save()
             return
         else:
-            Assistance.objects.get(id=input_dict['assistance_req_id']).update(set__staff_id=input_dict['staff_id'])
+            staff = Staff.objects.get(id=input_dict['staff_id'])
+            staff.assistance_history.append(input_dict)
+            staff.save()
+            Assistance.objects.get(id=input_dict['assistance_req_id']).update(
+                set__accepted_by={'staff_id': staff.id, 'staff_name': staff.name})
             input_dict['msg'] = "Service has been accepted"
-            Staff.objects.get(id=input_dict['staff_id']).update(push__assistance_history=input_dict)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.save()
             return

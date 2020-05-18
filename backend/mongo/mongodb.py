@@ -75,7 +75,7 @@ class Assistance(Document):
     user = ReferenceField(User)
     assistance_type = StringField(choices=types)
     timestamp = DateTimeField()
-    staff_id = StringField()
+    accepted_by = DictField()
     meta = {'strict': False}
 
     def to_my_mongo(self):
