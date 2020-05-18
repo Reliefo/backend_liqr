@@ -58,7 +58,8 @@ def assistance_requests(message):
     returning_message = assistance_ob.to_json()
 
     restaurant_object = Restaurant.objects.filter(tables__in=[input_dict['table']]).first()
-
+    restaurant_object.assistance_reqs.append(assistance_ob.to_dbref())
+    restaurant_object.save()
     returning_dict = json_util.loads(returning_message)
     user_id = str(returning_dict.pop('user'))
     assistance_req_id = str(returning_dict.pop('_id'))
