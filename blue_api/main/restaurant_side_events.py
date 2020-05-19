@@ -141,7 +141,7 @@ def staff_acceptance(message):
                 set__accepted_by={'staff_id': str(curr_staff.id), 'staff_name': curr_staff.name})
             curr_staff.assistance_history.append(input_dict)
             staff_id = input_dict.pop('staff_id')
-            input_dict['accepted_py'] = {'staff_id': staff_id, 'staff_name': curr_staff.name}
+            input_dict['accepted_by'] = {'staff_id': staff_id, 'staff_name': curr_staff.name}
             input_dict['msg'] = "Service has been accepted"
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.save()
