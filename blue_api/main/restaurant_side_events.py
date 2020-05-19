@@ -138,10 +138,10 @@ def staff_acceptance(message):
             return
         else:
             staff = Staff.objects.get(id=input_dict['staff_id'])
+            Assistance.objects.get(id=input_dict['assistance_req_id']).update(
+                set__accepted_by={'staff_id': str(staff.id), 'staff_name': staff.name})
             staff.assistance_history.append(input_dict)
             staff.save()
-            Assistance.objects.get(id=input_dict['assistance_req_id']).update(
-                set__accepted_by={'staff_id': staff.id, 'staff_name': staff.name})
             input_dict['msg'] = "Service has been accepted"
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.save()

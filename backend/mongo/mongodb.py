@@ -80,11 +80,21 @@ class Assistance(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
+        data.pop('user')
+        data.pop('_id')
+        data['user_id'] = str(self.user.id)
+        data['user'] = self.user.name
+        data['assistance_req_id'] = str(self.id)
         data['timestamp'] = str(data['timestamp'])
         return data
 
     def to_json(self):
         data = self.to_mongo()
+        data.pop('user')
+        data.pop('_id')
+        data['user_id'] = str(self.user.id)
+        data['user'] = self.user.name
+        data['assistance_req_id'] = str(self.id)
         data['timestamp'] = str(data['timestamp'])
         return json_util.dumps(data)
 
@@ -245,6 +255,11 @@ class Table(Document):
             data['table_cart'] = self.table_cart.to_my_mongo()
         return json_util.dumps(data)
 
+    def remove_staff(self, staff_id):
+        for staff_ob in self.staff:
+            print(staff_ob.id)
+            self.staff.pop()
+
 
 class FoodOptions(EmbeddedDocument):
     options = ListField(DictField())
@@ -305,11 +320,11 @@ class Restaurant(Document):
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
-    home_screen_tags = ListField(StringField())
-    navigate_better_tags = ListField(StringField())
+    order_history = ListField(ReferenceField(OrderHistory, reverse_delete_rule=PULL))
+    home_screen_tags = ListField(StringField(), default=[])
+    navigate_better_tags = ListField(StringField(), defualt=[])
     manager_room = StringField()
     kitchen_room = StringField()
-    order_history = ListField(ReferenceField(OrderHistory))
 
     def to_json(self):
         data = self.to_mongo()
@@ -327,8 +342,6 @@ class Restaurant(Document):
             data['table_orders'][key] = self.table_orders[key].to_my_mongo()
         for key, order_his in enumerate(self.order_history):
             data['order_history'][key] = self.order_history[key].to_my_mongo()
-        for key, ass_req in enumerate(self.assistance_reqs):
-            data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
 
         return json_util.dumps(data)
 

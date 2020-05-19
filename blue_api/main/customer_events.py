@@ -61,12 +61,6 @@ def assistance_requests(message):
     restaurant_object.assistance_reqs.append(assistance_ob.to_dbref())
     restaurant_object.save()
     returning_dict = json_util.loads(returning_message)
-    user_id = str(returning_dict.pop('user'))
-    assistance_req_id = str(returning_dict.pop('_id'))
-    user_obj = User.objects.get(id=user_id)
-    returning_dict['user_id'] = user_id
-    returning_dict['user'] = user_obj.name
-    returning_dict['assistance_req_id'] = assistance_req_id
     returning_dict['request_type'] = "assistance_request"
     returning_dict['status'] = "pending"
     restaurant_object.assistance_reqs.append(returning_dict)
@@ -77,7 +71,7 @@ def assistance_requests(message):
         staff.save()
 
     returning_dict['msg'] = "Service has been requested"
-    socket_io.emit('assist', json_util.dumps(returning_dict), room=user_obj.current_table_id, namespace=our_namespace)
+    socket_io.emit('assist', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
     socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
                    namespace=our_namespace)
 
