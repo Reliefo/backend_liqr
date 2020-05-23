@@ -124,6 +124,7 @@ def staff_acceptance(message):
                 if request['assistance_req_id'] == input_dict['assistance_req_id']:
                     requests_queue.pop(n)
         table.requests_queue = requests_queue
+        table.save()
         if input_dict['status'] == "rejected":
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
