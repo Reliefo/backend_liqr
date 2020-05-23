@@ -36,7 +36,7 @@ def update_staff_endpoint(device_token, staff):
 
 def verify_endpoint(staff_id):
     staff = Staff.objects.get(id=staff_id)
-    if staff.endpoint_arn:
+    if not staff.endpoint_arn:
         return False
     platform_endpoint = sns.PlatformEndpoint(staff.endpoint_arn)
     enabled = platform_endpoint.attributes['Enabled']
