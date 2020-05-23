@@ -20,7 +20,7 @@ def push_order_complete_notification(request_dict, staff_endpoint_arn):
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
     try:
-        response = sns_client.publish(
+        sns_client.publish(
             TargetArn=staff_endpoint_arn,
             Message=json_util.dumps(final_message_dict),
             Subject='Thsi is subejct',
@@ -28,7 +28,7 @@ def push_order_complete_notification(request_dict, staff_endpoint_arn):
         )
     except sns_client.exceptions.EndpointDisabledException:
         remove_endpoint(staff_endpoint_arn)
-    return response
+    return
 
 
 def push_assistance_request_notification(request_dict, staff_endpoint_arn):
