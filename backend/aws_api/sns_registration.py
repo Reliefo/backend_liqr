@@ -37,4 +37,4 @@ def update_staff_endpoint(device_token, staff):
 def remove_endpoint(endpoint_arn):
     platform_endpoint = sns.PlatformEndpoint(endpoint_arn)
     staff_id = platform_endpoint.attributes['CustomUserData'].split('$')[1]
-    Staff.objects.get(staff_id=staff_id).update(endpoint_arn=None)
+    Staff.objects.get(id=staff_id).update(endpoint_arn=None)
