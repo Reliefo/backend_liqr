@@ -34,7 +34,14 @@ def update_staff_endpoint(device_token, staff):
         return
 
 
-def remove_endpoint(endpoint_arn):
-    platform_endpoint = sns.PlatformEndpoint(endpoint_arn)
-    staff_id = platform_endpoint.attributes['CustomUserData'].split('$')[1]
-    Staff.objects.get(id=staff_id).update(set__endpoint_arn=None)
+def verify_endpoint(staff_id):
+    staff = Staff.objects.get(id=staff_id)
+    platform_endpoint = sns.PlatformEndpoint(staff)
+    enabled = platform_endpoint.attributes['Enabled']
+    if enabled == 'false':
+        staff.endpoint_arn = None
+        platform_endpoint.delete()
+        staff.save()
+        return False
+    else:
+        return True

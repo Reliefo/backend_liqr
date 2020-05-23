@@ -5,6 +5,7 @@ from .. import socket_io, our_namespace
 from backend.mongo.query import *
 from werkzeug.security import generate_password_hash
 from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification
+from backend.aws_api.sns_registration import verify_endpoint
 
 
 @socket_io.on('fetch_rest_manager', namespace=our_namespace)
@@ -199,3 +200,15 @@ def bill_the_table(message):
     else:
         input_dict['status'] = 'failed'
         emit('billing', json_util.dumps(input_dict))
+
+
+@socket_io.on('check_endpoint', namespace=our_namespace)
+def check_endpoint(message):
+    input_dict = json_util.loads(message)
+    if verify_endpoint(input_dict['staff_id']):
+        input_dict['status'] = "working"
+        emit('endpoint_check', json_util.dumps(input_dict))
+    else:
+        input_dict['status'] = "damaged"
+        emit('endpoint_check', json_util.dumps(input_dict))
+
