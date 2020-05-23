@@ -70,12 +70,14 @@ def send_new_orders(message):
         sending_dict['request_type'] = "pickup_request"
         sending_dict['status'] = "pending"
         KitchenStaff.objects.get(id=message['kitchen_staff_id']).update(push__orders_cooked=sending_dict)
-        for staff in Table.objects.get(id=table_order.table_id).staff:
+        table = Table.objects.get(id=table_order.table_id)
+        table.requests_queue.append(sending_dict)
+        for staff in table.staff:
             if staff.endpoint_arn:
                 sending_dict['staff_id'] = staff.id
-                staff.requests_queue.append(sending_dict)
                 push_order_complete_notification(sending_dict, staff.endpoint_arn)
             staff.save()
+        table.save()
 
     sending_json = json_util.dumps(sending_dict)
     socket_io.emit('order_updates', sending_json, room=restaurant_object.manager_room, namespace=our_namespace)
@@ -87,14 +89,16 @@ def send_new_orders(message):
 @socket_io.on('staff_acceptance', namespace=our_namespace)
 def staff_acceptance(message):
     input_dict = json_util.loads(message)
+    curr_staff = Staff.objects.get(id=input_dict['staff_id'])
+    table = Table.objects.get(id=input_dict['table_id'])
+    requests_queue = table.requests_queue
     if input_dict['request_type'] == 'pickup_request':
-        curr_staff = Staff.objects.get(id=input_dict['staff_id'])
-        requests_queue = curr_staff.requests_queue
         for n, request in enumerate(requests_queue):
             if request['request_type'] == 'pickup_request':
                 if request['order_id'] == input_dict['order_id'] and request['food_id'] == input_dict['food_id']:
                     requests_queue.pop(n)
-        curr_staff.requests_queue = requests_queue
+        table.requests_queue = requests_queue
+        table.save()
         if input_dict['status'] == "rejected":
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.rej_order_history.append(input_dict)
@@ -116,13 +120,11 @@ def staff_acceptance(message):
             curr_staff.save()
             return
     if input_dict['request_type'] == 'assistance_request':
-        curr_staff = Staff.objects.get(id=input_dict['staff_id'])
-        requests_queue = curr_staff.requests_queue
         for n, request in enumerate(requests_queue):
             if request['request_type'] == 'assistance_request':
                 if request['assistance_req_id'] == input_dict['assistance_req_id']:
                     requests_queue.pop(n)
-        curr_staff.requests_queue = requests_queue
+        table.requests_queue = requests_queue
         if input_dict['status'] == "rejected":
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
@@ -212,4 +214,3 @@ def check_endpoint(message):
     else:
         input_dict['status'] = "damaged"
         emit('endpoint_check', json_util.dumps(input_dict))
-

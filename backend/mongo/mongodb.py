@@ -229,6 +229,7 @@ class Table(Document):
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
+    requests_queue = ListField(DictField())
     meta = {'strict': False}
 
     def to_my_mongo(self):

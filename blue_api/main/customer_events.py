@@ -64,11 +64,13 @@ def assistance_requests(message):
     returning_dict['request_type'] = "assistance_request"
     returning_dict['status'] = "pending"
     restaurant_object.assistance_reqs.append(returning_dict)
-    for staff in Table.objects.get(id=input_dict['table']).staff:
+    table = Table.objects.get(id=input_dict['table'])
+    table.requests_queue.append(returning_dict)
+    for staff in table.staff:
         if staff.endpoint_arn:
-            staff.requests_queue.append(returning_dict)
             push_assistance_request_notification(returning_dict, staff.endpoint_arn)
         staff.save()
+    table.save()
 
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
