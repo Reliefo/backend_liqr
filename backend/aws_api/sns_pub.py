@@ -1,6 +1,6 @@
 import boto3
 from bson import json_util
-
+from backend.aws_api.sns_registration import remove_endpoint
 sns_client = boto3.client(
     "sns",
     aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
@@ -19,12 +19,15 @@ def push_order_complete_notification(request_dict, staff_endpoint_arn):
 
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
-    response = sns_client.publish(
-        TargetArn=staff_endpoint_arn,
-        Message=json_util.dumps(final_message_dict),
-        Subject='Thsi is subejct',
-        MessageStructure="json"
-    )
+    try:
+        response = sns_client.publish(
+            TargetArn=staff_endpoint_arn,
+            Message=json_util.dumps(final_message_dict),
+            Subject='Thsi is subejct',
+            MessageStructure="json"
+        )
+    except sns_client.exceptions.EndpointDisabledException:
+        remove_endpoint(staff_endpoint_arn)
     return response
 
 
