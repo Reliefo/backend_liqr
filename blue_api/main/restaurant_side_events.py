@@ -115,7 +115,6 @@ def staff_acceptance(message):
             return
     if input_dict['request_type'] == 'assistance_request':
         curr_staff = Staff.objects.get(id=input_dict['staff_id'])
-        input_dict['staff_name'] = curr_staff.name
         requests_queue = curr_staff.requests_queue
         for n, request in enumerate(requests_queue):
             if request['request_type'] == 'assistance_request':

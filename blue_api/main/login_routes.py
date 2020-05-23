@@ -56,7 +56,8 @@ def user_register():
         refresh_token = create_refresh_token(identity=app_user["username"])
         return json_util.dumps(
             {"status": "Registration successful", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-             "name": the_user.name, "email": the_user.email_id, "user_id": str(the_user.id), "restaurant_id": restaurant_object.restaurant_id})
+             "name": the_user.name, "email": the_user.email_id, "user_id": str(the_user.id),
+             "restaurant_id": restaurant_object.restaurant_id})
     return json_util.dumps({"status": "Registration failed"})
 
 
@@ -125,13 +126,19 @@ def register():
                         return json_util.dumps({"status": "Already Registered"})
                     hash_pass = generate_password_hash(request.form["password"], method='sha256')
                     if request.form['user_type'] == "manager":
-                        restaurant_object = Restaurant(name=request.form['restaurant_name'],
-                                                       restaurant_id=request.form['restaurant_id'],
-                                                       ).save()
+                        if request.form['new_rest'] == 'yes':
+                            if len(Restaurant.objects(restaurant_id=request.form['restaurant_id'])) > 0:
+                                return json_util.dumps({"status": "Registration failed, this restaurant already exists"})
+                            restaurant_object = Restaurant(name=request.form['restaurant_name'],
+                                                           restaurant_id=request.form['restaurant_id'],
+                                                           ).save()
+                        else:
+                            restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
                         AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
                                 manager_name=request.form['manager_name'],
                                 restaurant_id=restaurant_object.restaurant_id,
                                 user_type=request.form["user_type"]).save()
+                        return json_util.dumps({"status": "Registration successful"})
 
                     AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
                             restaurant_id=request.form["restaurant_id"], user_type=request.form["user_type"]).save()
