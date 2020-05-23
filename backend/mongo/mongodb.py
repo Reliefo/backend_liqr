@@ -190,7 +190,6 @@ class TempUser(User):
 
 class Staff(Document):
     name = StringField()
-    requests_queue = ListField(DynamicField())
     assistance_history = ListField(DictField())
     rej_assistance_history = ListField(DictField())
     order_history = ListField(DictField())
@@ -230,6 +229,7 @@ class Table(Document):
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     requests_queue = ListField(DictField())
+
     meta = {'strict': False}
 
     def to_my_mongo(self):
