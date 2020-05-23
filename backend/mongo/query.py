@@ -24,7 +24,7 @@ def fetch_requests_queue(staff_id, rest_id):
                     if new_datetime > this_datetime:
                         requests_queue.insert(n + 1, request)
                         break
-    return requests_queue
+    return json_util.dumps({'requests_queue': requests_queue})
 
 
 def return_user_details(user_id):
