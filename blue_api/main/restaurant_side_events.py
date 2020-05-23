@@ -76,7 +76,6 @@ def send_new_orders(message):
             if staff.endpoint_arn:
                 sending_dict['staff_id'] = staff.id
                 push_order_complete_notification(sending_dict, staff.endpoint_arn)
-            staff.save()
         table.save()
 
     sending_json = json_util.dumps(sending_dict)
@@ -159,6 +158,7 @@ def fetch_staff_details(message):
     rest_id = user_rest_dets['restaurant_id']
     emit('staff_details', return_staff_details(staff_id))
     emit('restaurant_object', return_restaurant(rest_id))
+    emit('requests_queue', fetch_requests_queue(staff_id, rest_id))
 
 
 @socket_io.on('register_your_people', namespace=our_namespace)

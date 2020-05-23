@@ -9,6 +9,24 @@ def return_staff_details(staff_id):
     return Staff.objects.get(id=staff_id).to_json()
 
 
+def fetch_requests_queue(staff_id, rest_id):
+    staff = Staff.objects.get(id=staff_id)
+    requests_queue = []
+    for table in Restaurant.objects(restaurant_id=rest_id).first().tables:
+        if staff in table.staff:
+            for request in table.requests_queue:
+                if not requests_queue:
+                    requests_queue.append(request)
+                    continue
+                new_datetime = datetime.strptime(request['timestamp'], "%Y-%m-%d %H:%M:%S.%f")
+                for n in range(len(requests_queue) - 1, -1, -1):
+                    this_datetime = datetime.strptime(requests_queue[n]['timestamp'], "%Y-%m-%d %H:%M:%S.%f")
+                    if new_datetime > this_datetime:
+                        requests_queue.insert(n + 1, request)
+                        break
+    return requests_queue
+
+
 def return_user_details(user_id):
     return User.objects.get(id=user_id).to_json()
 
@@ -109,7 +127,7 @@ def push_to_table_cart(input_order):
         food_list = [FoodItemMod.from_json(json_util.dumps(
             {**{key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture},
              **{'status': "queued"}})) for food_dict in
-                     order['food_list']]
+            order['food_list']]
         user = User.objects.get(id=order['placed_by'])
         TableOrder.objects.get(id=ordered_table.table_cart.id).update(
             push__orders=Order(placed_by={"id": str(user.id), "name": user.name},
@@ -120,7 +138,7 @@ def push_to_table_cart(input_order):
         food_list = [FoodItemMod.from_json(json_util.dumps(
             {**{key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture},
              **{'status': "queued"}})) for food_dict in
-                     order['food_list']]
+            order['food_list']]
         table_order.orders.append(Order(placed_by={"id": str(User.objects.get(id=order['placed_by']).id),
                                                    "name": User.objects.get(id=order['placed_by']).name},
                                         food_list=food_list).save().to_dbref())
