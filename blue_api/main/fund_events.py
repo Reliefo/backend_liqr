@@ -33,7 +33,7 @@ def connect():
     elif app_user.user_type == "customer":
         join_room(str(app_user.rest_user.current_table_id))
     AppUser.objects(username=username).first().update(set__sid=request.sid)
-    sys.stdout.write(username+" who is a "+app_user.user_type+" connected")
+    sys.stderr.write(username+" who is a "+app_user.user_type+" connected")
     # all_clients.append(request.sid)
 
 
