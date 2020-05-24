@@ -19,7 +19,6 @@ def connect():
     username = get_jwt_identity()
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
-    sys.stdout.write(username+" who is a "+app_user.user_type+" joined "+app_user.restaurant_id)
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
@@ -34,6 +33,7 @@ def connect():
     elif app_user.user_type == "customer":
         join_room(str(app_user.rest_user.current_table_id))
     AppUser.objects(username=username).first().update(set__sid=request.sid)
+    sys.stdout.write(username+" who is a "+app_user.user_type+" connected")
     # all_clients.append(request.sid)
 
 
