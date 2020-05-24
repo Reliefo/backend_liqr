@@ -1,4 +1,4 @@
-import threading
+import sys
 from . import main
 from flask import session, request
 from .. import socket_io, our_namespace
@@ -19,6 +19,7 @@ def connect():
     username = get_jwt_identity()
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
+    sys.stdout.write(username+" who is a "+app_user.user_type+" joined "+app_user.restaurant_id)
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
