@@ -101,16 +101,18 @@ def staff_acceptance(message):
         if input_dict['status'] == "rejected":
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.rej_order_history.append(input_dict)
-            push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
             curr_staff.save()
+            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
             return
         elif input_dict['status'] == "accepted_rejected":
             input_dict['status'] = 'accepted'
             curr_staff.order_history.remove(input_dict)
             input_dict['status'] = 'rejected'
             curr_staff.rej_order_history.append(input_dict)
-            push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
             curr_staff.save()
+            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
             return
         else:
             input_dict['type'] = 'on_the_way'
@@ -127,17 +129,19 @@ def staff_acceptance(message):
         table.save()
         if input_dict['status'] == "rejected":
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
-            push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.save()
+            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
             return
         elif input_dict['status'] == "accepted_rejected":
             input_dict['status'] = 'accepted'
             Staff.objects.get(id=input_dict['staff_id']).update(pull__assistance_history=input_dict)
             input_dict['status'] = 'rejected'
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
-            push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
             curr_staff.save()
+            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
             return
         else:
             Assistance.objects.get(id=input_dict['assistance_req_id']).update(
