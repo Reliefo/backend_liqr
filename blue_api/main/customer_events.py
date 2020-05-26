@@ -85,6 +85,8 @@ def fetch_the_bill(message):
     socket_io.emit('logger', message, namespace=our_namespace)
     user_id = input_dict['user_id']
     if input_dict['table_bill']:
-        return json_util.dumps({'status': "asking"})
+        returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your table bill will be brought to you'})
+        socket_io.emit('billing', returning_json, namespace=our_namespace)
     else:
-        return json_util.dumps({'status': "asking"})
+        returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your personal bill will be brought to you'})
+        socket_io.emit('billing', returning_json, namespace=our_namespace)
