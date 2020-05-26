@@ -26,7 +26,7 @@ def place_personal_order(message):
     restaurant_object = Restaurant.objects.filter(tables__in=[new_order_dict['table_id']]).first()
     socket_io.emit('new_orders', new_order, room=restaurant_object.manager_room, namespace=our_namespace)
     socket_io.emit('new_orders', new_order, room=restaurant_object.kitchen_room, namespace=our_namespace)
-    socket_io.emit('new_orders', new_order, room=new_order.table_id, namespace=our_namespace)
+    socket_io.emit('new_orders', new_order, room=new_order_dict['table_id'], namespace=our_namespace)
 
 
 @socket_io.on('push_to_table_cart', namespace=our_namespace)
@@ -50,7 +50,7 @@ def place_table_order(message):
     restaurant_object = Restaurant.objects.filter(tables__in=[new_order_dict['table_id']]).first()
     socket_io.emit('new_orders', new_order, room=restaurant_object.manager_room, namespace=our_namespace)
     socket_io.emit('new_orders', new_order, room=restaurant_object.kitchen_room, namespace=our_namespace)
-    socket_io.emit('new_orders', new_order, room=new_order.table_id, namespace=our_namespace)
+    socket_io.emit('new_orders', new_order, room=new_order_dict['table_id'], namespace=our_namespace)
 
 
 """
