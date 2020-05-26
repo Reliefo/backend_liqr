@@ -35,8 +35,9 @@ def push_to_table(message):
     socket_io.emit('logger', message, namespace=our_namespace)
     push_to_table_cart(input_order)
     table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
+    table_cart_order_dict = json_util.loads(table_cart_order)
     socket_io.emit('table_cart_orders', table_cart_order, namespace=our_namespace)
-    socket_io.emit('table_cart_orders', table_cart_order, room=table_cart_order.table_id, namespace=our_namespace)
+    socket_io.emit('table_cart_orders', table_cart_order, room=table_cart_order_dict['table_id'], namespace=our_namespace)
 
 
 @socket_io.on('place_table_order', namespace=our_namespace)
@@ -95,6 +96,7 @@ def fetch_the_bill(message):
     user_id = input_dict['user_id']
     if input_dict['table_bill']:
         returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your table bill will be brought to you'})
+        billed_cleaned(input_dict['table_id'])
         socket_io.emit('billing', returning_json, namespace=our_namespace)
     else:
         returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your personal bill will be brought '

@@ -2,6 +2,7 @@ from flask import session, jsonify, request
 from backend.mongo.mongodb import *
 from backend.mongo.query import user_scan
 from backend.mongo.utils import str_n
+import sys
 import re
 from flask_login import current_user, login_user, login_required, logout_user
 from . import main
@@ -204,7 +205,9 @@ def change_password():
 @main.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh():
+    device_token = request.form['device_token']
     current_username = get_jwt_identity()
+    sys.stderr.write("LiQR_Error: "+current_username+" who has a "+device_token+" connected\n")
     ret = {
         'access_token': create_access_token(identity=current_username),
         'code': '200'

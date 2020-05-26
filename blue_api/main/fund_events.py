@@ -39,12 +39,10 @@ def connect():
 
 @socket_io.on('disconnect', namespace=our_namespace)
 def on_disconnect():
-    print("Disconnected :( from ", request.sid)
+    # print("Disconnected :( from ", request.sid)
+    return
 
 
 @socket_io.on('check_logger', namespace=our_namespace)
 def fetch_all(message):
-    print("here i am printing requiest id", request.sid, request.namespace)
-    print(message)
-    print(datetime.now())
     emit('logger', {'msg': "Event fetch is workign HERE IT IS TABLE      " + str(np.random.randint(100))}, )
