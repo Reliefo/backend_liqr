@@ -22,7 +22,7 @@ def place_personal_order(message):
     input_order = json_util.loads(message)
     socket_io.emit('logger', message, namespace=our_namespace)
     new_order = order_placement(input_order)
-    restaurant_object = Restaurant.objects.filter(table_orders__in=[message['table_order_id']]).first()
+    restaurant_object = Restaurant.objects.filter(tables__in=[new_order.table_id]).first()
     socket_io.emit('new_orders', new_order, room=restaurant_object.manager_room, namespace=our_namespace)
     socket_io.emit('new_orders', new_order, room=restaurant_object.kitchen_room, namespace=our_namespace)
     socket_io.emit('new_orders', new_order, room=new_order.table_id, namespace=our_namespace)
@@ -45,7 +45,7 @@ def place_table_order(message):
     table_id = table_id_dict['table_id']
     socket_io.emit('logger', message, namespace=our_namespace)
     new_order = order_placement_table(table_id)
-    restaurant_object = Restaurant.objects.filter(table_orders__in=[message['table_order_id']]).first()
+    restaurant_object = Restaurant.objects.filter(tables__in=[new_order.table_id]).first()
     socket_io.emit('new_orders', new_order, room=restaurant_object.manager_room, namespace=our_namespace)
     socket_io.emit('new_orders', new_order, room=restaurant_object.kitchen_room, namespace=our_namespace)
     socket_io.emit('new_orders', new_order, room=new_order.table_id, namespace=our_namespace)
