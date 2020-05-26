@@ -22,7 +22,10 @@ def place_personal_order(message):
     input_order = json_util.loads(message)
     socket_io.emit('logger', message, namespace=our_namespace)
     new_order = order_placement(input_order)
-    socket_io.emit('new_orders', new_order, namespace=our_namespace)
+    restaurant_object = Restaurant.objects.filter(table_orders__in=[message['table_order_id']]).first()
+    socket_io.emit('new_orders', new_order, room=restaurant_object.manager_room, namespace=our_namespace)
+    socket_io.emit('new_orders', new_order, room=restaurant_object.kitchen_room, namespace=our_namespace)
+    socket_io.emit('new_orders', new_order, room=new_order.table_id, namespace=our_namespace)
 
 
 @socket_io.on('push_to_table_cart', namespace=our_namespace)
@@ -32,6 +35,7 @@ def push_to_table(message):
     push_to_table_cart(input_order)
     table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
     socket_io.emit('table_cart_orders', table_cart_order, namespace=our_namespace)
+    socket_io.emit('table_cart_orders', table_cart_order, room=table_cart_order.table_id, namespace=our_namespace)
 
 
 @socket_io.on('place_table_order', namespace=our_namespace)
@@ -41,7 +45,10 @@ def place_table_order(message):
     table_id = table_id_dict['table_id']
     socket_io.emit('logger', message, namespace=our_namespace)
     new_order = order_placement_table(table_id)
-    socket_io.emit('new_orders', new_order, namespace=our_namespace)
+    restaurant_object = Restaurant.objects.filter(table_orders__in=[message['table_order_id']]).first()
+    socket_io.emit('new_orders', new_order, room=restaurant_object.manager_room, namespace=our_namespace)
+    socket_io.emit('new_orders', new_order, room=restaurant_object.kitchen_room, namespace=our_namespace)
+    socket_io.emit('new_orders', new_order, room=new_order.table_id, namespace=our_namespace)
 
 
 """
@@ -88,5 +95,6 @@ def fetch_the_bill(message):
         returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your table bill will be brought to you'})
         socket_io.emit('billing', returning_json, namespace=our_namespace)
     else:
-        returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your personal bill will be brought to you'})
+        returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your personal bill will be brought '
+                                                                                'to you'})
         socket_io.emit('billing', returning_json, namespace=our_namespace)
