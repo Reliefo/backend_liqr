@@ -32,14 +32,57 @@ def place_personal_order(message):
 
 @socket_io.on('push_to_table_cart', namespace=our_namespace)
 def push_to_table(message):
+    """{
+    "table": "5eccc49668b1b9d33f7108ac",
+    "orders": [
+        {
+            "placed_by": "5ece0b5f25e42280c6d83951",
+            "food_list": [
+                {
+                    "name": "Nachos",
+                    "description": "Nachos with extra toppings. Chicken or veg. With cheese",
+                    "price": "190",
+                    "restaurant_id": "BNGHSR0004",
+                    "quantity": 1,
+                    "food_id": "5eccc9a668b1b9d33f7108b3",
+                    "food_options": {
+                        "options": [
+                            {
+                                "option_name": "Veg",
+                                "option_price": "190"
+                            }
+                        ],
+                        "choices": [
+                            "Mozzarella"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}"""
     input_order = json_util.loads(message)
     sys.stderr.write("LiQR_Error: "+message+" was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     push_to_table_cart(input_order)
     table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
-    table_cart_order_dict = json_util.loads(table_cart_order)
     socket_io.emit('table_cart_orders', table_cart_order, namespace=our_namespace)
-    socket_io.emit('table_cart_orders', table_cart_order, room=table_cart_order_dict['table_id'], namespace=our_namespace)
+    socket_io.emit('table_cart_orders', table_cart_order, room=input_order['table'], namespace=our_namespace)
+
+
+@socket_io.on('remove_table_cart', namespace=our_namespace)
+def remove_table_cart(message):
+    """Needs:
+    table_id
+    order_id
+    food_id"""
+    input_order = json_util.loads(message)
+    sys.stderr.write("LiQR_Error: "+message+" was sent to customer events\n")
+    socket_io.emit('logger', message, namespace=our_namespace)
+    remove_from_table_cart(input_order)
+    table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
+    socket_io.emit('table_cart_orders', table_cart_order, namespace=our_namespace)
+    socket_io.emit('table_cart_orders', table_cart_order, room=input_order['table'], namespace=our_namespace)
 
 
 @socket_io.on('place_table_order', namespace=our_namespace)

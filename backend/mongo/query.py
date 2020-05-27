@@ -128,9 +128,16 @@ def push_to_table_cart(input_order):
              **{'status': "queued"}})) for food_dict in
             order['food_list']]
         user = User.objects.get(id=order['placed_by'])
-        TableOrder.objects.get(id=ordered_table.table_cart.id).update(
-            push__orders=Order(placed_by={"id": str(user.id), "name": user.name},
-                               food_list=food_list).save().to_dbref())
+        cart_order_id = None
+        for cart_order in TableOrder.objects.get(id=ordered_table.table_cart.id).orders:
+            if str(user.id) == cart_order.placed_by['id']:
+                cart_order_id = cart_order.id
+        if cart_order_id:
+            Order.objects.get(id=cart_order_id).update(push_all__food_list=food_list)
+        else:
+            TableOrder.objects.get(id=ordered_table.table_cart.id).update(
+                push__orders=Order(placed_by={"id": str(user.id), "name": user.name},
+                                   food_list=food_list).save().to_dbref())
     else:
         table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
                                  timestamp=datetime.now())
@@ -143,6 +150,14 @@ def push_to_table_cart(input_order):
                                         food_list=food_list).save().to_dbref())
         table_order.save()
         Table.objects.get(id=input_order['table']).update(set__table_cart=table_order.to_dbref())
+
+
+def remove_from_table_cart(input_dict):
+    remove_food = None
+    for food_item in Order.objects.get(id=input_dict['order_id']).food_list:
+        if food_item.food_id == input_dict['food_id']:
+            remove_food = food_item
+    Order.objects.get(id=input_dict['order_id']).update(pull__food_list=remove_food)
 
 
 def order_placement_table(table_id):
