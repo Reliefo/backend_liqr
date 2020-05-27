@@ -1,6 +1,7 @@
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
 from flask_socketio import emit
+import sys
 from backend.aws_api.sns_pub import push_assistance_request_notification
 
 
@@ -32,6 +33,7 @@ def place_personal_order(message):
 @socket_io.on('push_to_table_cart', namespace=our_namespace)
 def push_to_table(message):
     input_order = json_util.loads(message)
+    sys.stderr.write("LiQR_Error: "+message+" was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     push_to_table_cart(input_order)
     table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
