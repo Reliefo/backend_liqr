@@ -32,7 +32,11 @@ def return_user_details(user_id):
 
 
 def return_table_details(user_id):
-    return Table.objects(users__in=[user_id]).first().to_cust_json()
+    current_table_id = User.objects.get(id=user_id).current_table_id
+    try:
+        return Table.objects.get(id=current_table_id).to_cust_json()
+    except ValidationError:
+        return Table.objects(name='Not a table', seats=420)[0].to_json()
 
 
 def return_restaurant(rest_id):
