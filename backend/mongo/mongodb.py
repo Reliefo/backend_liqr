@@ -195,6 +195,7 @@ class Staff(Document):
     order_history = ListField(DictField())
     rej_order_history = ListField(DictField())
     endpoint_arn = StringField()
+    device_token = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()

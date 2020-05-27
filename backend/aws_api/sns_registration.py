@@ -22,6 +22,7 @@ def update_staff_endpoint(device_token, staff):
                                                                               CustomUserData=staff.name + "$" + str(
                                                                                   staff.id))
             staff.endpoint_arn = platform_endpoint.arn
+            staff.device_token = device_token
             staff.save()
             return
     else:
@@ -30,6 +31,7 @@ def update_staff_endpoint(device_token, staff):
                                                                           CustomUserData=staff.name + "$" + str(
                                                                               staff.id))
         staff.endpoint_arn = platform_endpoint.arn
+        staff.device_token = device_token
         staff.save()
         return
 

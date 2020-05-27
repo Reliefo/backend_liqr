@@ -129,7 +129,8 @@ def register():
                     if request.form['user_type'] == "manager":
                         if request.form['new_rest'] == 'yes':
                             if len(Restaurant.objects(restaurant_id=request.form['restaurant_id'])) > 0:
-                                return json_util.dumps({"status": "Registration failed, this restaurant already exists"})
+                                return json_util.dumps(
+                                    {"status": "Registration failed, this restaurant already exists"})
                             restaurant_object = Restaurant(name=request.form['restaurant_name'],
                                                            restaurant_id=request.form['restaurant_id'],
                                                            ).save()
@@ -207,8 +208,13 @@ def change_password():
 def refresh():
     current_username = get_jwt_identity()
     if 'device_token' in request.form.keys():
+        staff = AppUser.objects(username=current_username).first().staff_user
         device_token = request.form['device_token']
-        sys.stderr.write("LiQR_Error: "+current_username+" who has a "+device_token+" connected\n")
+        if device_token != staff.device_token:
+            staff.device_token = device_token
+            staff.save()
+            update_staff_endpoint(device_token, staff)
+        sys.stderr.write("LiQR_Error: " + current_username + " who has a " + device_token + " connected\n")
     ret = {
         'access_token': create_access_token(identity=current_username),
         'code': '200'

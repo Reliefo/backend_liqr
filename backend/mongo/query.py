@@ -166,6 +166,8 @@ def remove_from_table_cart(input_dict):
 
 def order_placement_table(table_id):
     table_order = Table.objects.get(id=table_id).table_cart
+    table_order.timestamp = datetime.now()
+    table_order.save()
     Table.objects.get(id=table_id).update(unset__table_cart="")
     Table.objects.get(id=table_id).update(push__table_orders=table_order.to_dbref())
     Restaurant.objects(tables__in=[str(table_id)]).update(push__table_orders=table_order.to_dbref())

@@ -88,7 +88,6 @@ def remove_table_cart(message):
 @socket_io.on('place_table_order', namespace=our_namespace)
 def place_table_order(message):
     table_id_dict = json_util.loads(message)
-    socket_io.emit('logger', table_id_dict, namespace=our_namespace)
     table_id = table_id_dict['table_id']
     socket_io.emit('logger', message, namespace=our_namespace)
     new_order = order_placement_table(table_id)
