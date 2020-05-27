@@ -206,7 +206,7 @@ def change_password():
 @jwt_refresh_token_required
 def refresh():
     current_username = get_jwt_identity()
-    if request.form['device_token']:
+    if 'device_token' in request.form.keys():
         device_token = request.form['device_token']
         sys.stderr.write("LiQR_Error: "+current_username+" who has a "+device_token+" connected\n")
     ret = {
