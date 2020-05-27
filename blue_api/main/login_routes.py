@@ -205,9 +205,10 @@ def change_password():
 @main.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh():
-    device_token = request.form['device_token']
     current_username = get_jwt_identity()
-    sys.stderr.write("LiQR_Error: "+current_username+" who has a "+device_token+" connected\n")
+    if request.form['device_token']:
+        device_token = request.form['device_token']
+        sys.stderr.write("LiQR_Error: "+current_username+" who has a "+device_token+" connected\n")
     ret = {
         'access_token': create_access_token(identity=current_username),
         'code': '200'
