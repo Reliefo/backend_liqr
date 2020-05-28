@@ -62,7 +62,7 @@ def push_to_table(message):
     ]
 }"""
     input_order = json_util.loads(message)
-    sys.stderr.write("LiQR_Error: "+message+" was sent to customer events\n")
+    sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     push_to_table_cart(input_order)
     table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
@@ -77,7 +77,7 @@ def remove_table_cart(message):
     order_id
     food_id"""
     input_order = json_util.loads(message)
-    sys.stderr.write("LiQR_Error: "+message+" was sent to customer events\n")
+    sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     remove_from_table_cart(input_order)
     table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
@@ -139,10 +139,11 @@ def fetch_the_bill(message):
     socket_io.emit('logger', message, namespace=our_namespace)
     user_id = input_dict['user_id']
     if input_dict['table_bill']:
-        returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your table bill will be brought to you'})
+        returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
+                                          'message': 'Your table bill will be brought to you'})
         billed_cleaned(input_dict['table_id'])
         socket_io.emit('billing', returning_json, namespace=our_namespace)
     else:
-        returning_json = json_util.dumps({'status': "fetching_bill", 'message': 'Your personal bill will be brought '
-                                                                                'to you'})
+        returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
+                                          'message': 'Your personal bill will be brought to you'})
         socket_io.emit('billing', returning_json, namespace=our_namespace)

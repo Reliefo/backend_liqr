@@ -129,7 +129,6 @@ def staff_acceptance(message):
         table.save()
         if input_dict['status'] == "rejected":
             Staff.objects.get(id=input_dict['staff_id']).update(push__rej_assistance_history=input_dict)
-            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.save()
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
