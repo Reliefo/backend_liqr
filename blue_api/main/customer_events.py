@@ -80,9 +80,9 @@ def remove_table_cart(message):
     sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     remove_from_table_cart(input_order)
-    table_cart_order = Table.objects.get(id=input_order['table']).table_cart.to_json()
+    table_cart_order = Table.objects.get(id=input_order['table_id']).table_cart.to_json()
     socket_io.emit('table_cart_orders', table_cart_order, namespace=our_namespace)
-    socket_io.emit('table_cart_orders', table_cart_order, room=input_order['table'], namespace=our_namespace)
+    socket_io.emit('table_cart_orders', table_cart_order, room=input_order['table_id'], namespace=our_namespace)
 
 
 @socket_io.on('place_table_order', namespace=our_namespace)
