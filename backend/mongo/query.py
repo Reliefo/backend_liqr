@@ -51,7 +51,7 @@ def home_screen_lists(rest_id):
     for tag in Restaurant.objects(restaurant_id=rest_id).first().navigate_better_tags:
         home_screen['navigate_better'][tag] = [str(food.id) for food in
                                                FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
-    return json.dumps(home_screen)
+    return json_util.dumps(home_screen)
 
 
 def return_restaurant_customer(rest_id):
@@ -127,8 +127,8 @@ def push_to_table_cart(input_order):
     ordered_table = Table.objects.get(id=input_order['table'])
     order = input_order['orders'][0]
     if ordered_table.table_cart:
-        new_food_list = [FoodItemMod.from_json(food_embed(food_dict,fooditem_fields_to_capture)) for food_dict in
-            order['food_list']]
+        new_food_list = [FoodItemMod.from_json(food_embed(food_dict, fooditem_fields_to_capture)) for food_dict in
+                         order['food_list']]
         user = User.objects.get(id=order['placed_by'])
         cart_order_id = None
         for cart_order in TableOrder.objects.get(id=ordered_table.table_cart.id).orders:
@@ -141,23 +141,23 @@ def push_to_table_cart(input_order):
                 quantity = -1
                 for food_item in food_list:
                     if food_item.food_id == new_food_item.food_id:
-                        remove_food=food_item
-                        quantity = food_item.quantity+new_food_item.quantity
+                        quantity = food_item.quantity + new_food_item.quantity
+                        remove_food = food_item
                 if quantity != -1:
                     food_list.remove(remove_food)
-                    new_food_item.quantity=quantity
+                    new_food_item.quantity = quantity
                 food_list.append(new_food_item)
-            order.food_list=food_list
+            order.food_list = food_list
             order.save()
         else:
             TableOrder.objects.get(id=ordered_table.table_cart.id).update(
                 push__orders=Order(placed_by={"id": str(user.id), "name": user.name},
-                                   food_list=food_list).save().to_dbref())
+                                   food_list=new_food_list).save().to_dbref())
     else:
         table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id),
                                  timestamp=datetime.now())
-        food_list = [FoodItemMod.from_json(food_embed(food_dict,fooditem_fields_to_capture)) for food_dict in
-            order['food_list']]
+        food_list = [FoodItemMod.from_json(food_embed(food_dict, fooditem_fields_to_capture)) for food_dict in
+                     order['food_list']]
         table_order.orders.append(Order(placed_by={"id": str(User.objects.get(id=order['placed_by']).id),
                                                    "name": User.objects.get(id=order['placed_by']).name},
                                         food_list=food_list).save().to_dbref())
