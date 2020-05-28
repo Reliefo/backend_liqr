@@ -1,5 +1,4 @@
 from backend.mongo.mongodb import *
-import json
 import numpy as np
 import re
 
@@ -47,34 +46,21 @@ def random_food_list():
 
 
 # Generating orders and asstypes
-def food_embed(food_dict):
-    json_dict = json_util.loads(
-        FoodItem.objects(id=food_dict['food_id']).exclude('id').exclude('restaurant')[0].to_json())
-    json_dict.pop('tags')
-    json_dict['food_id'] = food_dict['food_id']
-    json_dict['quantity'] = food_dict['quantity']
-    json_dict['instructions'] = food_dict['instructions']
+def food_embed(food_dict, fooditem_fields_to_capture):
+    json_dict = {key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture}
     json_dict['status'] = 'queued'
     option_id = choice_id = ''
-    try:
-        option = np.random.choice(list(json_dict['food_options']['options'].keys()))
-        option_pair = {option: json_dict['food_options']['options'][option]}
-        json_dict['food_options']['options'] = option_pair
-        option_id = option.lower()
-    except:
-        pass
-    try:
-        choice = np.random.choice(list(json_dict['food_options']['choices']))
-        json_dict['food_options']['choices'] = [choice]
-        choice_id = choice.lower()
-    except:
-        pass
+    if 'food_options' in json_dict:
+        if 'options' in json_dict['food_options'].keys():
+            option_id = json_dict['food_options']['options'][0]['option_name']
+        if 'choices' in json_dict['food_options'].keys():
+            choice_id = json_dict['food_options']['choices'][0]
     if option_id != '':
         if choice_id != '':
             json_dict['food_id'] = food_dict['food_id'] + "#" + option_id + "_" + choice_id
         else:
             json_dict['food_id'] = food_dict['food_id'] + "#" + option_id
-    return json_dict
+    return json_util.dumps(json_dict)
 
 
 def c_food_dict(food_id):
