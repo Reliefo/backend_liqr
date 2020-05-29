@@ -126,6 +126,7 @@ class OrderHistory(Document):
     table_id = StringField()
     table = StringField()
     bill_structure = DictField()
+    taxes = DictField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -324,7 +325,7 @@ class Restaurant(Document):
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     order_history = ListField(ReferenceField(OrderHistory, reverse_delete_rule=PULL))
-    home_screen_tags = ListField(StringField(), default=[])
+    home_screen_tags = ListField(StringField(), default=["Most Popular", "Chef's Special", "Daily Special", "On Offer"])
     navigate_better_tags = ListField(StringField(), defualt=[])
     manager_room = StringField()
     kitchen_room = StringField()

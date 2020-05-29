@@ -487,6 +487,17 @@ def configuring_home_screen(request_type, message):
         return {'status': 'command type not recognized'}
 
 
+def calculate_bill(table_ob, restaurant):
+    pretax = 0
+    for table_ord in table_ob.table_orders:
+        for order in table_ord.orders:
+            for food in order.food_list:
+                pretax += float(food.price)
+    total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
+    total_amount = pretax * (100 + total_tax) / 100
+    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Total Tax': total_tax, 'Total Amount': total_amount}
+
+
 def billed_cleaned(table_id):
     table_ob = Table.objects.get(id=table_id)
     if len(table_ob.table_orders) == 0:
@@ -518,11 +529,10 @@ def billed_cleaned(table_id):
     order_history = OrderHistory()
     order_history.table_id = table_id
     order_history.table = table_ob.name
+    order_history.taxes, order_history.bill_structure = calculate_bill(table_ob, Restaurant.objects(
+        tables__in=[table_ob]).first())
     for table_ord in table_ob.table_orders:
-        if table_ord.personal_order:
-            order_history.personal_orders.append(json_util.loads(table_ord.to_json()))
-        else:
-            order_history.table_orders.append(json_util.loads(table_ord.to_json()))
+        order_history.table_orders.append(json_util.loads(table_ord.to_json()))
         table_ord.delete()
     order_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
     order_history.assistance_reqs.extend([json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
@@ -535,4 +545,4 @@ def billed_cleaned(table_id):
     table_ob.assistance_reqs = []
     table_ob.users = []
     table_ob.save()
-    return True
+    return order_history.to_json()
