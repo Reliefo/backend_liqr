@@ -61,6 +61,13 @@ def return_restaurant_customer(rest_id):
         .exclude("table_orders").first().to_json()
 
 
+def return_restaurant_kitchen(rest_id):
+    return  Restaurant.objects(restaurant_id=rest_id) \
+        .only('id') \
+        .only('name') \
+        .only("restaurant_id").first().to_json()
+
+
 def fetch_order(n):
     return TableOrder.objects[n].to_json()
 

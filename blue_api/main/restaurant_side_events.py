@@ -34,6 +34,7 @@ def fetch_kitchen_details(message):
     restaurant_id = input_dict['restaurant_id']
     kitchen_staff_id = input_dict['kitchen_staff_id']
     emit('kitchen_staff_object', KitchenStaff.objects.exclude('orders_cooked').get(id=kitchen_staff_id).to_json())
+    emit('restaurant_object', return_restaurant_kitchen(restaurant_id))
     lists_json = Restaurant.objects.filter(restaurant_id=restaurant_id).first().fetch_order_lists()
     emit('order_lists', lists_json)
 
