@@ -58,7 +58,8 @@ def send_new_orders(message):
 
     table_order = TableOrder.objects.get(id=status_tuple[0])
     ordered_by = Order.objects.get(id=status_tuple[1]).placed_by['name']
-    food_name = FoodItem.objects.get(id=status_tuple[2]).name
+    food_id = re.search('[a-z0-9]+', status_tuple[2]).group()
+    food_name = FoodItem.objects.get(id=food_id).name
 
     sending_dict = {'table_order_id': status_tuple[0], 'type': message['type'], 'order_id': status_tuple[1],
                     'food_id': status_tuple[2], 'kitchen_staff_id': message['kitchen_staff_id'],
