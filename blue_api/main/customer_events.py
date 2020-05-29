@@ -139,11 +139,13 @@ def fetch_the_bill(message):
     socket_io.emit('logger', message, namespace=our_namespace)
     user_id = input_dict['user_id']
     if input_dict['table_bill']:
+        order_history = billed_cleaned(input_dict['table_id'])
         returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
-                                          'message': 'Your table bill will be brought to you'})
-        billed_cleaned(input_dict['table_id'])
+                                          'message': 'Your table bill will be brought to you',
+                                          'order_history': json_util.loads(order_history)})
         socket_io.emit('billing', returning_json, namespace=our_namespace)
     else:
         returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
-                                          'message': 'Your personal bill will be brought to you'})
+                                          'message': 'Your personal bill will be brought to you',
+                                          'order_history': 'dud'})
         socket_io.emit('billing', returning_json, namespace=our_namespace)
