@@ -72,7 +72,7 @@ class Assistance(Document):
     types = ['water', 'help', 'cutlery', 'tissue', 'cleaning', 'menu', 'ketchup']
     table = StringField()
     table_id = StringField()
-    user = ReferenceField(User)
+    user = ReferenceField(User, reverse_delete_rule=CASCADE)
     assistance_type = StringField(choices=types)
     timestamp = DateTimeField()
     accepted_by = DictField()
