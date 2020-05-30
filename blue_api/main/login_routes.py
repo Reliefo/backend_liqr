@@ -48,7 +48,7 @@ def user_register():
             the_user = user_scan(table_id, unique_id, email_id)
             existing_no = len(AppUser.objects(user_type__in=['customer']))
             username = "CID" + str_n(existing_no + 1, 6)
-            app_user = AppUser(username=username, password=hash_pass, room="cust_room", user_type="customer",
+            app_user = AppUser(username=username, password=hash_pass, user_type="customer",
                                rest_user=reguser_ob.to_dbref()).save()
             login_user(app_user)
 
@@ -87,7 +87,7 @@ def user_login():
                 username = "CID" + str_n(existing_no + 1, 6)
                 password = "temp_pass" + username
                 hash_pass = generate_password_hash("temp_pass" + username, method='sha256')
-                AppUser(username=username, user_type="customer", room="cust_room", password=hash_pass,
+                AppUser(username=username, user_type="customer", password=hash_pass,
                         rest_user=the_user.to_dbref(), timestamp=datetime.now()).save()
             else:
                 the_user = user_scan(table_id, unique_id, email_id)
