@@ -103,6 +103,7 @@ class UserHistory(Document):
     restaurant_name = StringField()
     restaurant_id = StringField()
     table_orders = ListField(DictField())
+    personal_orders = ListField(DictField())
     users = ListField(DictField())
     assistance_reqs = ListField()
     timestamp = DateTimeField(default=datetime.now())
@@ -212,7 +213,6 @@ class AppUser(UserMixin, Document):
     user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin'])
     password = StringField()
     sid = StringField()
-    room = StringField()
     timestamp = DateTimeField(default=datetime.now())
     rest_user = ReferenceField(User, reverse_delete_rule=CASCADE)
     staff_user = ReferenceField(Staff, reverse_delete_rule=CASCADE)
@@ -276,6 +276,7 @@ class FoodItem(Document):
     tags = ListField(StringField())
     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
+    image_link = StringField(default='https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_food.png')
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -325,10 +326,11 @@ class Restaurant(Document):
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     order_history = ListField(ReferenceField(OrderHistory, reverse_delete_rule=PULL))
     home_screen_tags = ListField(StringField(), default=["Most Popular", "Chef's Special", "Daily Special", "On Offer"])
-    navigate_better_tags = ListField(StringField(), defualt=[])
+    navigate_better_tags = ListField(StringField(), default=[])
     manager_room = StringField()
     kitchen_room = StringField()
     taxes = DictField()
+    home_page_images = DictField(default={'0':'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
 
     def to_json(self):
         data = self.to_mongo()
