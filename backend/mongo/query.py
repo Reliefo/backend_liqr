@@ -519,11 +519,7 @@ def billed_cleaned(table_id):
         user_history.restaurant_id = str(restaurant.id)
         user_history.restaurant_name = str(restaurant.name)
         for table_ord in table_ob.table_orders:
-            if table_ord.personal_order:
-                if table_ord.orders[0].placed_by['id'] == user.id:
-                    user_history.personal_orders.append(json_util.loads(table_ord.to_json()))
-            else:
-                user_history.table_orders.append(json_util.loads(table_ord.to_json()))
+            user_history.table_orders.append(json_util.loads(table_ord.to_json()))
         user_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
         user_history.assistance_reqs.extend(
             [json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
@@ -536,8 +532,7 @@ def billed_cleaned(table_id):
     order_history = OrderHistory()
     order_history.table_id = table_id
     order_history.table = table_ob.name
-    order_history.taxes, order_history.bill_structure = calculate_bill(table_ob, Restaurant.objects(
-        tables__in=[table_ob]).first())
+    order_history.taxes, order_history.bill_structure = calculate_bill(table_ob, Restaurant.objects(tables__in=[table_ob]).first())
     for table_ord in table_ob.table_orders:
         order_history.table_orders.append(json_util.loads(table_ord.to_json()))
         table_ord.delete()
