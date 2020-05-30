@@ -48,7 +48,7 @@ def user_register():
             the_user = user_scan(table_id, unique_id, email_id)
             existing_no = len(AppUser.objects(user_type__in=['customer']))
             username = "CID" + str_n(existing_no + 1, 6)
-            app_user = AppUser(username=username, password=hash_pass, room="cust_room",
+            app_user = AppUser(username=username, password=hash_pass, room="cust_room", user_type="customer",
                                rest_user=reguser_ob.to_dbref()).save()
             login_user(app_user)
 
@@ -69,6 +69,7 @@ def user_login():
         email_id = request.form['email_id']
         password = request.form['password']
         table_id = request.form['table_id']
+        sys.stderr.write("LiQR_Error: " + unique_id + ' ' + table_id + " who is a " + email_id + " connected\n")
         restaurant_object = Restaurant.objects.filter(tables__in=[table_id])[0]
         if re.search("\$", unique_id) and len(User.objects.filter(unique_id=unique_id)) > 0:
             if email_id == "dud":
@@ -101,7 +102,7 @@ def user_login():
                 if the_user._cls == "User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "unique_id": the_user.email_id, "user_id": str(the_user.id),
+                         "name": the_user.name, "email_id": the_user.email_id, "user_id": str(the_user.id),
                          "restaurant_id": restaurant_object.restaurant_id})
                 else:
                     return json_util.dumps(
