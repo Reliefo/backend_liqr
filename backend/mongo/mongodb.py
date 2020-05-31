@@ -192,10 +192,8 @@ class TempUser(User):
 
 class Staff(Document):
     name = StringField()
-    assistance_history = ListField(DictField())
-    rej_assistance_history = ListField(DictField())
-    order_history = ListField(DictField())
-    rej_order_history = ListField(DictField())
+    requests_history = ListField(DictField())
+    rej_requests_history = ListField(DictField())
     endpoint_arn = StringField()
     device_token = StringField()
 
