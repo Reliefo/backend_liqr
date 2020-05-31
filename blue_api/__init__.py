@@ -16,7 +16,7 @@ def create_app(debug=False):
     app.debug = debug
     app.config['SECRET_KEY'] = '69#js32%_d4-!xd$'
     app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15200
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 30
     app.config['JWT_SECRET_KEY'] = '42@s3xn%o69^!xd$'
     app.config['PROPAGATE_EXCEPTIONS'] = True
     login_manager.init_app(app)
