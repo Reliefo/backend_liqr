@@ -101,7 +101,6 @@ def staff_acceptance(message):
         table.requests_queue = requests_queue
         table.save()
         if input_dict['status'] == "rejected":
-            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             curr_staff.rej_order_history.append(input_dict)
             curr_staff.save()
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)

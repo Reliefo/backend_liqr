@@ -545,6 +545,7 @@ def billed_cleaned(table_id):
     Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)
     table_ob.table_orders = []
     table_ob.assistance_reqs = []
+    table_ob.requests_queue = []
     table_ob.users = []
     table_ob.save()
     return order_history.to_json()
