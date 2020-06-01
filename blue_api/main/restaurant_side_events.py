@@ -130,10 +130,11 @@ def staff_acceptance(message):
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
         return
     else:  # ACCEPTED
-        curr_staff.requests_history.append(input_dict)
-        curr_staff.save()
+
         if input_dict['request_type'] == 'pickup_request':
             input_dict['type'] = 'on_the_way'
+            curr_staff.requests_history.append(input_dict)
+            curr_staff.save()
             socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
             return
         else:  # Assistance Request
@@ -143,6 +144,8 @@ def staff_acceptance(message):
             input_dict['accepted_by'] = {'staff_id': staff_id, 'staff_name': curr_staff.name}
             input_dict['msg'] = "Service has been accepted"
             sys.stderr.write("LiQR_Error: " + json_util.dumps(input_dict) + " was sent to customer events\n")
+            curr_staff.requests_history.append(input_dict)
+            curr_staff.save()
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
 
