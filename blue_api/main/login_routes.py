@@ -216,6 +216,24 @@ def refresh():
             staff.save()
             update_staff_endpoint(device_token, staff)
         sys.stderr.write("LiQR_Error: " + current_username + " who has a " + device_token + " connected\n")
+    elif 'table_id' in request.form.keys():
+        if request.form['email_id'] == 'dud':
+            the_user = user_scan(request.form['table_id'],request.form['unique_id'] )
+        else:
+            the_user = user_scan(request.form['table_id'], request.form['unique_id'], request.form['email_id'])
+
+        restaurant_object = Restaurant.objects.filter(tables__in=[request.form['table_id']])[0]
+        if the_user._cls == "User.RegisteredUser":
+            return json_util.dumps(
+                {"status": "Login Success", "jwt": create_access_token(identity=current_username), "code": "200",
+                 "name": the_user.name, "email_id": the_user.email_id, "user_id": str(the_user.id),
+                 "restaurant_id": restaurant_object.restaurant_id})
+        else:
+            return json_util.dumps(
+                {"status": "Login Success", "jwt": create_access_token(identity=current_username), "code": "200",
+                 "name": the_user.name, "unique_id": the_user.unique_id, "user_id": str(the_user.id),
+                 "restaurant_id": restaurant_object.restaurant_id})
+
     ret = {
         'access_token': create_access_token(identity=current_username),
         'code': '200'
