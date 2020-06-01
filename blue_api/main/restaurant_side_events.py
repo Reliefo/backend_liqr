@@ -128,7 +128,7 @@ def staff_acceptance(message):
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
         return
-    else: # ACCEPTED
+    else:  # ACCEPTED
         curr_staff.requests_history.append(input_dict)
         curr_staff.save()
         if input_dict['request_type'] == 'pickup_request':

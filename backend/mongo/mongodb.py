@@ -11,6 +11,7 @@ conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud',
 class FoodOptionsMod(EmbeddedDocument):
     options = ListField(DictField())
     choices = ListField()
+    add_ons = ListField(DictField())
 
 
 class FoodItemMod(EmbeddedDocument):
@@ -265,6 +266,7 @@ class Table(Document):
 class FoodOptions(EmbeddedDocument):
     options = ListField(DictField())
     choices = ListField()
+    add_ons = ListField(DictField())
 
 
 class FoodItem(Document):
