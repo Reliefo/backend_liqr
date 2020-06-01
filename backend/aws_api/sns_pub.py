@@ -1,6 +1,7 @@
 import boto3
 from bson import json_util
 from backend.aws_api.sns_registration import verify_endpoint
+
 sns_client = boto3.client(
     "sns",
     aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
@@ -10,12 +11,11 @@ sns_client = boto3.client(
 
 
 def push_order_complete_notification(request_dict, staff_endpoint_arn):
-
     pub_data_dict = {**request_dict, **{'click_action': "FLUTTER_NOTIFICATION_CLICK"}}
 
     gcm_dict = {'data': pub_data_dict,
-                'notification': {'text': 'We have something to be delivered from some table to someone!',
-                                 'title': 'New Order Update'}}
+                'notification': {'text': 'We have ' + request_dict['food_name'] + ' to be delivered to ' + request_dict['table'] + ' to ' + request_dict['user'],
+                                 'title': 'Order Pickup: ' + request_dict['food_name'] + ' to ' + request_dict['table']}}
 
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
@@ -35,8 +35,9 @@ def push_assistance_request_notification(request_dict, staff_endpoint_arn):
     pub_data_dict = {**request_dict, **{'click_action': "FLUTTER_NOTIFICATION_CLICK"}}
 
     gcm_dict = {'data': pub_data_dict,
-                'notification': {'text': 'Someone asked for '+request_dict['assistance_type']+' from '+request_dict['table'],
-                                 'title': 'Assistance Request from ' + request_dict['table']}}
+                'notification': {
+                    'text': request_dict['user'] + ' from ' + request_dict['table']+' asked for ' + request_dict['assistance_type'],
+                    'title': 'Assistance: ' + request_dict['assistance_type']+' for '+ request_dict['table']}}
 
     final_message_dict = {"default": "Sample fallback message", "GCM": json_util.dumps(gcm_dict)}
 
