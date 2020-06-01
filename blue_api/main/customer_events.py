@@ -2,7 +2,7 @@ from .. import socket_io, our_namespace
 from backend.mongo.query import *
 from flask_socketio import emit
 import sys
-from backend.aws_api.sns_pub import push_assistance_request_notification
+from backend.aws_api.sns_pub import push_assistance_request_notification, push_bill_request_notification
 
 
 @socket_io.on('fetch_rest_customer', namespace=our_namespace)
@@ -122,7 +122,6 @@ def assistance_requests(message):
         if staff.endpoint_arn:
             returning_dict['staff_id'] = staff.id
             push_assistance_request_notification(returning_dict, staff.endpoint_arn)
-        staff.save()
     table.save()
 
     returning_dict['msg'] = "Service has been requested"
@@ -135,13 +134,16 @@ def assistance_requests(message):
 def fetch_the_bill(message):
     input_dict = json_util.loads(message)
     socket_io.emit('logger', message, namespace=our_namespace)
-    user_id = input_dict['user_id']
+    table = Table.objects.get(id=input_dict['table_id'])
+    user = User.objects.get(id=input_dict['user_id'])
+    returning_dict = {'status': "billed", 'table_id': input_dict['table_id'], 'table': table.name, 'user': user.name}
     if input_dict['table_bill']:
-        order_history = billed_cleaned(input_dict['table_id'])
-        returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
-                                          'message': 'Your table bill will be brought to you',
-                                          'order_history': json_util.loads(order_history)})
-        socket_io.emit('billing', returning_json, namespace=our_namespace)
+        returning_dict['order_history'] = json_util.loads(billed_cleaned(input_dict['table_id']))
+        returning_dict['message'] = 'Your table bill will be brought to you'
+        socket_io.emit('billing', json_util.dumps(returning_dict), namespace=our_namespace)
+        for staff in table.staff:
+            if staff.endpoint_arn:
+                push_bill_request_notification(returning_dict, staff.endpoint_arn)
     else:
         returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
                                           'message': 'Your personal bill will be brought to you',
