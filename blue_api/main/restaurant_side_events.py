@@ -3,6 +3,7 @@ from flask import request
 from flask_socketio import emit
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
+import sys
 from werkzeug.security import generate_password_hash
 from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification
 from backend.aws_api.sns_registration import verify_endpoint
@@ -141,6 +142,7 @@ def staff_acceptance(message):
             staff_id = input_dict.pop('staff_id')
             input_dict['accepted_by'] = {'staff_id': staff_id, 'staff_name': curr_staff.name}
             input_dict['msg'] = "Service has been accepted"
+            sys.stderr.write("LiQR_Error: " + json_util.dumps(input_dict) + " was sent to customer events\n")
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             return
 
