@@ -345,8 +345,7 @@ def configuring_staff(request_type, message):
         this_object.save()
         return message
     elif request_type == 'assign':
-        for staff_id in message['assigned_staff']:
-            Table.objects.get(id=message['table_id']).update(push__staff=Staff.objects.get(id=staff_id))
+        Table.objects.get(id=message['table_id']).update(push__staff=Staff.objects.get(id=message['assigned_staff']))
         return {**message, **{'status': 'Staff Assigned'}}
     elif request_type == 'withdraw':
         Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=message['withdraw_staff_id']))
