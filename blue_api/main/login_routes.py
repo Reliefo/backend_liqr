@@ -222,6 +222,7 @@ def refresh():
         else:
             the_user = user_scan(request.form['table_id'], request.form['unique_id'], request.form['email_id'])
 
+        join_room(str(the_user.current_table_id))
         restaurant_object = Restaurant.objects.filter(tables__in=[request.form['table_id']])[0]
         if the_user._cls == "User.RegisteredUser":
             return json_util.dumps(
