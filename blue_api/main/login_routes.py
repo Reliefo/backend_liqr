@@ -29,7 +29,7 @@ def user_register():
         table_id = request.form['table_id']
         restaurant_object = Restaurant.objects.filter(tables__in=[table_id]).first()
         hash_pass = generate_password_hash(request.form["password"], method='sha256')
-        sys.stderr.write("LiQR_Error: " + unique_id+' '+email_id+' '+name+' '+table_id)
+        sys.stderr.write("LiQR_Error: " + unique_id + ' ' + email_id + ' ' + name + ' ' + table_id)
         if len(User.objects(email_id=email_id)) > 0:
             return json_util.dumps({"status": "User alreadt registered"})
         if re.search("\$", unique_id):
@@ -51,7 +51,7 @@ def user_register():
             reguser_ob.save()
             the_user = user_scan(table_id, unique_id, email_id)
             existing_no = len(AppUser.objects(user_type__in=['customer']))
-            username = "CID" + str_n(CustomerStats.objects(username='LiQRocks42')[0].count+1, 6)
+            username = "CID" + str_n(CustomerStats.objects(username='LiQRocks42')[0].count + 1, 6)
             CustomerStats.objects(username='LiQRocks42')[0].update(inc__count=1)
             app_user = AppUser(username=username, password=hash_pass, user_type="customer",
                                rest_user=reguser_ob.to_dbref()).save()
@@ -223,12 +223,14 @@ def refresh():
         sys.stderr.write("LiQR_Error: " + current_username + " who has a " + device_token + " connected\n")
     elif 'table_id' in request.form.keys():
         if request.form['email_id'] == 'dud':
-            the_user = user_scan(request.form['table_id'],request.form['unique_id'] )
+            the_user = user_scan(request.form['table_id'], request.form['unique_id'])
         else:
             the_user = user_scan(request.form['table_id'], request.form['unique_id'], request.form['email_id'])
 
-        join_room(str(the_user.current_table_id))
         restaurant_object = Restaurant.objects.filter(tables__in=[request.form['table_id']])[0]
+        socket_io.emit('user_scan', the_user.to_json(), room=restaurant_object.manager_room,
+                       namespace=our_namespace)
+        join_room(str(the_user.current_table_id))
         if the_user._cls == "User.RegisteredUser":
             return json_util.dumps(
                 {"status": "Login Success", "jwt": create_access_token(identity=current_username), "code": "200",

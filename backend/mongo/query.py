@@ -85,8 +85,9 @@ def user_scan(table_id, unique_id, email_id='dud'):
                     scanned_table.save()
                     return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
-            if Table.objects(users__in=[temp_user[0].id]):
-                Table.objects(users__in=[temp_user[0].id]).first().update(pull__users=temp_user[0])
+            for table in Table.objects(users__in=[temp_user[0].id]):
+                table.users.remove(temp_user[0])
+                table.save()
             scanned_table.users.append(temp_user[0].to_dbref())
             scanned_table.save()
             return temp_user[0]
@@ -111,8 +112,9 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 scanned_table.users.append(reg_user.to_dbref())
                 scanned_table.save()
                 return reg_user
-        if Table.objects(users__in=[reg_user[0].id]):
-            Table.objects(users__in=[reg_user[0].id]).first().update(pull__users=reg_user[0])
+        for table in Table.objects(users__in=[reg_user.id]):
+            table.users.remove(reg_user)
+            table.save()
         scanned_table.users.append(reg_user.to_dbref())
         scanned_table.save()
         reg_user.current_table_id = str(scanned_table.id)
