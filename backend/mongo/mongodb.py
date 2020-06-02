@@ -221,6 +221,11 @@ class AppUser(UserMixin, Document):
     temp_password = BooleanField()
 
 
+class CustomerStats(Document):
+    username = StringField()
+    count = IntField()
+
+
 class Table(Document):
     name = StringField(required=True)
     seats = IntField(required=True)
@@ -330,7 +335,8 @@ class Restaurant(Document):
     manager_room = StringField()
     kitchen_room = StringField()
     taxes = DictField()
-    home_page_images = DictField(default={'0':'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
+    home_page_images = DictField(
+        default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
 
     def to_json(self):
         data = self.to_mongo()

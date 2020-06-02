@@ -49,7 +49,8 @@ def user_register():
             reguser_ob.save()
             the_user = user_scan(table_id, unique_id, email_id)
             existing_no = len(AppUser.objects(user_type__in=['customer']))
-            username = "CID" + str_n(existing_no + 1, 6)
+            username = "CID" + str_n(CustomerStats.objects(username='LiQRocks42')[0].count+1, 6)
+            CustomerStats.objects(username='LiQRocks42')[0].update(inc__count=1)
             app_user = AppUser(username=username, password=hash_pass, user_type="customer",
                                rest_user=reguser_ob.to_dbref()).save()
             login_user(app_user)
@@ -85,8 +86,8 @@ def user_login():
                 unique_id = unique_id.split("$")[0]
             if email_id == "dud":
                 the_user = user_scan(table_id, unique_id)
-                existing_no = len(AppUser.objects(user_type__in=['customer']))
-                username = "CID" + str_n(existing_no + 1, 6)
+                username = "CID" + str_n(CustomerStats.objects(username='LiQRocks42')[0].count + 1, 6)
+                CustomerStats.objects(username='LiQRocks42')[0].update(inc__count=1)
                 password = "temp_pass" + username
                 hash_pass = generate_password_hash("temp_pass" + username, method='sha256')
                 AppUser(username=username, user_type="customer", password=hash_pass,
