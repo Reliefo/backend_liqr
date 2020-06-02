@@ -36,7 +36,7 @@ def connect():
         try:
             sys.stderr.write("LiQR_Error: "+app_user.rest_user.name+" who is a "+app_user.user_type+" joined"+app_user.rest_user.current_table_id+"\n")
         except:
-            sys.stderr.write("LiQR_Error: " +app_user.rest_user+' '+app_user.to_json())
+            pass
     AppUser.objects(username=username).first().update(set__sid=request.sid)
     sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
     # all_clients.append(request.sid)
