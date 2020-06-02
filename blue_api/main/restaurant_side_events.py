@@ -178,11 +178,11 @@ def register_your_people(message):
     hash_pass = generate_password_hash(password, method='sha256')
     assigned_room = "kids_room" if input_dict["username"][:2] == "KID" else "adults_room"
     if input_dict['user_type'] == "staff":
-        AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
+        AppUser(username=input_dict["username"], password=hash_pass,
                 user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
                 staff_user=Staff.objects.get(id=input_dict['object_id']).to_dbref()).save()
     elif input_dict['user_type'] == "kitchen":
-        AppUser(username=input_dict["username"], password=hash_pass, room=assigned_room,
+        AppUser(username=input_dict["username"], password=hash_pass,
                 user_type=input_dict['user_type'], restaurant_id=rest_id, temp_password=True,
                 kitchen_staff=KitchenStaff.objects.get(id=input_dict['object_id']).to_dbref()).save()
     else:
