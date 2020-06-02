@@ -32,6 +32,7 @@ def connect():
             join_room(str(table.id))
     elif app_user.user_type == "customer":
         join_room(str(app_user.rest_user.current_table_id))
+        sys.stderr.write("LiQR_Error: "+app_user.rest_user.name+" who is a "+app_user.user_type+" joined"+app_user.rest_user.current_table_id+"\n")
     AppUser.objects(username=username).first().update(set__sid=request.sid)
     sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
     # all_clients.append(request.sid)
