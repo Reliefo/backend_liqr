@@ -141,6 +141,7 @@ def fetch_the_bill(message):
         returning_dict['order_history'] = json_util.loads(billed_cleaned(input_dict['table_id']))
         returning_dict['message'] = 'Your table bill will be brought to you'
         socket_io.emit('billing', json_util.dumps(returning_dict), namespace=our_namespace)
+        returning_dict.pop('order_history')
         for staff in table.staff:
             if staff.endpoint_arn:
                 push_bill_request_notification(returning_dict, staff.endpoint_arn)
