@@ -29,6 +29,7 @@ def user_register():
         table_id = request.form['table_id']
         restaurant_object = Restaurant.objects.filter(tables__in=[table_id]).first()
         hash_pass = generate_password_hash(request.form["password"], method='sha256')
+        sys.stderr.write("LiQR_Error: " + unique_id+' '+email_id+' '+name+' '+table_id)
         if len(User.objects(email_id=email_id)) > 0:
             return json_util.dumps({"status": "User alreadt registered"})
         if re.search("\$", unique_id):
