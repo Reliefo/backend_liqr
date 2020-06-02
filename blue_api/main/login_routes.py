@@ -39,6 +39,8 @@ def user_register():
             reguser_ob.save()
             tempuser_ob.reguser_ob = str(reguser_ob.id)
             tempuser_ob.save()
+            Table.objects(users__in=[tempuser_ob.id])[0].update(
+                pull__users=User.objects.get(id=tempuser_ob.id))
             the_user = user_scan(table_id, unique_id, email_id)
             app_user = AppUser.objects(rest_user__in=[tempuser_ob.id]).first()
             app_user.rest_user = reguser_ob.to_dbref()
