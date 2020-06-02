@@ -111,6 +111,8 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 scanned_table.users.append(reg_user.to_dbref())
                 scanned_table.save()
                 return reg_user
+        if Table.objects(users__in=[reg_user[0].id]):
+            Table.objects(users__in=[reg_user[0].id]).first().update(pull__users=reg_user[0])
         scanned_table.users.append(reg_user.to_dbref())
         scanned_table.save()
         reg_user.current_table_id = str(scanned_table.id)
