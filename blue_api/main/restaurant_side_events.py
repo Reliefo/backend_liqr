@@ -5,7 +5,8 @@ from .. import socket_io, our_namespace
 from backend.mongo.query import *
 import sys
 from werkzeug.security import generate_password_hash
-from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification
+from backend.aws_api.sns_pub import push_order_complete_notification, push_assistance_request_notification, \
+    push_bill_request_notification
 from backend.aws_api.sns_registration import verify_endpoint
 
 
@@ -196,12 +197,15 @@ def register_your_people(message):
 def bill_the_table(message):
     input_dict = json_util.loads(message)
     table_id = input_dict['table_id']
-    if billed_cleaned(table_id):
-        input_dict['status'] = 'billed'
-        emit('billing', json_util.dumps(input_dict))
-    else:
-        input_dict['status'] = 'failed'
-        emit('billing', json_util.dumps(input_dict))
+    table = Table.objects.get(id=input_dict['table_id'])
+    returning_dict = {'status': "billed", 'table_id': input_dict['table_id'], 'table': table.name, 'user': "Manager",
+                      'order_history': json_util.loads(billed_cleaned(input_dict['table_id'])),
+                      'message': 'Your table bill will be brought to you'}
+    socket_io.emit('billing', json_util.dumps(returning_dict), namespace=our_namespace)
+    returning_dict.pop('order_history')
+    for staff in table.staff:
+        if staff.endpoint_arn:
+            push_bill_request_notification(returning_dict, staff.endpoint_arn)
 
 
 @socket_io.on('check_endpoint', namespace=our_namespace)
