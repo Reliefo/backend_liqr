@@ -110,6 +110,8 @@ class UserHistory(Document):
     timestamp = DateTimeField(default=datetime.now())
     table_id = StringField()
     table = StringField()
+    bill_structure = DictField()
+    taxes = DictField()
 
     def to_my_mongo(self):
         data = self.to_mongo()

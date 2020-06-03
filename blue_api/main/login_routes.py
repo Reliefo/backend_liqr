@@ -107,7 +107,8 @@ def user_login():
                 if the_user._cls == "User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "email_id": the_user.email_id, "user_id": str(the_user.id),
+                         "name": the_user.name, "unique_id": request.form['unique_id'], "email_id": the_user.email_id,
+                         "user_id": str(the_user.id),
                          "restaurant_id": restaurant_object.restaurant_id})
                 else:
                     return json_util.dumps(
@@ -140,7 +141,7 @@ def register():
                             restaurant_object = Restaurant(name=request.form['restaurant_name'],
                                                            restaurant_id=request.form['restaurant_id'],
                                                            manager_room=request.form['restaurant_id'],
-                                                           kitchen_room=request.form['restaurant_id']+'_kitchen'
+                                                           kitchen_room=request.form['restaurant_id'] + '_kitchen'
                                                            ).save()
                         else:
                             restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
