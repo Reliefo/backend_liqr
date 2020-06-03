@@ -62,7 +62,7 @@ def return_restaurant_customer(rest_id):
 
 
 def return_restaurant_kitchen(rest_id):
-    return  Restaurant.objects(restaurant_id=rest_id) \
+    return Restaurant.objects(restaurant_id=rest_id) \
         .only('id') \
         .only('name') \
         .only("restaurant_id").first().to_json()
@@ -504,12 +504,19 @@ def configuring_home_screen(request_type, message):
         return {'status': 'command type not recognized'}
 
 
+def configuring_taxes(request_type, message):
+    if request_type == 'set':
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__taxes=message['taxes'])
+    else:
+        return {'status': 'command type not recognized'}
+
+
 def calculate_bill(table_ob, restaurant):
     pretax = 0
     for table_ord in table_ob.table_orders:
         for order in table_ord.orders:
             for food in order.food_list:
-                pretax += float(food.price)*food.quantity
+                pretax += float(food.price) * food.quantity
     total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
     total_amount = pretax * (100 + total_tax) / 100
     return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Total Tax': total_tax, 'Total Amount': total_amount}
@@ -542,7 +549,8 @@ def billed_cleaned(table_id):
     order_history = OrderHistory()
     order_history.table_id = table_id
     order_history.table = table_ob.name
-    order_history.taxes, order_history.bill_structure = calculate_bill(table_ob, Restaurant.objects(tables__in=[table_ob]).first())
+    order_history.taxes, order_history.bill_structure = calculate_bill(table_ob, Restaurant.objects(
+        tables__in=[table_ob]).first())
     for table_ord in table_ob.table_orders:
         order_history.table_orders.append(json_util.loads(table_ord.to_json()))
         table_ord.delete()
