@@ -233,7 +233,6 @@ def refresh():
         restaurant_object = Restaurant.objects.filter(tables__in=[request.form['table_id']])[0]
         socket_io.emit('user_scan', the_user.to_json(), room=restaurant_object.manager_room,
                        namespace=our_namespace)
-        join_room(str(the_user.current_table_id))
         if the_user._cls == "User.RegisteredUser":
             return json_util.dumps(
                 {"status": "Login Success", "jwt": create_access_token(identity=current_username), "code": "200",
