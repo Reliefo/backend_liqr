@@ -509,6 +509,7 @@ def configuring_home_screen(request_type, message):
 def configuring_taxes(request_type, message):
     if request_type == 'set':
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__taxes=message['taxes'])
+        return message
     else:
         return {'status': 'command type not recognized'}
 
