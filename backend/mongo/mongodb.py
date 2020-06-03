@@ -281,7 +281,7 @@ class FoodItem(Document):
     tags = ListField(StringField())
     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
-    image_link = StringField(default='https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_food.png')
+    image_link = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
