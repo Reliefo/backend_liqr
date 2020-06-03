@@ -1,8 +1,13 @@
 import boto3
 from backend.mongo.mongodb import Staff
-from backend.aws_api.sns_pub import sns_client
 
 sns = boto3.resource(
+    "sns",
+    aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
+    aws_secret_access_key="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",
+    region_name="ap-south-1"
+)
+sns_client = boto3.client(
     "sns",
     aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
     aws_secret_access_key="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",
