@@ -23,10 +23,8 @@ def connect():
         disconnect(previous_sid)
     if app_user.user_type == "manager":
         join_room(app_user.restaurant_id)
-        Restaurant.objects(restaurant_id=app_user.restaurant_id).first().update(set__manager_room=app_user.restaurant_id)
     elif app_user.user_type == "kitchen":
         join_room(app_user.restaurant_id+"_kitchen")
-        Restaurant.objects(restaurant_id=app_user.restaurant_id).first().update(set__kitchen_room=app_user.restaurant_id+"_kitchen")
     elif app_user.user_type == "staff":
         for table in Table.objects(staff__in=[app_user.staff_user.id]):
             join_room(str(table.id))

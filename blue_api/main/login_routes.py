@@ -139,6 +139,8 @@ def register():
                                     {"status": "Registration failed, this restaurant already exists"})
                             restaurant_object = Restaurant(name=request.form['restaurant_name'],
                                                            restaurant_id=request.form['restaurant_id'],
+                                                           manager_room=request.form['restaurant_id'],
+                                                           kitchen_room=request.form['restaurant_id']+'_kitchen'
                                                            ).save()
                         else:
                             restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
