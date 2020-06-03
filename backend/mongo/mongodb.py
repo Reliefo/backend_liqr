@@ -183,6 +183,7 @@ class RegisteredUser(User):
     email_id = StringField(required=True)
     phone_no = StringField()
     tempuser_ob = StringField()
+    unique_id = StringField()
 
 
 class TempUser(User):

@@ -34,7 +34,7 @@ def user_register():
             return json_util.dumps({"status": "User alreadt registered"})
         if re.search("\$", unique_id):
             tempuser_ob = TempUser.objects(unique_id=unique_id).first()
-            reguser_ob = RegisteredUser(name=name, email_id=email_id, tempuser_ob=str(tempuser_ob.id))
+            reguser_ob = RegisteredUser(name=name, email_id=email_id, tempuser_ob=str(tempuser_ob.id), unique_id=unique_id)
             reguser_ob.dine_in_history = tempuser_ob.dine_in_history
             reguser_ob.save()
             tempuser_ob.reguser_ob = str(reguser_ob.id)
@@ -47,7 +47,7 @@ def user_register():
             app_user.password = hash_pass
             app_user.save()
         else:
-            reguser_ob = RegisteredUser(name=name, email_id=email_id)
+            reguser_ob = RegisteredUser(name=name, email_id=email_id, unique_id=unique_id)
             reguser_ob.save()
             the_user = user_scan(table_id, unique_id, email_id)
             existing_no = len(AppUser.objects(user_type__in=['customer']))
@@ -62,7 +62,7 @@ def user_register():
         refresh_token = create_refresh_token(identity=app_user["username"])
         return json_util.dumps(
             {"status": "Registration successful", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-             "name": the_user.name, "email": the_user.email_id, "user_id": str(the_user.id),
+             "name": the_user.name, "unique_id": the_user.unique_id, "email": the_user.email_id, "user_id": str(the_user.id),
              "restaurant_id": restaurant_object.restaurant_id})
     return json_util.dumps({"status": "Registration failed"})
 
@@ -107,7 +107,7 @@ def user_login():
                 if the_user._cls == "User.RegisteredUser":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-                         "name": the_user.name, "unique_id": request.form['unique_id'], "email_id": the_user.email_id,
+                         "name": the_user.name, "unique_id": the_user.unique_id, "email_id": the_user.email_id,
                          "user_id": str(the_user.id),
                          "restaurant_id": restaurant_object.restaurant_id})
                 else:
