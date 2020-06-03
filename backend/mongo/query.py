@@ -305,6 +305,8 @@ def configuring_restaurant(message):
         return configuring_food_item(request_type, message)
     elif element_type == 'home_screen_tags':
         return configuring_home_screen(request_type, message)
+    elif element_type == 'taxes':
+        return configuring_taxes(request_type, message)
     else:
         return {'status': 'element not recognized'}
 
