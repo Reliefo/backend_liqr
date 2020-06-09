@@ -100,7 +100,7 @@ class Assistance(Document):
         return json_util.dumps(data)
 
 
-class UserHistory(Document):
+class OrderHistory(Document):
     restaurant_name = StringField()
     restaurant_id = StringField()
     table_orders = ListField(DictField())
@@ -112,28 +112,12 @@ class UserHistory(Document):
     table = StringField()
     bill_structure = DictField()
     taxes = DictField()
+    pdf = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
 
-        return data
-
-
-class OrderHistory(Document):
-    table_orders = ListField(DictField())
-    personal_orders = ListField(DictField())
-    users = ListField(DictField())
-    assistance_reqs = ListField(DictField())
-    timestamp = DateTimeField(default=datetime.now())
-    table_id = StringField()
-    table = StringField()
-    bill_structure = DictField()
-    taxes = DictField()
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
-        data['timestamp'] = str(data['timestamp'])
         return data
 
 
@@ -148,7 +132,7 @@ class KitchenStaff(Document):
 
 class User(Document):
     name = StringField(required=True)
-    dine_in_history = ListField(ReferenceField(UserHistory, reverse_delete_rule=PULL))
+    dine_in_history = ListField(ReferenceField(OrderHistory, reverse_delete_rule=PULL))
     current_table_id = StringField()
     personal_cart = ListField(ReferenceField(TableOrder), reverse_delete_rule=PULL)
     timestamp = DateTimeField(default=datetime.now())

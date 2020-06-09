@@ -28,7 +28,7 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 planet_no = 1
             else:
                 planet_no = len(TempUser.objects.filter(planet__in=[planet])) + 1
-            name = planet + "_" + str(planet_no)
+            name = planet + " " + str(planet_no)
             temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
                                  planet=planet, planet_no=planet_no, name=name).save()
             scanned_table.users.append(temp_user.to_dbref())
@@ -232,33 +232,18 @@ def calculate_bill(table_ob, restaurant):
 
 def billed_cleaned(table_id):
     table_ob = Table.objects.get(id=table_id)
+    restaurant = Restaurant.objects(tables__in=[table_id]).first()
     if len(table_ob.table_orders) == 0:
         table_ob.users = []
         table_ob.save()
         return False
-    taxes, bill_structure = calculate_bill(table_ob, Restaurant.objects(tables__in=[table_ob]).first())
-    for user in table_ob.users:
-        user_history = UserHistory()
-        restaurant = Restaurant.objects(tables__in=[table_id]).first()
-        user_history.table_id = table_id
-        user_history.table = table_ob.name
-        user_history.restaurant_id = str(restaurant.id)
-        user_history.restaurant_name = str(restaurant.name)
-        for table_ord in table_ob.table_orders:
-            user_history.table_orders.append(json_util.loads(table_ord.to_json()))
-        user_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
-        user_history.assistance_reqs.extend(
-            [json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
-        user_history.timestamp = datetime.now()
-        user_history.taxes, user_history.bill_structure = taxes, bill_structure
-        user_history.save()
-        user.dine_in_history.append(user_history.to_dbref())
-        user.current_table_id = None
-        user.save()
 
+    taxes, bill_structure = calculate_bill(table_ob, Restaurant.objects(tables__in=[table_ob]).first())
     order_history = OrderHistory()
     order_history.table_id = table_id
     order_history.table = table_ob.name
+    order_history.restaurant_id = str(restaurant.id)
+    order_history.restaurant_name = str(restaurant.name)
     order_history.taxes, order_history.bill_structure = taxes, bill_structure
     for table_ord in table_ob.table_orders:
         order_history.table_orders.append(json_util.loads(table_ord.to_json()))
@@ -268,7 +253,12 @@ def billed_cleaned(table_id):
     for ass_req in table_ob.assistance_reqs:
         ass_req.delete()
     order_history.timestamp = datetime.now()
+    order_history.pdf = 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/BNGKOR001/bills/5ed0a0f1f466d5287c8c9e15.pdf'
     order_history.save()
+    for user in table_ob.users:
+        user.dine_in_history.append(order_history.to_dbref())
+        user.current_table_id = None
+        user.save()
     Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)
     table_ob.table_orders = []
     table_ob.assistance_reqs = []
