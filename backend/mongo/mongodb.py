@@ -104,7 +104,6 @@ class OrderHistory(Document):
     restaurant_name = StringField()
     restaurant_id = StringField()
     table_orders = ListField(DictField())
-    personal_orders = ListField(DictField())
     users = ListField(DictField())
     assistance_reqs = ListField()
     timestamp = DateTimeField(default=datetime.now())

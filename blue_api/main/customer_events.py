@@ -144,7 +144,7 @@ def fetch_the_bill(message):
         returning_dict.pop('order_history')
         for staff in table.staff:
             if staff.endpoint_arn:
-                push_bill_request_notification(returning_dict, staff.endpoint_arn)
+                push_bill_request_notification(returning_dict, staff.endpoint_arn, staff_id=str(staff.id))
     else:
         returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
                                           'message': 'Your personal bill will be brought to you',
