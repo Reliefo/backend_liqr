@@ -9,7 +9,10 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch, cm
 import math
 import boto3
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
+pdfmetrics.registerFont(TTFont('New Times Bo', 'Times New Roman Gras 700.ttf'))
 styles = getSampleStyleSheet()
 
 client = boto3.client(
