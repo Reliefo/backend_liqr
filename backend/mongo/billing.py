@@ -118,8 +118,7 @@ def generate_bill(table_ob, restaurant):
     total_amount = round(pretax + taxes, 2)
 
     pdf_file = BytesIO()
-    #     doc = SimpleDocTemplate(pdf_file)
-    doc = SimpleDocTemplate('phello.pdf')
+    doc = SimpleDocTemplate(pdf_file)
 
     Story = [Spacer(1, 1.7 * inch)]
     PS = ParagraphStyle(name='Welcome', parent=styles["Heading2"], alignment=1)
