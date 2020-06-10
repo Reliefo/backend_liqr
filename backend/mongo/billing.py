@@ -43,7 +43,7 @@ def myFirstPage(canvas, doc, restaurant, table_ob):
     phone2 = None
     if len(restaurant.phone_nos) > 1:
         phone2 = restaurant.phone_nos[1]
-    invoice_no = str_n(restaurant.invoice_no + 1)
+    invoice_no = str_n(restaurant.invoice_no + 1, 7)
     users = [user.name for user in table_ob.users]
     date = str(datetime.now()).split()[0]
     time = str(datetime.now()).split()[1].split('.')[0]
