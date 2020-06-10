@@ -52,7 +52,7 @@ def push_assistance_request_notification(request_dict, staff_endpoint_arn, staff
             MessageStructure="json"
         )
     except sns_client.exceptions.EndpointDisabledException:
-        verify_endpoint(request_dict['staff_id'])
+        verify_endpoint(staff_id)
     return
 
 
