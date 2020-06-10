@@ -226,7 +226,7 @@ def calculate_bill(table_ob, restaurant):
             for food in order.food_list:
                 pretax += float(food.price) * food.quantity
     total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
-    total_amount = pretax * (100 + total_tax) / 100
+    total_amount = round(pretax * (100 + total_tax) / 100, 2)
     return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Total Tax': total_tax, 'Total Amount': total_amount}
 
 
