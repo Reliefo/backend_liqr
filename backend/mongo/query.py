@@ -1,5 +1,6 @@
 from backend.mongo.configure_queries import *
 from backend.mongo.returning_query import *
+from backend.mongo.billing import billed_cleaned
 import time
 
 
@@ -216,53 +217,3 @@ def order_status_completed(status_tuple):
     if validate_for_table_order(status_tuple[0], False):
         TableOrder.objects.get(id=status_tuple[0]).update(set__status='completed')
     return "Done"
-
-
-def calculate_bill(table_ob, restaurant):
-    pretax = 0
-    for table_ord in table_ob.table_orders:
-        for order in table_ord.orders:
-            for food in order.food_list:
-                pretax += float(food.price) * food.quantity
-    total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
-    taxes = total_tax * pretax / 100
-    total_amount = round(pretax * (100 + total_tax) / 100, 2)
-    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes, 'Total Amount': total_amount}
-
-
-def billed_cleaned(table_id):
-    table_ob = Table.objects.get(id=table_id)
-    restaurant = Restaurant.objects(tables__in=[table_id]).first()
-    if len(table_ob.table_orders) == 0:
-        table_ob.users = []
-        table_ob.save()
-        return False
-
-    taxes, bill_structure = calculate_bill(table_ob, Restaurant.objects(tables__in=[table_ob]).first())
-    order_history = OrderHistory()
-    order_history.table_id = table_id
-    order_history.table = table_ob.name
-    order_history.restaurant_id = str(restaurant.id)
-    order_history.restaurant_name = str(restaurant.name)
-    order_history.taxes, order_history.bill_structure = taxes, bill_structure
-    for table_ord in table_ob.table_orders:
-        order_history.table_orders.append(json_util.loads(table_ord.to_json()))
-        table_ord.delete()
-    order_history.users.extend([{"name": user.name, "user_id": str(user.id)} for user in table_ob.users])
-    order_history.assistance_reqs.extend([json_util.loads(ass_req.to_json()) for ass_req in table_ob.assistance_reqs])
-    for ass_req in table_ob.assistance_reqs:
-        ass_req.delete()
-    order_history.timestamp = datetime.now()
-    order_history.pdf = 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/BNGKOR001/bills/5ed0a0f1f466d5287c8c9e15.pdf'
-    order_history.save()
-    for user in table_ob.users:
-        user.dine_in_history.append(order_history.to_dbref())
-        user.current_table_id = None
-        user.save()
-    Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)
-    table_ob.table_orders = []
-    table_ob.assistance_reqs = []
-    table_ob.requests_queue = []
-    table_ob.users = []
-    table_ob.save()
-    return order_history.to_json()
