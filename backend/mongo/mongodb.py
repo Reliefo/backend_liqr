@@ -310,6 +310,7 @@ class Restaurant(Document):
     food_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
     bar_menu = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
     address = StringField()
+    phone_nos = ListField(StringField())
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
