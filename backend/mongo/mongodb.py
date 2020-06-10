@@ -323,6 +323,7 @@ class Restaurant(Document):
     taxes = DictField(default={'Service':0, 'CGST':0, 'SGST':0})
     home_page_images = DictField(
         default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
+    invoice_no = IntField(default=0)
 
     def to_json(self):
         data = self.to_mongo()

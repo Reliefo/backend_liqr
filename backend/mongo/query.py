@@ -59,7 +59,8 @@ def order_placement(input_order):
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=True,
                              timestamp=datetime.now())
     for order in input_order['orders']:
-        food_list = [FoodItemMod.from_json(food_embed(food_dict,fooditem_fields_to_capture)) for food_dict in order['food_list']]
+        food_list = [FoodItemMod.from_json(food_embed(food_dict, fooditem_fields_to_capture)) for food_dict in
+                     order['food_list']]
         user = User.objects.get(id=order['placed_by'])
         table_order.orders.append(
             Order(placed_by={"id": str(user.id), "name": user.name}, food_list=food_list).save().to_dbref())
@@ -224,8 +225,9 @@ def calculate_bill(table_ob, restaurant):
             for food in order.food_list:
                 pretax += float(food.price) * food.quantity
     total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
+    taxes = total_tax * pretax / 100
     total_amount = round(pretax * (100 + total_tax) / 100, 2)
-    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Total Tax': total_tax, 'Total Amount': total_amount}
+    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes, 'Total Amount': total_amount}
 
 
 def billed_cleaned(table_id):
