@@ -110,12 +110,13 @@ def generate_bill(table_ob, restaurant):
     pretax = 0
     for food in current_list:
         item_rows.append(
-            [food['name'], customization(food) if 'food_options' in food.keys() else None, int(food['price']),
+            [Paragraph(food['name'],styles['Normal']), customization(food) if 'food_options' in food.keys() else None, int(food['price']),
              food['quantity'], int(food['price']) * food['quantity']])
         pretax += int(food['price']) * food['quantity']
     total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
     taxes = total_tax * pretax / 100
     total_amount = round(pretax + taxes, 2)
+    taxes = round(taxes,2)
 
     pdf_file = BytesIO()
     doc = SimpleDocTemplate(pdf_file)
@@ -168,8 +169,6 @@ def generate_bill(table_ob, restaurant):
 
     doc.build(Story, onFirstPage=partial(myFirstPage, restaurant=restaurant, table_ob=table_ob),
               onLaterPages=myLaterPages)
-
-    #     return pdf_file
     invoice_no = str_n(restaurant.invoice_no + 1, 7)
     pdf_file.seek(0)
     pdf_link = upload_pdf_bill(pdf_file, restaurant.restaurant_id, invoice_no)
