@@ -207,11 +207,11 @@ def configuring_taxes(request_type, message):
 def configuring_kitchen(request_type, message):
     if request_type == 'add':
         kitchen = Kitchen(name=message['name']).save()
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchens=kitchen.to_dbref())
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchen=kitchen.to_dbref())
         message['kitchen_id'] = str(kitchen.id)
         return message
     elif request_type == 'edit':
-        """Requires kitchen_room_id, name, type=edit_kitchen_room"""
+        """Requires kitchen_id, name, type=edit_kitchen"""
         Kitchen.objects.get(id=message['kitchen_id']).update(set__name=message['name'])
         return message
     elif request_type == 'delete':
@@ -237,9 +237,9 @@ def configuring_kitchen(request_type, message):
 
 def configuring_kitchen_staff(request_type, message):
     if request_type == 'add':
-        new_staff = KitchenStaff(name=message['name'], kitchen=message['kitchen_id']).save()
-        Kitchen.objects.get(id=message['kitchen_staff_id']).update(push__kitchen_staff=new_staff.to_dbref())
-        message['kitchen_staff'] = new_staff.to_json()
+        new_staff = KitchenStaff(name=staff_pair['name'], kitchen=message['kitchen_id']).save()
+        Kitchen.objects.get(id=message['kitchen_id']).update(push__kitchen_staff=new_staff.to_dbref())
+        message['kitchen_staff'] = json_util.loads(new_staff.to_json())
         return message
     elif request_type == 'delete':
         KitchenStaff.objects.get(id=message['kitchen_staff_id']).delete()
