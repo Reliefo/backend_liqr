@@ -192,13 +192,11 @@ def login():
                 elif check_user.user_type == "manager":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
-                         "restaurant_id": check_user.restaurant_id, "manager_name": check_user.name}), 200
-
+                         "restaurant_id": check_user.restaurant_id, "name": check_user.name}), 200
                 elif check_user.user_type == "owner":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
                          "restaurant_id": check_user.restaurant_id, "name": check_user.name}), 200
-
                 elif check_user.user_type == "kitchen":
                     object_id = str(check_user.kitchen_staff.id)
                 else:

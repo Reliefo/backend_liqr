@@ -18,6 +18,14 @@ def fetch_rest_object(message):
     emit('order_lists', lists_json)
 
 
+@socket_io.on('fetch_rest_owner', namespace=our_namespace)
+def fetch_rest_owner(message):
+    input_dict = json_util.loads(message)
+    restaurant_id = input_dict['restaurant_id']
+    rest_json = return_restaurant_owner(restaurant_id)
+    emit('restaurant_object', rest_json)
+
+
 @socket_io.on('configuring_restaurant', namespace=our_namespace)
 def configuring_restaurant_event(message):
     restaurant_id = AppUser.objects(sid=request.sid).first().restaurant_id

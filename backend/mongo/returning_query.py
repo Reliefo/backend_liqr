@@ -62,3 +62,11 @@ def return_restaurant_kitchen(rest_id):
         .only('id') \
         .only('name') \
         .only("restaurant_id").first().to_json()
+
+
+def return_restaurant_owner(rest_id):
+    return Restaurant.objects(restaurant_id=rest_id) \
+        .only('id') \
+        .only('name') \
+        .only("restaurant_id") \
+        .only("order_history").first().to_json()
