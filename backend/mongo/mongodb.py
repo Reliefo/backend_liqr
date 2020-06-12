@@ -331,6 +331,7 @@ class Restaurant(Document):
     address = StringField()
     phone_nos = ListField(StringField())
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
+    kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
@@ -338,6 +339,7 @@ class Restaurant(Document):
     home_screen_tags = ListField(StringField(), default=["Most Popular", "Chef's Special", "Daily Special", "On Offer"])
     navigate_better_tags = ListField(StringField(), default=[])
     manager_room = StringField()
+    kitchen_room = StringField()
     taxes = DictField(default={'Service': 0, 'CGST': 0, 'SGST': 0})
     home_page_images = DictField(
         default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
