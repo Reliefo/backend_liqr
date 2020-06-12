@@ -233,5 +233,5 @@ def configuring_kitchen_room(request_type, message):
     if request_type == 'add':
         kitchen = KitchenRoom(name=message['name']).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchen_rooms=kitchen.to_dbref())
-        message['kitchen_room'] = json_util.loads(kitchen.to_json())
+        message['kitchen_room'] = str(kitchen.id)
         return message
