@@ -20,6 +20,8 @@ def configuring_restaurant(message):
         return configuring_home_screen(request_type, message)
     elif element_type == 'taxes':
         return configuring_taxes(request_type, message)
+    elif element_type == 'kitchen_room':
+        return configuring_kitchen_room(request_type, message)
     else:
         return {'status': 'element not recognized'}
 
@@ -225,3 +227,12 @@ def configuring_taxes(request_type, message):
         return message
     else:
         return {'status': 'command type not recognized'}
+
+
+def configuring_kitchen_room(request_type, message):
+    if request_type == 'add':
+        kitchen = KitchenRoom(name=message['name'],
+                              room=message['restaurant_id'] + "_" + message['name'].lower().replace(' ', '_')).save()
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchen_rooms=kitchen.to_dbref())
+        message['kitchen_room'] = json_util.dumps(kitchen.to_json())
+        return message

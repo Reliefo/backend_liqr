@@ -124,15 +124,6 @@ class OrderHistory(Document):
         return json_util.dumps(data)
 
 
-class KitchenStaff(Document):
-    name = StringField()
-    orders_cooked = ListField(DictField())
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
-        return data
-
-
 class User(Document):
     name = StringField(required=True)
     dine_in_history = ListField(ReferenceField(OrderHistory, reverse_delete_rule=PULL))
@@ -301,6 +292,30 @@ class Category(Document):
         return data
 
 
+class KitchenStaff(Document):
+    name = StringField()
+    orders_cooked = ListField(DictField())
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        return data
+
+
+class KitchenRoom(Document):
+    name = StringField()
+    room = StringField()
+    kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
+    categories = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        for key, staff in enumerate(self.kitchen_staff):
+            data['kitchen_staff'][key] = self.kitchen_staff[key].to_my_mongo()
+        for key, sub_cat in enumerate(self.categories):
+            data['categories'][key] = str(self.categories[key].id)
+        return data
+
+
 def check_exists(order_id, order_list):
     for n, order in enumerate(order_list):
         if order_id == order['_id']:
@@ -316,7 +331,6 @@ class Restaurant(Document):
     address = StringField()
     phone_nos = ListField(StringField())
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
-    kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     table_orders = ListField(ReferenceField(TableOrder, reverse_delete_rule=PULL))
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
@@ -324,11 +338,11 @@ class Restaurant(Document):
     home_screen_tags = ListField(StringField(), default=["Most Popular", "Chef's Special", "Daily Special", "On Offer"])
     navigate_better_tags = ListField(StringField(), default=[])
     manager_room = StringField()
-    kitchen_room = StringField()
-    taxes = DictField(default={'Service':0, 'CGST':0, 'SGST':0})
+    taxes = DictField(default={'Service': 0, 'CGST': 0, 'SGST': 0})
     home_page_images = DictField(
         default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
     invoice_no = IntField(default=0)
+    kitchen_rooms = ListField(ReferenceField(KitchenRoom, reverse_delete_rule=PULL))
 
     def to_json(self):
         data = self.to_mongo()
@@ -338,8 +352,6 @@ class Restaurant(Document):
             data['bar_menu'][key] = self.bar_menu[key].to_my_mongo()
         for key, staff in enumerate(self.staff):
             data['staff'][key] = self.staff[key].to_my_mongo()
-        for key, staff in enumerate(self.kitchen_staff):
-            data['kitchen_staff'][key] = self.kitchen_staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
             data['tables'][key] = self.tables[key].to_my_mongo()
         for key, table_order in enumerate(self.table_orders):
