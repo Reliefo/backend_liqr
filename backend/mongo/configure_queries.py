@@ -234,5 +234,5 @@ def configuring_kitchen_room(request_type, message):
         kitchen = KitchenRoom(name=message['name'],
                               room=message['restaurant_id'] + "_" + message['name'].lower().replace(' ', '_')).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchen_rooms=kitchen.to_dbref())
-        message['kitchen_room'] = json_util.dumps(kitchen.to_json())
+        message['kitchen_room'] = json_util.loads(kitchen.to_json())
         return message
