@@ -151,6 +151,8 @@ def register():
                         return json_util.dumps({"status": "Registration successful"})
                     elif request.form["user_type"] == "owner":
                         restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
+                        if restaurant_object:
+                            return json_util.dumps({'status': "restaurant doesn't exist"})
                         AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
                                 name=request.form['name'],
                                 restaurant_id=restaurant_object.restaurant_id,
