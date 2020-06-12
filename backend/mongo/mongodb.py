@@ -188,6 +188,15 @@ class Staff(Document):
         return data
 
 
+class KitchenStaff(Document):
+    name = StringField()
+    orders_cooked = ListField(DictField())
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        return data
+
+
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
     user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin'])
@@ -289,15 +298,6 @@ class Category(Document):
         for key, food_item in enumerate(self.food_list):
             data['food_list'][key] = self.food_list[key].to_my_mongo()
 
-        return data
-
-
-class KitchenStaff(Document):
-    name = StringField()
-    orders_cooked = ListField(DictField())
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
         return data
 
 
