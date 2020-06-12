@@ -23,6 +23,8 @@ def connect():
         disconnect(previous_sid)
     if app_user.user_type == "manager":
         join_room(app_user.restaurant_id)
+    elif app_user.user_type == "owner":
+        join_room(app_user.restaurant_id)
     elif app_user.user_type == "kitchen":
         join_room(app_user.restaurant_id+"_kitchen")
     elif app_user.user_type == "staff":

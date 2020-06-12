@@ -145,14 +145,21 @@ def register():
                         else:
                             restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
                         AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
-                                manager_name=request.form['manager_name'],
+                                name=request.form['name'],
                                 restaurant_id=restaurant_object.restaurant_id,
                                 user_type=request.form["user_type"]).save()
                         return json_util.dumps({"status": "Registration successful"})
-
-                    AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
-                            restaurant_id=request.form["restaurant_id"], user_type=request.form["user_type"]).save()
-                    return json_util.dumps({"status": "Registration successful"})
+                    elif request.form["user_type"] == "owner":
+                        restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
+                        AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
+                                name=request.form['name'],
+                                restaurant_id=restaurant_object.restaurant_id,
+                                user_type=request.form["user_type"]).save()
+                        return json_util.dumps({"status": "Registration successful"})
+                    else:
+                        AppUser(username=request.form["username"], password=hash_pass, timestamp=datetime.now(),
+                                restaurant_id=request.form["restaurant_id"], user_type=request.form["user_type"]).save()
+                        return json_util.dumps({"status": "Registration successful"})
                 return json_util.dumps({"status": "Registration failed, admin credentials wrong"})
             return json_util.dumps({"status": "User is not admin"})
         return json_util.dumps({"status": "Admin username doesn't exist'"})
@@ -183,7 +190,12 @@ def login():
                 elif check_user.user_type == "manager":
                     return json_util.dumps(
                         {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
-                         "restaurant_id": check_user.restaurant_id, "manager_name": check_user.manager_name}), 200
+                         "restaurant_id": check_user.restaurant_id, "manager_name": check_user.name}), 200
+
+                elif check_user.user_type == "owner":
+                    return json_util.dumps(
+                        {"status": "Login Success", "jwt": access_token, "refresh_token": refresh_token,
+                         "restaurant_id": check_user.restaurant_id, "name": check_user.name}), 200
 
                 elif check_user.user_type == "kitchen":
                     object_id = str(check_user.kitchen_staff.id)

@@ -199,7 +199,7 @@ class KitchenStaff(Document):
 
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
-    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin'])
+    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin', 'owner'])
     password = StringField()
     sid = StringField()
     timestamp = DateTimeField(default=datetime.now())
@@ -207,7 +207,7 @@ class AppUser(UserMixin, Document):
     staff_user = ReferenceField(Staff, reverse_delete_rule=CASCADE)
     kitchen_staff = ReferenceField(KitchenStaff, reverse_delete_rule=CASCADE)
     restaurant_id = StringField()
-    manager_name = StringField()
+    name = StringField()
     temp_password = BooleanField()
 
 
