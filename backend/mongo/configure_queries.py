@@ -20,8 +20,8 @@ def configuring_restaurant(message):
         return configuring_home_screen(request_type, message)
     elif element_type == 'taxes':
         return configuring_taxes(request_type, message)
-    elif element_type == 'kitchen_room':
-        return configuring_kitchen_room(request_type, message)
+    elif element_type == 'kitchen':
+        return configuring_kitchen(request_type, message)
     else:
         return {'status': 'element not recognized'}
 
@@ -78,31 +78,6 @@ def configuring_staff(request_type, message):
     elif request_type == 'withdraw':
         Table.objects.get(id=message['table_id']).update(pull__staff=Staff.objects.get(id=message['withdraw_staff_id']))
         return {**message, **{'status': 'Staff Withdrawn'}}
-    else:
-        return {'status': 'command type not recognized'}
-
-
-def configuring_kitchen_staff(request_type, message):
-    if request_type == 'add':
-        staff_objects = []
-        staff_dict_list = []
-        for staff_pair in message['kitchen_staff']:
-            new_staff = KitchenStaff(name=staff_pair['name']).save()
-            staff_objects.append(new_staff.to_dbref())
-            staff_dict_list.append({**{'kitchen_staff_id': str(new_staff.id)}, **staff_pair})
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__kitchen_staff=staff_objects)
-        message['kitchen_staff'] = staff_dict_list
-        return message
-    elif request_type == 'delete':
-        KitchenStaff.objects.get(id=message['kitchen_staff_id']).delete()
-        message['status'] = "Staff Deleted"
-        return message
-    elif request_type == 'edit':
-        this_object = KitchenStaff.objects.get(id=message['kitchen_staff_id'])
-        for field in message['editing_fields'].keys():
-            this_object[field] = message['editing_fields'][field]
-        this_object.save()
-        return message
     else:
         return {'status': 'command type not recognized'}
 
@@ -229,9 +204,52 @@ def configuring_taxes(request_type, message):
         return {'status': 'command type not recognized'}
 
 
-def configuring_kitchen_room(request_type, message):
+def configuring_kitchen(request_type, message):
     if request_type == 'add':
-        kitchen = KitchenRoom(name=message['name']).save()
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchen_rooms=kitchen.to_dbref())
-        message['kitchen_room_id'] = str(kitchen.id)
+        kitchen = Kitchen(name=message['name']).save()
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchens=kitchen.to_dbref())
+        message['kitchen_id'] = str(kitchen.id)
         return message
+    elif request_type == 'edit':
+        """Requires kitchen_room_id, name, type=edit_kitchen_room"""
+        Kitchen.objects.get(id=message['kitchen_id']).update(set__name=message['name'])
+        return message
+    elif request_type == 'delete':
+        kitchen = Kitchen.objects.get(id=message['kitchen_id'])
+        for kitchen_staff in kitchen.kitchen_staff:
+            kitchen_staff.delete()
+        for category in kitchen.categories:
+            category.kitchen = None
+            category.save()
+        return message
+    elif request_type == 'category':
+        categories = Category.objects(id__in=message['categories'])
+        kitchen = Kitchen.objects.get(id=message['kitchen_id'])
+        kitchen.extend(categories)
+        kitchen.save()
+        for category in kitchen.categories:
+            category.kitchen = str(kitchen.id)
+            category.save()
+        return message
+    else:
+        return {'status': 'command type not recognized'}
+
+
+def configuring_kitchen_staff(request_type, message):
+    if request_type == 'add':
+        new_staff = KitchenStaff(name=message['name'], kitchen=message['kitchen_id']).save()
+        Kitchen.objects.get(id=message['kitchen_staff_id']).update(push__kitchen_staff=new_staff.to_dbref())
+        message['kitchen_staff'] = new_staff.to_json()
+        return message
+    elif request_type == 'delete':
+        KitchenStaff.objects.get(id=message['kitchen_staff_id']).delete()
+        message['status'] = "Staff Deleted"
+        return message
+    elif request_type == 'edit':
+        this_object = KitchenStaff.objects.get(id=message['kitchen_staff_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
+        return message
+    else:
+        return {'status': 'command type not recognized'}

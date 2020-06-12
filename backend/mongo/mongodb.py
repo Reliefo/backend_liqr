@@ -191,6 +191,7 @@ class Staff(Document):
 class KitchenStaff(Document):
     name = StringField()
     orders_cooked = ListField(DictField())
+    kitchen = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -292,6 +293,7 @@ class Category(Document):
     name = StringField(required=True)
     description = StringField()
     food_list = ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
+    kitchen = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -301,7 +303,7 @@ class Category(Document):
         return data
 
 
-class KitchenRoom(Document):
+class Kitchen(Document):
     name = StringField()
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     categories = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
@@ -343,7 +345,7 @@ class Restaurant(Document):
     home_page_images = DictField(
         default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
     invoice_no = IntField(default=0)
-    kitchen_rooms = ListField(ReferenceField(KitchenRoom, reverse_delete_rule=PULL))
+    kitchens = ListField(ReferenceField(Kitchen, reverse_delete_rule=PULL))
 
     def to_json(self):
         data = self.to_mongo()
@@ -361,6 +363,8 @@ class Restaurant(Document):
             data['order_history'][key] = self.order_history[key].to_my_mongo()
         for key, ass_req in enumerate(self.assistance_reqs):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
+        for key, ass_req in enumerate(self.kitchens):
+            data['kitchens'][key] = self.kitchens[key].to_my_mongo()
 
         return json_util.dumps(data)
 
