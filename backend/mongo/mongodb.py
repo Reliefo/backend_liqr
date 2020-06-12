@@ -303,7 +303,6 @@ class Category(Document):
 
 class KitchenRoom(Document):
     name = StringField()
-    room = StringField()
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     categories = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
 
