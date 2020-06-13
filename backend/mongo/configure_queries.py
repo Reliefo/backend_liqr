@@ -219,6 +219,9 @@ def configuring_kitchen(request_type, message):
         for kitchen_staff in kitchen.kitchen_staff:
             kitchen_staff.delete()
         for category in kitchen.categories:
+            for food in category.food_list:
+                food.kitchen = None
+                food.save()
             category.kitchen = None
             category.save()
         return message
@@ -228,7 +231,10 @@ def configuring_kitchen(request_type, message):
         kitchen.extend(categories)
         kitchen.save()
         for category in kitchen.categories:
-            category.kitchen = str(kitchen.id)
+            for food in category.food_list:
+                food.kitchen = message['kitchen_id']
+                food.save()
+            category.kitchen = message['kitchen_id']
             category.save()
         return message
     else:

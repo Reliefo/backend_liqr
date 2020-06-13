@@ -273,6 +273,7 @@ class FoodItem(Document):
     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
     image_link = StringField()
+    kitchen = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
