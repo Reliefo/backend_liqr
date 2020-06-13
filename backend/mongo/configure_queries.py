@@ -212,7 +212,10 @@ def configuring_kitchen(request_type, message):
         return message
     elif request_type == 'edit':
         """Requires kitchen_id, name, type=edit_kitchen"""
-        Kitchen.objects.get(id=message['kitchen_id']).update(set__name=message['name'])
+        this_object = Kitchen.objects.get(id=message['kitchen_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
         return message
     elif request_type == 'delete':
         kitchen = Kitchen.objects.get(id=message['kitchen_id'])
