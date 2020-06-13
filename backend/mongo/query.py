@@ -55,7 +55,8 @@ def user_scan(table_id, unique_id, email_id='dud'):
 
 
 def order_placement(input_order):
-    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'food_options']
+    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'food_options',
+                                  'kitchen']
     ordered_table = Table.objects.get(id=input_order['table'])
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=True,
                              timestamp=datetime.now())
@@ -72,7 +73,8 @@ def order_placement(input_order):
 
 
 def push_to_table_cart(input_order):
-    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'food_options']
+    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'food_options',
+                                  'kitchen']
     ordered_table = Table.objects.get(id=input_order['table'])
     order = input_order['orders'][0]
     if ordered_table.table_cart:
