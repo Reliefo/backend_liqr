@@ -228,7 +228,7 @@ def configuring_kitchen(request_type, message):
     elif request_type == 'category':
         categories = Category.objects(id__in=message['categories'])
         kitchen = Kitchen.objects.get(id=message['kitchen_id'])
-        kitchen.extend(categories)
+        kitchen.categories.extend(categories)
         kitchen.save()
         for category in kitchen.categories:
             for food in category.food_list:
