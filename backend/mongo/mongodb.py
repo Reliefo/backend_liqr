@@ -21,6 +21,7 @@ class FoodItemMod(EmbeddedDocument):
     price = StringField()
     instructions = StringField()
     quantity = IntField()
+    kitchen = StringField()
     status = StringField(choices=['queued', 'cooking', 'completed'])
     food_options = EmbeddedDocumentField(FoodOptionsMod)
 
