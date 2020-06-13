@@ -314,7 +314,7 @@ class Kitchen(Document):
         for key, staff in enumerate(self.kitchen_staff):
             data['kitchen_staff'][key] = self.kitchen_staff[key].to_my_mongo()
         for key, sub_cat in enumerate(self.categories):
-            data['categories'][key] = str(self.categories[key].id)
+            data['categories'][key] = {"category_id": str(self.categories[key].id), "category_name": self.categories[key].name}
         return data
 
 
