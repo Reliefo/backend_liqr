@@ -240,6 +240,17 @@ def configuring_kitchen(request_type, message):
             category.kitchen = message['kitchen_id']
             category.save()
         return message
+    elif request_type == 'decategory':
+        category = Category.objects.get(id=message['category_id'])
+        kitchen = Kitchen.objects.get(id=message['kitchen_id'])
+        kitchen.categories.remove(category)
+        kitchen.save()
+        category.kitchen = None
+        category.save()
+        for food in category.food_list:
+            food.kitchen = None
+            food.save()
+        return message
     else:
         return {'status': 'command type not recognized'}
 
