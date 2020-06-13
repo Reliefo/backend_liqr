@@ -61,7 +61,7 @@ def return_restaurant_kitchen(rest_id):
     return Restaurant.objects(restaurant_id=rest_id) \
         .only('id') \
         .only('name') \
-        .only('kitchen') \
+        .only('kitchens') \
         .only("restaurant_id").first().to_json()
 
 
