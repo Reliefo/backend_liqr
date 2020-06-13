@@ -227,6 +227,7 @@ def configuring_kitchen(request_type, message):
                 food.save()
             category.kitchen = None
             category.save()
+        kitchen.delete()
         return message
     elif request_type == 'category':
         categories = Category.objects(id__in=message['categories'])
