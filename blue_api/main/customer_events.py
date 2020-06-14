@@ -96,6 +96,14 @@ def place_table_order(message):
     socket_io.emit('new_orders', new_order, room=new_order_dict['table_id'], namespace=our_namespace)
 
 
+@socket_io.on('cancel_ordered_items', namespace=our_namespace)
+def cancel_items(message):
+    input_order = json_util.loads(message)
+    sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
+    socket_io.emit('logger', message, namespace=our_namespace)
+    # socket_io.emit('table_cart_orders', table_cart_order, room=input_order['table_id'], namespace=our_namespace)
+
+
 """
 @socket_io.on('kitchen_updates', namespace=our_namespace)
 socket_io.emit('order_updates')
