@@ -101,7 +101,8 @@ def cancel_items(message):
     input_order = json_util.loads(message)
     sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
-    # socket_io.emit('table_cart_orders', table_cart_order, room=input_order['table_id'], namespace=our_namespace)
+    input_order['status'] = 'cancelled'
+    socket_io.emit('cancel_items_request', json_util.dumps(input_order), room=input_order['table_id'], namespace=our_namespace)
 
 
 """
