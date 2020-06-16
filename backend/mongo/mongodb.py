@@ -260,6 +260,28 @@ class Table(Document):
             self.staff.pop()
 
 
+class InventoryItem(Document):
+    name = StringField()
+    units = DictField()
+    default_unit = StringField()
+    quantity = FloatField()
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        return data
+
+
+class InventoryItemMod(Document):
+    name = StringField()
+    units = DictField()
+    default_unit = StringField()
+    quantity = FloatField()
+
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        return data
+
+
 class FoodOptions(EmbeddedDocument):
     options = ListField(DictField())
     choices = ListField()
@@ -275,19 +297,22 @@ class FoodItem(Document):
     restaurant_id = StringField()
     image_link = StringField()
     kitchen = StringField()
+    ingredients = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
 
     def to_my_mongo(self):
         data = self.to_mongo()
         if self.food_options:
             data['food_options'] = self.food_options.to_mongo()
-
+        if self.ingredients:
+            data['ingredients'] = self.ingredients.to_my_mongo()
         return data
 
     def to_json(self):
         data = self.to_mongo()
         if self.food_options:
             data['food_options'] = self.food_options.to_mongo()
-
+        if self.ingredients:
+            data['ingredients'] = self.ingredients.to_my_mongo()
         return json_util.dumps(data)
 
 
@@ -301,7 +326,6 @@ class Category(Document):
         data = self.to_mongo()
         for key, food_item in enumerate(self.food_list):
             data['food_list'][key] = self.food_list[key].to_my_mongo()
-
         return data
 
 
@@ -348,6 +372,7 @@ class Restaurant(Document):
         default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
     invoice_no = IntField(default=0)
     kitchens = ListField(ReferenceField(Kitchen, reverse_delete_rule=PULL))
+    inventory = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
 
     def to_json(self):
         data = self.to_mongo()
@@ -365,8 +390,6 @@ class Restaurant(Document):
             data['order_history'][key] = self.order_history[key].to_my_mongo()
         for key, ass_req in enumerate(self.assistance_reqs):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
-        for key, ass_req in enumerate(self.kitchens):
-            data['kitchens'][key] = self.kitchens[key].to_my_mongo()
 
         return json_util.dumps(data)
 
