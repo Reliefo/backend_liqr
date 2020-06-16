@@ -139,7 +139,7 @@ def configuring_food_item(request_type, message):
             if field == 'food_options':
                 status = False
                 for ops in message['editing_fields'][field].keys():
-                    if len(ops) != 0:
+                    if len(message['editing_fields'][field][ops]) != 0:
                         status = True
                 if status:
                     this_object[field] = FoodOptions.from_json(json_util.dumps(message['editing_fields'][field]))
