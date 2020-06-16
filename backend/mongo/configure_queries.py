@@ -137,7 +137,14 @@ def configuring_food_item(request_type, message):
         this_object = FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():
             if field == 'food_options':
-                this_object[field] = FoodOptions.from_json(json_util.dumps(message['editing_fields'][field]))
+                status = False
+                for ops in message['editing_fields'][field].keys():
+                    if len(ops) != 0:
+                        status = True
+                if status:
+                    this_object[field] = FoodOptions.from_json(json_util.dumps(message['editing_fields'][field]))
+                else:
+                    this_object[field] = None
             else:
                 this_object[field] = message['editing_fields'][field]
         this_object.save()
