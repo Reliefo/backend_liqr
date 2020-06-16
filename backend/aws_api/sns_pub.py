@@ -33,7 +33,7 @@ def push_order_complete_notification(request_dict, staff_endpoint_arn):
     return
 
 
-def push_assistance_request_notification(request_dict, staff_endpoint_arn, staff_id):
+def push_assistance_request_notification(request_dict, staff_endpoint_arn):
     pub_data_dict = {**request_dict, **{'click_action': "FLUTTER_NOTIFICATION_CLICK"}}
 
     gcm_dict = {'data': pub_data_dict,
@@ -52,7 +52,7 @@ def push_assistance_request_notification(request_dict, staff_endpoint_arn, staff
             MessageStructure="json"
         )
     except sns_client.exceptions.EndpointDisabledException:
-        verify_endpoint(staff_id)
+        verify_endpoint(request_dict['staff_id'])
     return
 
 
