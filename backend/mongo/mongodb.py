@@ -271,15 +271,12 @@ class InventoryItem(Document):
         return data
 
 
-class InventoryItemMod(Document):
+class InventoryItemMod(EmbeddedDocument):
+    inventory_item_id = StringField()
     name = StringField()
     units = DictField()
     default_unit = StringField()
     quantity = FloatField()
-
-    def to_my_mongo(self):
-        data = self.to_mongo()
-        return data
 
 
 class FoodOptions(EmbeddedDocument):
@@ -297,7 +294,7 @@ class FoodItem(Document):
     restaurant_id = StringField()
     image_link = StringField()
     kitchen = StringField()
-    ingredients = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
+    ingredients = ListField(EmbeddedDocumentField(InventoryItemMod))
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -390,6 +387,8 @@ class Restaurant(Document):
             data['order_history'][key] = self.order_history[key].to_my_mongo()
         for key, ass_req in enumerate(self.assistance_reqs):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
+        for key, ass_req in enumerate(self.kitchens):
+            data['kitchens'][key] = self.kitchens[key].to_my_mongo()
 
         return json_util.dumps(data)
 
