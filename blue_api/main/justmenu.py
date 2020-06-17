@@ -47,7 +47,7 @@ def configure_justmenu(input_dict):
 def justmenu_configuration(message):
     input_dict = json_util.loads(message)
 
-    emit('justmenu', configure_justmenu(input_dict))
+    emit('justmenu_config', configure_justmenu(input_dict))
 
 
 @socket_io.on('fetch_justmenu', namespace=our_namespace)
