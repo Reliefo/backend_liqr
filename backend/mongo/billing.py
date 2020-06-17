@@ -174,7 +174,7 @@ def generate_bill(table_ob, restaurant):
     pdf_link = upload_pdf_bill(pdf_file, restaurant.restaurant_id, invoice_no)
     Restaurant.objects.get(id=restaurant.id).update(inc__invoice_no=1)
 
-    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes, 'Total Amount': total_amount}, pdf_link
+    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes, 'Total Amount': total_amount}, pdf_link, invoice_no
 
 
 def billed_cleaned(table_id):
@@ -185,9 +185,10 @@ def billed_cleaned(table_id):
         table_ob.save()
         return False
 
-    taxes, bill_structure, pdf_link = generate_bill(table_ob, restaurant)
+    taxes, bill_structure, pdf_link, invoice_no = generate_bill(table_ob, restaurant)
     order_history = OrderHistory()
     order_history.table_id = table_id
+    order_history.invoice_no = invoice_no
     order_history.table = table_ob.name
     order_history.restaurant_id = str(restaurant.id)
     order_history.restaurant_name = str(restaurant.name)

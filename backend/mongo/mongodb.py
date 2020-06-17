@@ -113,6 +113,7 @@ class OrderHistory(Document):
     bill_structure = DictField()
     taxes = DictField()
     pdf = StringField()
+    invoice_no = StringField()
 
     def to_my_mongo(self):
         data = self.to_mongo()
@@ -387,8 +388,10 @@ class Restaurant(Document):
             data['order_history'][key] = self.order_history[key].to_my_mongo()
         for key, ass_req in enumerate(self.assistance_reqs):
             data['assistance_reqs'][key] = self.assistance_reqs[key].to_my_mongo()
-        for key, ass_req in enumerate(self.kitchens):
+        for key, kitchen in enumerate(self.kitchens):
             data['kitchens'][key] = self.kitchens[key].to_my_mongo()
+        for key, item in enumerate(self.inventory):
+            data['inventory'][key] = self.inventory[key].to_my_mongo()
 
         return json_util.dumps(data)
 
