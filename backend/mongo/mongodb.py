@@ -275,8 +275,7 @@ class InventoryItem(Document):
 class InventoryItemMod(EmbeddedDocument):
     inventory_item_id = StringField()
     name = StringField()
-    units = DictField()
-    default_unit = StringField()
+    unit_used = StringField()
     quantity = FloatField()
 
 
