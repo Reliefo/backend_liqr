@@ -347,6 +347,10 @@ def check_exists(order_id, order_list):
     return -1
 
 
+class JustMenu(Document):
+    name = StringField(required=True)
+    menu = ListField(StringField())
+
 class Restaurant(Document):
     name = StringField(required=True)
     restaurant_id = StringField(required=True)

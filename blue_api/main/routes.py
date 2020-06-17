@@ -39,6 +39,12 @@ def clear_orders():
     return "Cleared orders"
 
 
+@main.route('/get_just_menu/<string:jm_id>', methods=['GET'])
+def get_just_menu(jm_id):
+    jm = JustMenu.objects.get(id=jm_id)
+    return jm.to_json()
+
+
 @main.route('/table/<string:table_id>', methods=['GET'])
 def scanned_table(table_id):
     return redirect("https://order.liqr.cc/?table_id=" + table_id)

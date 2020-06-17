@@ -281,3 +281,23 @@ def configuring_kitchen_staff(request_type, message):
         return message
     else:
         return {'status': 'command type not recognized'}
+
+
+def configuring_inventory(request_type, message):
+    if request_type == 'add':
+        inventory_item = InventoryItem(name=message['name'], units=message['units'], quantity=message['quantity'], default_unit=message['default_unit']).save()
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__inventory=inventory_item)
+        message['inventory_item_id'] = str(inventory_item.id)
+        return message
+    elif request_type == 'delete':
+        InventoryItem.objects.get(id=message['inventory_item_id']).delete()
+        message['status'] = "Staff Deleted"
+        return message
+    elif request_type == 'edit':
+        this_object=InventoryItem.objects.get(id=message['kitchen_staff_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
+        return message
+    else:
+        return {'status': 'command type not recognized'}
