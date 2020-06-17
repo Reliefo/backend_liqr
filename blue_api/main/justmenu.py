@@ -39,7 +39,7 @@ def configure_justmenu(input_dict):
             image.delete()
         just.delete()
         input_dict['status'] = 'delete'
-    input_dict['justmenu'] = json_util.loads(just.to_json())
+    input_dict['justmenu_config'] = json_util.loads(just.to_json())
     return json_util.dumps(input_dict)
 
 
@@ -48,3 +48,11 @@ def justmenu_configuration(message):
     input_dict = json_util.loads(message)
 
     emit('justmenu', configure_justmenu(input_dict))
+
+
+@socket_io.on('fetch_justmenu', namespace=our_namespace)
+def fetch_justmenu(message):
+    just_list = []
+    for just in JustMenu.objects:
+        just_list.append(json_util.loads(just.to_json()))
+    emit('here_justmenu', json_util.dumps(just_list))
