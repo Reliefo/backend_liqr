@@ -353,6 +353,11 @@ class JustMenu(Document):
     created = DateTimeField()
     visits = ListField(DateTimeField())
 
+    def to_json(self):
+        data = self.to_mongo()
+        data['timestamp'] = str(data['timestamp'])
+        return json_util.dumps(data)
+
 class Restaurant(Document):
     name = StringField(required=True)
     restaurant_id = StringField(required=True)

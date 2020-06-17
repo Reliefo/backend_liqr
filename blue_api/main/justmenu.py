@@ -38,7 +38,7 @@ def configure_justmenu(input_dict):
             image = s3_res.Object('liqr-justmenu', object_key)
             image.delete()
         just.delete()
-        input_dict['status'] = 'delete'
+        input_dict['status'] = 'deleted'
     input_dict['justmenu_config'] = json_util.loads(just.to_json())
     return json_util.dumps(input_dict)
 
