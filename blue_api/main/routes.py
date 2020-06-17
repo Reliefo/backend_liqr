@@ -42,6 +42,8 @@ def clear_orders():
 @main.route('/get_just_menu/<string:jm_id>', methods=['GET'])
 def get_just_menu(jm_id):
     jm = JustMenu.objects.get(id=jm_id)
+    jm.visits.append(datetime.now())
+    jm.save()
     return jm.to_json()
 
 

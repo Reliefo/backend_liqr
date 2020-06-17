@@ -8,8 +8,6 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity,
 )
 from flask_socketio import emit, join_room, leave_room, disconnect, rooms
-all_clients = []
-active_clients = []
 
 
 @socket_io.on('connect', namespace=our_namespace)
@@ -39,7 +37,6 @@ def connect():
             pass
     AppUser.objects(username=username).first().update(set__sid=request.sid)
     sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
-    # all_clients.append(request.sid)
 
 
 @socket_io.on('disconnect', namespace=our_namespace)
