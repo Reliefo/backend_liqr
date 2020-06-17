@@ -21,7 +21,7 @@ def connect():
     previous_sid = app_user.sid
     previous_sid = True
     if previous_sid:
-        disconnect(previous_sid)
+        disconnect(request.sid)
     if app_user.user_type == "manager":
         join_room(app_user.restaurant_id)
     elif app_user.user_type == "owner":
