@@ -355,7 +355,7 @@ class JustMenu(Document):
 
     def to_json(self):
         data = self.to_mongo()
-        data['timestamp'] = str(data['timestamp'])
+        data['created'] = str(data['created'])
         return json_util.dumps(data)
 
 class Restaurant(Document):
