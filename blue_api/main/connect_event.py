@@ -8,7 +8,6 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity,
 )
 from flask_socketio import emit, join_room, leave_room, disconnect, rooms
-
 all_clients = []
 active_clients = []
 
@@ -21,7 +20,7 @@ def connect():
     previous_sid = app_user.sid
     previous_sid = True
     if previous_sid:
-        disconnect(request.sid)
+        disconnect(previous_sid)
     if app_user.user_type == "manager":
         join_room(app_user.restaurant_id)
     elif app_user.user_type == "owner":
