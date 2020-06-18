@@ -45,7 +45,7 @@ def generate_qr_image(justmenu_id, name):
     d = ImageDraw.Draw(img)
     w, h = d.textsize(msg, font=font)
 
-    d.text(((W - w) / 2, 150), msg, font=font, fill="black")
+    d.text(((W - w) / 2, 170), msg, font=font, fill="black")
 
     font_scan = ImageFont.truetype("Roboto-Black.ttf", 76)
 
