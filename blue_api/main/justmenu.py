@@ -18,7 +18,7 @@ def configure_justmenu(input_dict):
         name = input_dict['name']
         just = JustMenu(name=name, created=datetime.now()).save()
     elif request_type == 'image':
-        object_key = input_dict['image_url'].split('/', 3)[-1]
+        object_key = input_dict['image_url'].split('/', 4)[-1]
         image = s3_res.ObjectAcl('liqr-justmenu', object_key)
         image.put(ACL='public-read')
         just = JustMenu.objects.get(id=input_dict['justmenu_id'])
@@ -34,7 +34,7 @@ def configure_justmenu(input_dict):
     elif request_type == 'delete':
         just = JustMenu.objects.get(id=input_dict['justmenu_id'])
         for image_url in just.menu:
-            object_key = image_url.split('/', 3)[-1]
+            object_key = image_url.split('/', 4)[-1]
             image = s3_res.Object('liqr-justmenu', object_key)
             image.delete()
         just.delete()
