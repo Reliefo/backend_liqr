@@ -39,7 +39,7 @@ def configure_justmenu(input_dict):
             image.delete()
         just.delete()
         input_dict['status'] = 'deleted'
-    input_dict['justmenu_config'] = json_util.loads(just.to_json())
+    input_dict['justmenu_object'] = json_util.loads(just.to_json())
     return json_util.dumps(input_dict)
 
 
