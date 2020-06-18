@@ -13,7 +13,12 @@ s3_res = boto3.resource(
     aws_secret_access_key="Xcor+sVRczxXR3mwHs84YcB8R27FIdWxooEXkQ6U",
     region_name="ap-south-1"
 )
-
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
+    aws_secret_access_key="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",
+    region_name="ap-south-1"
+)
 
 def generate_qr_image(justmenu_id, name):
     qr = qrcode.QRCode(
