@@ -352,11 +352,13 @@ class JustMenu(Document):
     menu = ListField(StringField())
     created = DateTimeField()
     visits = ListField(DateTimeField())
+    qr = StringField()
 
     def to_json(self):
         data = self.to_mongo()
         data['created'] = str(data['created'])
         return json_util.dumps(data)
+
 
 class Restaurant(Document):
     name = StringField(required=True)
