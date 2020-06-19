@@ -110,7 +110,7 @@ def generate_bill(table_ob, restaurant):
     pretax = 0
     for food in current_list:
         item_rows.append(
-            [Paragraph(food['name'],styles['Normal']), customization(food) if 'food_options' in food.keys() else None, int(food['price']),
+            [Paragraph(food['name'],styles['BodyText']), customization(food) if 'food_options' in food.keys() else None, int(food['price']),
              food['quantity'], int(food['price']) * food['quantity']])
         pretax += int(food['price']) * food['quantity']
     total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
