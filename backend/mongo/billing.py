@@ -68,7 +68,7 @@ def myFirstPage(canvas, doc, restaurant, table_ob):
     canvas.drawString(400, 760, "Date: " + date)
     canvas.drawString(400, 745, "Time: " + time)
     canvas.drawString(400, 730, "Billing Table: " + table_ob.name)
-    canvas.line(33, 640, 580, 640)
+    canvas.line(33, 640, 560, 640)
     canvas.setFont('Times-Roman', 9)
     canvas.drawString(inch, 0.75 * inch, "Page %d %s" % (doc.page, restaurant.name))
     canvas.restoreState()
@@ -110,13 +110,18 @@ def generate_bill(table_ob, restaurant):
     pretax = 0
     for food in current_list:
         item_rows.append(
-            [Paragraph(food['name'],styles['BodyText']), customization(food) if 'food_options' in food.keys() else None, int(food['price']),
+            [Paragraph(food['name'], styles['BodyText']),
+             Paragraph(customization(food), styles['BodyText']) if 'food_options' in food.keys() else None,
+             int(food['price']),
              food['quantity'], int(food['price']) * food['quantity']])
         pretax += int(food['price']) * food['quantity']
-    total_tax = restaurant.taxes['Service'] + restaurant.taxes['SGST'] + restaurant.taxes['CGST']
+    CGST = restaurant.taxes['CGST']
+    SGST = restaurant.taxes['SGST']
+    service_tax = restaurant.taxes['Service']
+    total_tax = CGST + SGST + service_tax
     taxes = total_tax * pretax / 100
     total_amount = round(pretax + taxes, 2)
-    taxes = round(taxes,2)
+    taxes = round(taxes, 2)
 
     pdf_file = BytesIO()
     doc = SimpleDocTemplate(pdf_file)
@@ -136,7 +141,11 @@ def generate_bill(table_ob, restaurant):
     Titles = [Paragraph('<b>{}</b>'.format(title), TitleStyle) for title in RawTitles]
     PreTotalRow = [Paragraph('<b>Pretax Total</b>', PretaxTotalStyle), '', '', '',
                    Paragraph('<b>₹ {}</b>'.format(pretax), TotalStyle)]
-    TaxesRow = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), PretaxTotalStyle), '', '', '',
+    TaxesRow = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), PretaxTotalStyle), Paragraph('<b>CGST: {}%, SGST: {}%, '
+                                                                                             'Service Tax: {'
+                                                                                             '}%</b>'.format(CGST, SGST,
+                                                                                                             service_tax),
+                                                                                             PretaxTotalStyle), '', '',
                 Paragraph('<b>₹ {}</b>'.format(taxes), TotalStyle)]
     TotalRow = [Paragraph('<b>Total</b>', PretaxTotalStyle), '', '', '',
                 Paragraph('<b>₹ {}</b>'.format(total_amount), TotalStyle)]
@@ -159,7 +168,7 @@ def generate_bill(table_ob, restaurant):
     RupeeStyle = ParagraphStyle(name='Tatotaitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
                                 fontSize=14)
 
-    last_P = Paragraph('Total Bill = ₹ ' + str(total_amount), RupeeStyle)
+    last_P = Paragraph('Total Bill to be Paid: ₹ ' + str(total_amount), RupeeStyle)
 
     Story.append(last_P)
     Story.append(Spacer(1, 0.2 * inch))
@@ -174,7 +183,8 @@ def generate_bill(table_ob, restaurant):
     pdf_link = upload_pdf_bill(pdf_file, restaurant.restaurant_id, invoice_no)
     Restaurant.objects.get(id=restaurant.id).update(inc__invoice_no=1)
 
-    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes, 'Total Amount': total_amount}, pdf_link, invoice_no
+    return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes,
+                              'Total Amount': total_amount}, pdf_link, invoice_no
 
 
 def billed_cleaned(table_id):
