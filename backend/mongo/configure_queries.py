@@ -133,6 +133,9 @@ def configuring_food_item(request_type, message):
         FoodItem.objects.get(id=message['food_id']).delete()
         message['status'] = "Food Item Deleted"
         return message
+    elif request_type == 'visibility':
+        FoodItem.objects.get(id=message['food_id']).update(set__visibility=message['visibility'])
+        return message
     elif request_type == 'edit':
         this_object = FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():

@@ -295,6 +295,7 @@ class FoodItem(Document):
     image_link = StringField()
     kitchen = StringField()
     ingredients = ListField(EmbeddedDocumentField(InventoryItemMod))
+    visibility = BooleanField(default=True)
 
     def to_my_mongo(self):
         data = self.to_mongo()
