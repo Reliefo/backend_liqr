@@ -152,7 +152,7 @@ def generate_bill(table_ob, restaurant):
 
     data = [Titles] + item_rows + [PreTotalRow] + [TaxesRow] + [TotalRow]
 
-    columnSizes = [3 * inch, 2 * inch, 0.6 * inch, 0.4 * inch, 0.8 * inch]
+    columnSizes = [3 * inch, 2.5 * inch, 0.6 * inch, 0.4 * inch, 0.8 * inch]
     t = TablePDF(data, columnSizes)
     t.setStyle(TableStyle([('ALIGN', (0, 0), (-1, 0), 'CENTER'),
                            ('ALIGN', (2, 1), (-1, -1), 'RIGHT'),
