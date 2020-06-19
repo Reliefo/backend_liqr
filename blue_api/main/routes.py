@@ -54,4 +54,6 @@ def scanned_table(table_id):
 
 @main.route('/table_no/<int:table_no>', methods=['GET'])
 def scanned_table_no(table_no):
+    if table_no==3:
+        table_no=41
     return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
