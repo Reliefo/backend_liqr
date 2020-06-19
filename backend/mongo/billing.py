@@ -142,9 +142,9 @@ def generate_bill(table_ob, restaurant):
     PreTotalRow = [Paragraph('<b>Pretax Total</b>', PretaxTotalStyle), '', '', '',
                    Paragraph('<b>₹ {}</b>'.format(pretax), TotalStyle)]
     TaxesRow = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), PretaxTotalStyle), Paragraph('<b>CGST: {}%, SGST: {}%, '
-                                                                                             'Service Tax: {'
-                                                                                             '}%</b>'.format(CGST, SGST,
-                                                                                                             service_tax),
+                                                                                             'Service Tax: {}%</b>'.
+                                                                                             format(CGST, SGST,
+                                                                                                    service_tax),
                                                                                              PretaxTotalStyle), '', '',
                 Paragraph('<b>₹ {}</b>'.format(taxes), TotalStyle)]
     TotalRow = [Paragraph('<b>Total</b>', PretaxTotalStyle), '', '', '',
@@ -160,6 +160,9 @@ def generate_bill(table_ob, restaurant):
                            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                           ('BACKGROUND',(-4,-1),(-2,-1), colors.black),
+                           ('BACKGROUND',(-4,-3),(-2,-3), colors.black),
+                           ('SPAN',(-4,-2),(-2,-2),)
                            ]))
 
     Story.append(t)
