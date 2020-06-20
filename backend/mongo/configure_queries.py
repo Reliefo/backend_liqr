@@ -127,7 +127,7 @@ def configuring_bar_category(request_type, message):
 def configuring_add_ons(request_type, message):
     if request_type == 'add':
         food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
-        Restaurant.objects(id=message['restaurant_id'])[0].update(push__add_ons=food_object.to_dbref())
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__add_ons=food_object.to_dbref())
         message.pop('food_dict')
         message['food_obj'] = json_util.loads(food_object.to_json())
         return message
