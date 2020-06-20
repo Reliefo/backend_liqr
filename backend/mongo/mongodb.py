@@ -280,9 +280,16 @@ class InventoryItemMod(EmbeddedDocument):
 
 
 class FoodOptions(EmbeddedDocument):
-    options = ListField(DictField())
-    choices = ListField()
-    add_ons = ListField(DictField())
+    custom_type = StringField(choices=['options', 'choices', 'add_ons'])
+    less_more = IntField()
+    number = IntField()
+    available_list = ListField()
+    name = StringField()
+
+
+#     options = ListField(DictField())
+#     choices = ListField()
+#     add_ons = ListField(DictField())
 
 
 class FoodItem(Document):
@@ -290,7 +297,8 @@ class FoodItem(Document):
     description = StringField()
     price = StringField(required=True)
     tags = ListField(StringField())
-    food_options = EmbeddedDocumentField(FoodOptions)
+    food_options = ListField(EmbeddedDocumentField(FoodOptions))
+    #     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
     image_link = StringField()
     kitchen = StringField()
