@@ -279,10 +279,10 @@ class InventoryItemMod(EmbeddedDocument):
     quantity = FloatField()
 
 
-class FoodOptions(EmbeddedDocument):
+class FoodCustomization(EmbeddedDocument):
     name = StringField()
-    food_options_type = StringField(choices=['options', 'choices', 'add_ons'])
-    less_more = IntField()
+    customization_type = StringField(choices=['options', 'choices', 'add_ons'])
+    less_more = IntField(choices=[-1, 0, 1])
     that_number = IntField()
     list_of_options = ListField()
 
@@ -297,7 +297,7 @@ class FoodItem(Document):
     description = StringField()
     price = StringField(required=True)
     tags = ListField(StringField())
-    food_options = ListField(EmbeddedDocumentField(FoodOptions))
+    customization = ListField(EmbeddedDocumentField(FoodCustomization))
     #     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
     image_link = StringField()
@@ -307,16 +307,16 @@ class FoodItem(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
-        for key, food_option in enumerate(self.food_options):
-            data['food_options'][key] = self.food_options[key].to_mongo()
+        for key, customization in enumerate(self.customization):
+            data['customization'][key] = self.customization[key].to_mongo()
         if self.ingredients:
             data['ingredients'] = self.ingredients.to_my_mongo()
         return data
 
     def to_json(self):
         data = self.to_mongo()
-        for key, food_option in enumerate(self.food_options):
-            data['food_options'][key] = self.food_options[key].to_mongo()
+        for key, customization in enumerate(self.customization):
+            data['customization'][key] = self.customization[key].to_mongo()
         if self.ingredients:
             data['ingredients'] = self.ingredients.to_my_mongo()
         return json_util.dumps(data)
