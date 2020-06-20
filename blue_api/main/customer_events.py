@@ -102,6 +102,8 @@ def cancel_items(message):
     sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     input_order['status'] = 'cancelled'
+    Order.objects.get(id=input_order['order_id']).update(pull__food_list=FoodItemMod(food_id=input_order['food_id']))
+    input_order['table_orders'] = json_util.loads(Table.objects.only("table_orders").get(id=input_order['table_id']).to_json())['table_orders']
     socket_io.emit('cancel_items_request', json_util.dumps(input_order), room=input_order['table_id'], namespace=our_namespace)
 
 
