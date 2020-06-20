@@ -287,7 +287,7 @@ class FoodOptions(EmbeddedDocument):
 
 class FoodItem(Document):
     name = StringField(required=True)
-    description = StringField(required=True)
+    description = StringField()
     price = StringField(required=True)
     tags = ListField(StringField())
     food_options = EmbeddedDocumentField(FoodOptions)
@@ -392,6 +392,8 @@ class Restaurant(Document):
             data['food_menu'][key] = self.food_menu[key].to_my_mongo()
         for key, sub_cat in enumerate(self.bar_menu):
             data['bar_menu'][key] = self.bar_menu[key].to_my_mongo()
+        for key, add_on in enumerate(self.add_ons):
+            data['add_ons'][key] = self.add_ons[key].to_my_mongo()
         for key, staff in enumerate(self.staff):
             data['staff'][key] = self.staff[key].to_my_mongo()
         for key, table in enumerate(self.tables):
