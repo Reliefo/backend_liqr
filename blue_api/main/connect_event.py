@@ -16,7 +16,6 @@ def connect():
     username = get_jwt_identity()
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
-    previous_sid = True
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
