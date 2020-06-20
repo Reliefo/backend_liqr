@@ -160,9 +160,9 @@ def generate_bill(table_ob, restaurant):
                            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                           ('BACKGROUND',(-4,-1),(-2,-1), colors.black),
-                           ('BACKGROUND',(-4,-3),(-2,-3), colors.black),
-                           ('SPAN',(-4,-2),(-2,-2),)
+                           ('SPAN',(-4,-1),(-2,-1)),
+                           ('SPAN',(-4,-2),(-2,-2)),
+                           ('SPAN',(-4,-3),(-2,-3))
                            ]))
 
     Story.append(t)
