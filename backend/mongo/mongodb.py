@@ -280,11 +280,11 @@ class InventoryItemMod(EmbeddedDocument):
 
 
 class FoodOptions(EmbeddedDocument):
+    name = StringField()
     food_options_type = StringField(choices=['options', 'choices', 'add_ons'])
     less_more = IntField()
     that_number = IntField()
     list_of_options = ListField()
-    name = StringField()
 
 
 #     options = ListField(DictField())
@@ -307,16 +307,16 @@ class FoodItem(Document):
 
     def to_my_mongo(self):
         data = self.to_mongo()
-        if self.food_options:
-            data['food_options'] = self.food_options.to_mongo()
+        for key, food_option in enumerate(self.food_options):
+            data['food_options'][key] = self.food_options[key].to_mongo()
         if self.ingredients:
             data['ingredients'] = self.ingredients.to_my_mongo()
         return data
 
     def to_json(self):
         data = self.to_mongo()
-        if self.food_options:
-            data['food_options'] = self.food_options.to_mongo()
+        for key, food_option in enumerate(self.food_options):
+            data['food_options'][key] = self.food_options[key].to_mongo()
         if self.ingredients:
             data['ingredients'] = self.ingredients.to_my_mongo()
         return json_util.dumps(data)
