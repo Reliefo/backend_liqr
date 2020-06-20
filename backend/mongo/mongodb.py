@@ -280,10 +280,10 @@ class InventoryItemMod(EmbeddedDocument):
 
 
 class FoodOptions(EmbeddedDocument):
-    custom_type = StringField(choices=['options', 'choices', 'add_ons'])
+    food_options_type = StringField(choices=['options', 'choices', 'add_ons'])
     less_more = IntField()
-    number = IntField()
-    available_list = ListField()
+    that_number = IntField()
+    list_of_options = ListField()
     name = StringField()
 
 
