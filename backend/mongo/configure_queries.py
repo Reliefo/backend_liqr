@@ -14,6 +14,8 @@ def configuring_restaurant(message):
         return configuring_food_category(request_type, message)
     elif element_type == 'bar_category':
         return configuring_bar_category(request_type, message)
+    elif element_type == 'add_ons':
+        return configuring_add_ons(request_type, message)
     elif element_type == 'food_item':
         return configuring_food_item(request_type, message)
     elif element_type == 'home_screen_tags':
@@ -114,6 +116,30 @@ def configuring_bar_category(request_type, message):
         return message
     elif request_type == 'edit':
         this_object = Category.objects.get(id=message['category_id'])
+        for field in message['editing_fields'].keys():
+            this_object[field] = message['editing_fields'][field]
+        this_object.save()
+        return message
+    else:
+        return {'status': 'command type not recognized'}
+
+
+def configuring_add_ons(request_type, message):
+    if request_type == 'add':
+        food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
+        Restaurant.objects(id=message['restaurant_id'])[0].update(push__add_ons=food_object.to_dbref())
+        message.pop('food_dict')
+        message['food_obj'] = json_util.loads(food_object.to_json())
+        return message
+    elif request_type == 'delete':
+        FoodItem.objects.get(id=message['food_id']).delete()
+        message['status'] = "Food Item Deleted"
+        return message
+    elif request_type == 'visibility':
+        FoodItem.objects.get(id=message['food_id']).update(set__visibility=message['visibility'])
+        return message
+    elif request_type == 'edit':
+        this_object = FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():
             this_object[field] = message['editing_fields'][field]
         this_object.save()
@@ -288,7 +314,8 @@ def configuring_kitchen_staff(request_type, message):
 
 def configuring_inventory(request_type, message):
     if request_type == 'add':
-        inventory_item = InventoryItem(name=message['name'], units=message['units'], quantity=message['quantity'], default_unit=message['default_unit']).save()
+        inventory_item = InventoryItem(name=message['name'], units=message['units'], quantity=message['quantity'],
+                                       default_unit=message['default_unit']).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__inventory=inventory_item)
         message['inventory_item_id'] = str(inventory_item.id)
         return message
@@ -297,7 +324,7 @@ def configuring_inventory(request_type, message):
         message['status'] = "Staff Deleted"
         return message
     elif request_type == 'edit':
-        this_object=InventoryItem.objects.get(id=message['kitchen_staff_id'])
+        this_object = InventoryItem.objects.get(id=message['kitchen_staff_id'])
         for field in message['editing_fields'].keys():
             this_object[field] = message['editing_fields'][field]
         this_object.save()
