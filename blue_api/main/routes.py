@@ -11,7 +11,7 @@ def hello_world():
     return redirect("https://solutions.liqr.cc/")
 
 
-@main.route('/rest')
+@main.route('/rest', methods=['GET', 'POST'])
 @cognito_auth_required
 def fetch_restaurant():
     rest_json = return_restaurant("BNGHSR0001")
