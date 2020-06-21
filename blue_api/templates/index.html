@@ -69,7 +69,9 @@ window.onload = function() {
         }
 
         case 'connect': {
-        console.log("Here you are")
+        	console.log("Here you are")
+		socket.emit('check_logger', 'hey')
+
 
           }
 
@@ -101,6 +103,9 @@ window.onload = function() {
       socket.on('new_orders', response =>
         dispatcher('event_name_asdfasdfsafrom_server', response)
       )
+	    socket.on("logger", response =>
+		    dispatcher("logger", response)
+		    )
 
       // socket life cycle events -> start
       socket.on('disconnect', reason => dispatcher('disconnect', reason))
