@@ -11,7 +11,7 @@ from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 
 
 @socket_io.on('connect', namespace=our_namespace)
-@jwt_required
+# @jwt_required
 def connect():
     username = get_jwt_identity()
     app_user = AppUser.objects(username=username).first()
