@@ -86,7 +86,7 @@
 
     function connectAndConfigureSocket() {
       // Sample code for forwarding the event from Socket server to the dispatcher
-      socket.on('event_name_from_server', response =>
+      socket.on('new_orders', response =>
         dispatcher('event_name_from_server', response.data)
       )
 
@@ -100,6 +100,8 @@
     }
 
     function dispatcher(eventName, eventData) {
+      console.log(eventName);
+      console.log(eventData);
       dispatchEvent(
         JSON.stringify({
           eventName,
