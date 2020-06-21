@@ -22,6 +22,7 @@ app = Flask(__name__)
 @login_manager.request_loader
 def load_user_from_request_header(request):
     try:
+        sys.stderr.write("LiQR_Error: " + str(request.headers)+ " who is a " + str(request.args) + " connected\n")
         access_token = request.headers["X-LiQR-Authorization"]
 
         sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
