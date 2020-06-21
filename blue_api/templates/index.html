@@ -87,7 +87,7 @@
     function connectAndConfigureSocket() {
       // Sample code for forwarding the event from Socket server to the dispatcher
       socket.on('new_orders', response =>
-        dispatcher('event_name_from_server', response.data)
+        dispatcher('event_name_asdfasdfsafrom_server', response)
       )
 
       // socket life cycle events -> start
