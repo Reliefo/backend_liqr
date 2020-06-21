@@ -23,10 +23,10 @@
     SOCKET_SERVER_ENDPOINT -> url of the server to which you want to connect.
     */
 
-    const SOCKET_SERVER_ENDPOINT = 'wss://...' // update it to your url.
+    const SOCKET_SERVER_ENDPOINT = 'https://liqr.cc/reliefo' // update it to your url.
     const WINDOW_LISTENER_EVENT_NAME = 'flutterListener'
     const socket = io(SOCKET_SERVER_ENDPOINT, {
-      transports: ['websocket']
+      transports: ['polling']
     })
 
     let channel, eventName
