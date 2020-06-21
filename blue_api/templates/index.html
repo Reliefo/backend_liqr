@@ -28,7 +28,96 @@
     // const socket = io(SOCKET_SERVER_ENDPOINT, {
     //   transports: ['websocket']
     // })
+
     let channel, eventName
+    
+
+
+    function dispatchEvent(eventNameAndData) {
+      const nativeCommunicator =
+        typeof webkit !== 'undefined' ? webkit.messageHandlers.native : window.native
+      nativeCommunicator.postMessage(eventNameAndData)
+    }
+
+    function dispatcher(eventName, eventData) {
+      if (window.socket){
+        console.log(window.socket.id)
+        console.log(window.socket.connected)}
+      if (eventName == "connect" && !window.socket.connected)
+        return
+      dispatchEvent(
+        JSON.stringify({
+          eventName,
+          eventData
+        })
+      )
+    }
+    function connectAndConfigureSocket(jwt) {
+      // Sample code for forwarding the event from Socket server to the dispatcher
+      window.socket = io(SOCKET_SERVER_ENDPOINT, {
+
+        transportOptions: {
+          polling : {
+            extraHeaders: {
+              Authorization: `Bearer `+jwt
+            }
+          }
+        }
+      });
+
+
+      window.socket.on('new_orders', response =>
+        dispatcher('new_orders', response)
+      )
+
+      window.socket.on('assist', response =>
+        dispatcher('assist', response)
+      )
+	    window.socket.on("logger", response =>
+		    dispatcher("logger", response)
+		    )
+	    window.socket.on("billing", response =>
+		    dispatcher("billing", response)
+		    )
+	    window.socket.on("restaurant_object", response =>
+		    dispatcher("restaurant_object", response)
+		    )
+	    window.socket.on("logger", response =>
+		    dispatcher("logger", response)
+		    )
+	    window.socket.on("logger", response =>
+		    dispatcher("logger", response)
+		    )
+	    window.socket.on("logger", response =>
+		    dispatcher("logger", response)
+		    )
+
+      // window.socket life cycle events -> start
+      window.socket.on('disconnect', reason => dispatcher('disconnect', reason))
+      window.socket.on('connect', () => dispatcher('connect', ''))
+      window.socket.on('reconnect_attempt', () => dispatcher('reconnect_attempt', ''))
+      window.socket.on('reconnect', () => dispatcher('reconnect', ''))
+      // socket life cycle events -> end
+      
+    }
+
+    function performEventAction(eventName, eventData) {
+      switch (eventName) {
+        case 'joinChannel': {
+          //event Name from Flutter app
+          joinChannel(eventData)
+          break
+        }
+
+        case 'connect': {
+        	console.log("Here you are")
+          connectAndConfigureSocket(eventData);
+          }
+        default:
+          window.socket.emit(eventName, eventData);
+          break
+      }
+    }
 
     function initEverything() {
       document.addEventListener(
@@ -45,91 +134,33 @@
         },
         false
       )
+      dispatcher('ready_to_connect', '')
     }
 
-    initEverything()
 
-    // window.onload = function() {
-    //   connectAndConfigureSocket()
-    // }
-
-    function performEventAction(eventName, eventData) {
-      switch (eventName) {
-        case 'joinChannel': {
-          //event Name from Flutter app
-          joinChannel(eventData)
-          break
-        }
-
-        case 'connect': {
-        	console.log("Here you are")
-          const socket = io(SOCKET_SERVER_ENDPOINT, {
-
-            transportOptions: {
-              polling : {
-                extraHeaders: {
-                  Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTI3MjkwNDIsIm5iZiI6MTU5MjcyOTA0MiwianRpIjoiZjgzNDQyZjctYmQ0ZS00YjcyLWIwZDUtY2RlOWM5YjVhYjk3IiwiZXhwIjoxNTkyNzQ0NDYyLCJpZGVudGl0eSI6InZpbmVldF9jYWZlX293biIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.FYuHz6HNPHlypNjzG5ODdhMGEdYOIMSR86HL6V7OtwM`
-                }
-              }
-            }
-          });
-          connectAndConfigureSocket(socket);
-
-
-          }
-
-
-        default:
-          alert('Invalid event action name: ' + eventName)
-          break
-      }
+    window.onload = function() {
+      initEverything()
+      // connectAndConfigureSocket()
     }
+
+
 
     function leaveChannel(channelName) {
-      socket.emit('leave', {
+      window.socket.emit('leave', {
         channelName
       })
     }
 
     function joinChannel(channelName) {
-      socket.emit('join', { channelName }) // this code pattern is dependent on how you are receiving events on your server.
+      window.socket.emit('join', { channelName }) // this code pattern is dependent on how you are receiving events on your server.
     }
 
-    function dispatchEvent(eventNameAndData) {
-      const nativeCommunicator =
-        typeof webkit !== 'undefined' ? webkit.messageHandlers.native : window.native
-      nativeCommunicator.postMessage(eventNameAndData)
-    }
 
-    function connectAndConfigureSocket(socket) {
-      // Sample code for forwarding the event from Socket server to the dispatcher
-      console.log("well well Lwnewell");
-      console.log(socket);
-      socket.on('new_orders', response =>
-        dispatcher('event_name_asdfasdfsafrom_server', response)
-      )
-	    socket.on("logger", response =>
-		    dispatcher("logger", response)
-		    )
 
-      // socket life cycle events -> start
-      socket.on('disconnect', reason => dispatcher('disconnect', reason))
-      socket.on('connect', () => dispatcher('connect', ''))
-      socket.on('reconnect_attempt', () => dispatcher('reconnect_attempt', ''))
-      socket.on('reconnect', () => dispatcher('reconnect', ''))
-      // socket life cycle events -> end
-      
-    }
 
-    function dispatcher(eventName, eventData) {
-      console.log(eventName);
-      console.log(eventData);
-      dispatchEvent(
-        JSON.stringify({
-          eventName,
-          eventData
-        })
-      )
-    }
+    
+
+    
+
   </script>
 </html>
