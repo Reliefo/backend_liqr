@@ -23,7 +23,7 @@ app = Flask(__name__)
 def load_user_from_request_header(request):
     try:
         sys.stderr.write("LiQR_Error: " + str(request.headers)+ " who is a " + str(request.args) + " connected\n")
-        access_token = request.headers["X-LiQR-Authorization"]
+        access_token = request.headers.get("Authorization")
 
         sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
         cognito = Cognito("ap-south-1_rO5dDlChJ", "6c3hp92sshqjpemgaof7hplup1", access_token)
