@@ -25,7 +25,15 @@
 
     const SOCKET_SERVER_ENDPOINT = 'https://liqr.cc/reliefo' // update it to your url.
     const WINDOW_LISTENER_EVENT_NAME = 'flutterListener'
-    var socket;
+    const socket =io(SOCKET_SERVER_ENDPOINT, {
+            transportOptions: {
+              polling: {
+                extraHeaders: {
+                  Authorization: `Bearer `
+                }
+              }
+            }
+          });
 
     let channel, eventName
 
@@ -60,15 +68,7 @@
 
         case 'connect': {
         console.log("Here you are")
-          socket = io(SOCKET_SERVER_ENDPOINT, {
-            transportOptions: {
-              polling: {
-                extraHeaders: {
-                  Authorization: `Bearer `
-                }
-              }
-            }
-          })
+
           connectAndConfigureSocket()
           }
 
