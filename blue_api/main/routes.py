@@ -4,6 +4,7 @@ from backend.mongo.mongo_setup import setup_mongo
 from . import main
 from backend.mongo.query import *
 
+from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
 
 @main.route('/')
 def hello_world():
@@ -11,6 +12,7 @@ def hello_world():
 
 
 @main.route('/rest')
+@cognito_auth_required
 def fetch_restaurant():
     rest_json = return_restaurant("BNGHSR0001")
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
