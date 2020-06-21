@@ -50,8 +50,6 @@
     }
     function connectAndConfigureSocket(SOCKET_SERVER_ENDPOINT, jwt) {
       // Sample code for forwarding the event from Socket server to the dispatcher
-      console.log(SOCKET_SERVER_ENDPOINT);
-      console.log(jwt);
       window.socket = io(SOCKET_SERVER_ENDPOINT, {
 
         transportOptions: {
