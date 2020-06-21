@@ -16,6 +16,8 @@ def connect():
     username = get_jwt_identity()
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
+
+    sys.stderr.write("LiQR_Error: "+username+" who is a "+request.query+" connected\n")
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
