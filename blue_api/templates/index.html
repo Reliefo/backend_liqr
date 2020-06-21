@@ -48,9 +48,7 @@
 
     initEverything()
 
-    window.onload = function() {
-      connectAndConfigureSocket()
-    }
+
 
     function performEventAction(eventName, eventData) {
       switch (eventName) {
@@ -70,6 +68,7 @@
               }
             }
           })
+          connectAndConfigureSocket()
           }
 
 
