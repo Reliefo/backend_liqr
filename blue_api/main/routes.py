@@ -2,6 +2,8 @@ from flask import request, jsonify, redirect, render_template
 
 from backend.mongo.mongo_setup import setup_mongo
 from . import main
+from .. import login_manager
+from flask_login import login_required, logout_user
 from backend.mongo.query import *
 
 from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
@@ -12,7 +14,7 @@ def hello_world():
 
 
 @main.route('/rest', methods=['GET', 'POST'])
-@cognito_auth_required
+@login_required
 def fetch_restaurant():
     rest_json = return_restaurant("BNGHSR0001")
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)

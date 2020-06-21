@@ -5,12 +5,31 @@ from flask_jwt_extended import JWTManager
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 from os import path, walk
 from flask_cognito import CognitoAuth
+from warrant import Cognito
+from backend.mongo.query import AppUser
 
 socket_io = SocketIO(logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, cors_allowed_origins="*")
 our_namespace = '/reliefo'
 login_manager = LoginManager()
 
 cogauth = ''
+
+
+app = Flask(__name__)
+
+
+@login_manager.request_loader
+def load_user_from_request_header(request):
+    try:
+        access_token = request.headers["X-LiQR-Authorization"]
+        cognito = Cognito("ap-south-1_rO5dDlChJ", "6c3hp92sshqjpemgaof7hplup1", access_token)
+        username = cognito.get_user()._metadata.get("username")
+        if username is None:
+            return None
+        return AppUser.objects(username=username)
+    except Exception as e:
+        return None
+
 
 def create_app(debug=False):
     """Create an application."""
@@ -35,7 +54,7 @@ def create_app(debug=False):
     app.config['COGNITO_USERPOOL_ID'] = 'ap-south-1_rO5dDlChJ'
 
     # optional
-    # app.config['COGNITO_APP_CLIENT_ID'] = '' # client ID you wish to verify user is authenticated against
+    # app.config['COGNITO_APP_CLIENT_ID'] = '6c3hp92sshqjpemgaof7hplup1' # client ID you wish to verify user is authenticated against
     app.config['COGNITO_CHECK_TOKEN_EXPIRATION'] = False  # disable token expiration checking for testing purposes
     app.config['COGNITO_JWT_HEADER_NAME'] = 'X-LiQR-Authorization',
     app.config['COGNITO_JWT_HEADER_PREFIX'] = 'Bearer',
