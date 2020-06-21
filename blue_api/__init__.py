@@ -28,6 +28,18 @@ def create_app(debug=False):
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 15420
     app.config['JWT_SECRET_KEY'] = '42@s3xn%o69^!xd$'
     app.config['PROPAGATE_EXCEPTIONS'] = True
+
+    app.config.extend({
+        'COGNITO_REGION': 'eu-central-1',
+        'COGNITO_USERPOOL_ID': 'eu-central-1c3fea2',
+
+        # optional
+        'COGNITO_APP_CLIENT_ID': 'abcdef123456',  # client ID you wish to verify user is authenticated against
+        'COGNITO_CHECK_TOKEN_EXPIRATION': False,  # disable token expiration checking for testing purposes
+        'COGNITO_JWT_HEADER_NAME': 'X-MyApp-Authorization',
+        'COGNITO_JWT_HEADER_PREFIX': 'Bearer',
+    })
+
     login_manager.init_app(app)
     jwt = JWTManager(app)
     from .main import main as main_blueprint

@@ -39,7 +39,7 @@
     }
 
     function dispatcher(eventName, eventData) {
-      if (eventName == "connect" && !window.socket.connected)
+      if (eventName == "connect" && window.socket.connected)
         return
       dispatchEvent(
         JSON.stringify({
