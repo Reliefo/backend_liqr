@@ -27,7 +27,9 @@ def load_user_from_request_header(request):
 
         sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
         cognito = Cognito("ap-south-1_rO5dDlChJ", "6c3hp92sshqjpemgaof7hplup1", access_token)
+        sys.stderr.write("LiQR_Error: " + str(cognito)+ " who is a " + str(request.args) + " connected\n")
         username = cognito.get_user()._metadata.get("username")
+        sys.stderr.write("LiQR_Error: " + username+ " who is a " + str(request.args) + " connected\n")
         if username is None:
             return None
         return AppUser.objects(username=username)
