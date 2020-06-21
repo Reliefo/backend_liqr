@@ -25,9 +25,7 @@
 
     const SOCKET_SERVER_ENDPOINT = 'https://liqr.cc/reliefo' // update it to your url.
     const WINDOW_LISTENER_EVENT_NAME = 'flutterListener'
-    const socket = io(SOCKET_SERVER_ENDPOINT, {
-      transports: ['websocket']
-    })
+    var socket;
 
     let channel, eventName
 
@@ -61,6 +59,18 @@
           joinChannel(eventData)
           break
         }
+
+        case 'connect': {
+          socket = io(SOCKET_SERVER_ENDPOINT, {
+    transportOptions: {
+      polling: {
+        extraHeaders: {
+          Authorization: `Bearer `+eventData
+        }
+      }
+    }
+  });
+
 
         default:
           alert('Invalid event action name: ' + eventName)
