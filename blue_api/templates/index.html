@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Flutter JS Socket Bridge</title>
+    <title>LiQR</title>
   </head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 
   <body>
     <div class="wrapper">
-      <h1>Flutter JS Socket Bridge</h1>
+      <h1>You're not supposed to be here. Attacking you in 10, 9, 8,7,6,5,4,3,2,1,GO KABOOMMMM</h1>
     </div>
   </body>
 
@@ -23,7 +23,6 @@
     SOCKET_SERVER_ENDPOINT -> url of the server to which you want to connect.
     */
 
-    const SOCKET_SERVER_ENDPOINT = 'https://liqr.cc/reliefo' // update it to your url.
     const WINDOW_LISTENER_EVENT_NAME = 'flutterListener'
     // const socket = io(SOCKET_SERVER_ENDPOINT, {
     //   transports: ['websocket']
@@ -49,8 +48,10 @@
         })
       )
     }
-    function connectAndConfigureSocket(jwt) {
+    function connectAndConfigureSocket(SOCKET_SERVER_ENDPOINT, jwt) {
       // Sample code for forwarding the event from Socket server to the dispatcher
+      console.log(SOCKET_SERVER_ENDPOINT);
+      console.log(jwt);
       window.socket = io(SOCKET_SERVER_ENDPOINT, {
 
         transportOptions: {
@@ -126,7 +127,9 @@
         }
 
         case 'connect': {
-          connectAndConfigureSocket(eventData);
+          decoded = JSON.parse(eventData);
+		SOCKET_URL = decoded['socket_url']
+          connectAndConfigureSocket(SOCKET_URL, decoded['naveen']);
           }
         default:
           window.socket.emit(eventName, eventData);
