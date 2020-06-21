@@ -11,7 +11,7 @@ login_manager = LoginManager()
 
 def create_app(debug=False):
     """Create an application."""
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="templates/")
     CORS(app)
     app.debug = debug
     app.config['SECRET_KEY'] = '69#js32%_d4-!xd$'
