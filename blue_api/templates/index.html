@@ -40,9 +40,6 @@
     }
 
     function dispatcher(eventName, eventData) {
-      if (window.socket){
-        console.log(window.socket.id)
-        console.log(window.socket.connected)}
       if (eventName == "connect" && !window.socket.connected)
         return
       dispatchEvent(
@@ -69,7 +66,6 @@
       window.socket.on('new_orders', response =>
         dispatcher('new_orders', response)
       )
-
       window.socket.on('assist', response =>
         dispatcher('assist', response)
       )
@@ -82,16 +78,36 @@
 	    window.socket.on("restaurant_object", response =>
 		    dispatcher("restaurant_object", response)
 		    )
-	    window.socket.on("logger", response =>
-		    dispatcher("logger", response)
+	    window.socket.on("updating_config", response =>
+		    dispatcher("updating_config", response)
 		    )
-	    window.socket.on("logger", response =>
-		    dispatcher("logger", response)
+	    window.socket.on("receive_your_people", response =>
+		    dispatcher("receive_your_people", response)
 		    )
-	    window.socket.on("logger", response =>
-		    dispatcher("logger", response)
+	    window.socket.on("order_lists", response =>
+		    dispatcher("order_lists", response)
 		    )
-
+	    window.socket.on("order_updates", response =>
+		    dispatcher("order_updates", response)
+		    )
+	    window.socket.on("user_scan", response =>
+		    dispatcher("user_scan", response)
+		    )
+	    window.socket.on("kitchen_staff_object", response =>
+		    dispatcher("kitchen_staff_object", response)
+		    )
+	    window.socket.on("kitchen_object", response =>
+		    dispatcher("kitchen_object", response)
+		    )
+	    window.socket.on("staff_details", response =>
+		    dispatcher("staff_details", response)
+		    )
+	    window.socket.on("requests_queue", response =>
+		    dispatcher("requests_queue", response)
+		    )
+	    window.socket.on("endpoint_check", response =>
+		    dispatcher("endpoint_check", response)
+		    )
       // window.socket life cycle events -> start
       window.socket.on('disconnect', reason => dispatcher('disconnect', reason))
       window.socket.on('connect', () => dispatcher('connect', ''))
@@ -110,7 +126,6 @@
         }
 
         case 'connect': {
-        	console.log("Here you are")
           connectAndConfigureSocket(eventData);
           }
         default:
