@@ -68,12 +68,12 @@
             transportOptions: {
               polling : {
                 extraHeaders: {
-                  Authorization: `Bearer `
+                  Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTI3MjkwNDIsIm5iZiI6MTU5MjcyOTA0MiwianRpIjoiZjgzNDQyZjctYmQ0ZS00YjcyLWIwZDUtY2RlOWM5YjVhYjk3IiwiZXhwIjoxNTkyNzQ0NDYyLCJpZGVudGl0eSI6InZpbmVldF9jYWZlX293biIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.FYuHz6HNPHlypNjzG5ODdhMGEdYOIMSR86HL6V7OtwM`
                 }
               }
             }
           });
-          connectAndConfigureSocket(socket)
+          connectAndConfigureSocket(socket);
 
 
           }

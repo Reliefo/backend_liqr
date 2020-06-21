@@ -14,7 +14,7 @@ from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 @jwt_required
 def connect():
     username = get_jwt_identity()
-    app_user = AppUser.objects(username="akshay_hou").first()
+    app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
 
     sys.stderr.write("LiQR_Error: "+username+" who is a "+str(request.args)+" connected\n")
