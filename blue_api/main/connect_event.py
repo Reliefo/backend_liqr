@@ -15,10 +15,10 @@ from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 
 # initialize extension
 
-@cogauth.identity_handler
-def lookup_cognito_user(payload):
-    """Look up user in our database from Cognito JWT payload."""
-    return AppUser.objects(username=payload['username'])
+# @cogauth.identity_handler
+# def lookup_cognito_user(payload):
+#     """Look up user in our database from Cognito JWT payload."""
+#     return AppUser.objects(username=payload['username'])
 
 
 
