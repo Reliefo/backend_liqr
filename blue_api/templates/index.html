@@ -62,14 +62,14 @@
 
         case 'connect': {
           socket = io(SOCKET_SERVER_ENDPOINT, {
-    transportOptions: {
-      polling: {
-        extraHeaders: {
-          Authorization: `Bearer `+eventData
-        }
-      }
-    }
-  });
+            transportOptions: {
+              polling: {
+                extraHeaders: {
+                  Authorization: `Bearer `+eventData
+                }
+              }
+            }
+          })
 
 
         default:
