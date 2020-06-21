@@ -33,7 +33,8 @@ def user_register():
             return json_util.dumps({"status": "User alreadt registered"})
         if re.search("\$", unique_id):
             tempuser_ob = TempUser.objects(unique_id=unique_id).first()
-            reguser_ob = RegisteredUser(name=name, email_id=email_id, tempuser_ob=str(tempuser_ob.id), unique_id=unique_id)
+            reguser_ob = RegisteredUser(name=name, email_id=email_id, tempuser_ob=str(tempuser_ob.id),
+                                        unique_id=unique_id)
             reguser_ob.dine_in_history = tempuser_ob.dine_in_history
             reguser_ob.save()
             tempuser_ob.reguser_ob = str(reguser_ob.id)
@@ -61,7 +62,8 @@ def user_register():
         refresh_token = create_refresh_token(identity=app_user["username"])
         return json_util.dumps(
             {"status": "Registration successful", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
-             "name": the_user.name, "unique_id": the_user.unique_id, "email": the_user.email_id, "user_id": str(the_user.id),
+             "name": the_user.name, "unique_id": the_user.unique_id, "email": the_user.email_id,
+             "user_id": str(the_user.id),
              "restaurant_id": restaurant_object.restaurant_id})
     return json_util.dumps({"status": "Registration failed"})
 
@@ -265,5 +267,11 @@ def refresh():
 @main.route('/logout', methods=['GET'])
 @login_required
 def logout():
+    logout_user()
+    return "Logout Successful"
+
+
+@main.route('/cognito_login', methods=['POST'])
+def cognito_login():
     logout_user()
     return "Logout Successful"

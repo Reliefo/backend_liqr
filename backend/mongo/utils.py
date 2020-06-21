@@ -45,24 +45,6 @@ def random_food_list():
     return list(set(random_fl))
 
 
-# Generating orders and asstypes
-def food_embed(food_dict, fooditem_fields_to_capture):
-    json_dict = {key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture}
-    json_dict['status'] = 'queued'
-    option_id = choice_id = ''
-    if 'food_options' in json_dict:
-        if 'options' in json_dict['food_options'].keys():
-            option_id = json_dict['food_options']['options'][0]['option_name']
-        if 'choices' in json_dict['food_options'].keys():
-            choice_id = json_dict['food_options']['choices'][0]
-    if option_id != '':
-        if choice_id != '':
-            json_dict['food_id'] = food_dict['food_id'] + "#" + option_id + "_" + choice_id
-        else:
-            json_dict['food_id'] = food_dict['food_id'] + "#" + option_id
-    return json_util.dumps(json_dict)
-
-
 def c_food_dict(food_id):
     f_dict = {'food_id': food_id, 'quantity': int(np.random.choice([1, 1, 1, 1, 2, 2, 3])),
               'instructions': ['Cook with love' if np.random.randint(2) else 'no'][0]}
@@ -74,7 +56,7 @@ def generate_order():
     for n in range(np.random.randint(1, 5)):
         input_order['orders'].append({})
         input_order['orders'][n]['placed_by'] = random_user()
-        input_order['orders'][n]['food_list'] = [food_embed(c_food_dict(v)) for v in random_food_list()]
+        # input_order['orders'][n]['food_list'] = [food_embed(c_food_dict(v)) for v in random_food_list()]
     return input_order
 
 
