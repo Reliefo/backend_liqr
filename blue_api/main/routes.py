@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect
+from flask import request, jsonify, redirect, render_template
 
 from backend.mongo.mongo_setup import setup_mongo
 from . import main
@@ -54,6 +54,11 @@ def scanned_table(table_id):
 
 @main.route('/table_no/<int:table_no>', methods=['GET'])
 def scanned_table_no(table_no):
-    if table_no==3:
-        table_no=41
+    if table_no == 3:
+        table_no = 41
     return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
+
+
+@main.route('/bridge_socket', methods=['GET'])
+def bridge_socket():
+    return render_template('index.html')
