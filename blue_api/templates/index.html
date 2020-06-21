@@ -25,7 +25,7 @@
 
     const SOCKET_SERVER_ENDPOINT = 'https://liqr.cc/reliefo' // update it to your url.
     const WINDOW_LISTENER_EVENT_NAME = 'flutterListener'
-    var socket;
+    // var socket;
     // const socket = io(SOCKET_SERVER_ENDPOINT, {
     //   transports: ['websocket']
     // })
@@ -64,7 +64,7 @@
 
         case 'connect': {
         	console.log("Here you are")
-          socket =io(SOCKET_SERVER_ENDPOINT, {
+          const socket =io(SOCKET_SERVER_ENDPOINT, {
 
             transportOptions: {
               polling : {
@@ -74,7 +74,7 @@
               }
             }
           });
-          connectAndConfigureSocket(socket)
+          connectAndConfigureSocket()
 
 
           }
@@ -102,7 +102,7 @@
       nativeCommunicator.postMessage(eventNameAndData)
     }
 
-    function connectAndConfigureSocket(socket) {
+    function connectAndConfigureSocket() {
       // Sample code for forwarding the event from Socket server to the dispatcher
       socket.on('new_orders', response =>
         dispatcher('event_name_asdfasdfsafrom_server', response)
