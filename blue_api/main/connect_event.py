@@ -1,7 +1,7 @@
 import sys
 from . import main
 from flask import session, request
-from .. import socket_io, our_namespace
+from .. import socket_io, our_namespace, cogauth
 from backend.mongo.query import *
 import numpy as np
 from flask_jwt_extended import (
@@ -10,22 +10,20 @@ from flask_jwt_extended import (
 from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 
 
-# # configuration
-#
-#
-# # initialize extension
-# from flask_cognito import CognitoAuth
-# cogauth = CognitoAuth(app)
-#
-# @cogauth.identity_handler
-# def lookup_cognito_user(payload):
-#     """Look up user in our database from Cognito JWT payload."""
-#     return User.query.filter(User.cognito_username == payload['username']).one_or_none()
-#
-#
-#
-# from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
-#
+# configuration
+
+
+# initialize extension
+
+@cogauth.identity_handler
+def lookup_cognito_user(payload):
+    """Look up user in our database from Cognito JWT payload."""
+    return AppUser.objects(username=payload['username'])
+
+
+
+from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
+
 # @route('/api/private')
 # @cognito_auth_required
 # def api_private():
@@ -37,9 +35,10 @@ from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 #     })
 
 @socket_io.on('connect', namespace=our_namespace)
-@jwt_required
+# @jwt_required
+@cognito_auth_required
 def connect():
-    username = get_jwt_identity()
+    username = lookup_cognito_user()
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
 
