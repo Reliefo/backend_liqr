@@ -66,7 +66,7 @@ def create_app(debug=False):
     app.config['COGNITO_JWT_HEADER_PREFIX'] = 'Bearer',
 
     login_manager.init_app(app)
-    # jwt = JWTManager(app)
+    jwt = JWTManager(app)
     # global cogauth
     # cogauth = CognitoAuth(app)
     from .main import main as main_blueprint
