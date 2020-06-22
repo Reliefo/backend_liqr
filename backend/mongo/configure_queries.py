@@ -165,7 +165,7 @@ def configuring_food_item(request_type, message):
     elif request_type == 'edit':
         this_object = FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():
-            if field == 'food_customization':
+            if field == 'customization':
                 this_object[field] = [FoodCustomization.from_json(json_util.dumps(customization)) for customization in
                                       message['editing_fields'][field]]
             else:
