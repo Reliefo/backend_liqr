@@ -295,7 +295,7 @@ class FoodCustomization(EmbeddedDocument):
 class FoodItem(Document):
     name = StringField(required=True)
     description = StringField()
-    price = StringField(required=True)
+    price = StringField()
     tags = ListField(StringField())
     customization = ListField(EmbeddedDocumentField(FoodCustomization))
     #     food_options = EmbeddedDocumentField(FoodOptions)
