@@ -40,12 +40,12 @@ def return_restaurant(rest_id):
 
 
 def home_screen_lists(rest_id):
-    home_screen = {'navigate_better': {}}
+    home_screen = {"LiQR's Food Clusters": {}}
     for tag in Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags:
         home_screen[tag] = [str(food.id) for food in
                             FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
     for tag in Restaurant.objects(restaurant_id=rest_id).first().navigate_better_tags:
-        home_screen['navigate_better'][tag] = [str(food.id) for food in
+        home_screen["LiQR's Food Clusters"][tag] = [str(food.id) for food in
                                                FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
     return json_util.dumps(home_screen)
 
