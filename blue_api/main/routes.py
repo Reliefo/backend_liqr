@@ -16,7 +16,7 @@ def hello_world():
 @main.route('/rest_<int:rest_no>', methods=['GET'])
 #@login_required
 def fetch_restaurant(rest_no):
-    rest_json = Restaurant.object[rest_no].to_json()
+    rest_json = Restaurant.objects[rest_no].to_json()
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_json
 
