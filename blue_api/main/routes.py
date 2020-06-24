@@ -13,10 +13,10 @@ def hello_world():
     return redirect("https://solutions.liqr.cc/")
 
 
-@main.route('/rest', methods=['GET', 'POST'])
-@login_required
-def fetch_restaurant():
-    rest_json = return_restaurant("BNGHSR0001")
+@main.route('/rest_<int:rest_no>', methods=['GET'])
+#@login_required
+def fetch_restaurant(rest_no):
+    rest_json = Restaurant.object[rest_no].to_json()
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_json
 
