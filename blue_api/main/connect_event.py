@@ -42,7 +42,7 @@ def connect():
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
 
-    sys.stderr.write("LiQR_Error: "+username+" who is a "+str(request.args)+" connected\n")
+    sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
