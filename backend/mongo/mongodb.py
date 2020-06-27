@@ -430,6 +430,10 @@ class Restaurant(Document):
             data['kitchens'][key] = self.kitchens[key].to_my_mongo()
         for key, item in enumerate(self.inventory):
             data['inventory'][key] = self.inventory[key].to_my_mongo()
+        for key, home_screen_list in enumerate(self.home_screen_lists):
+            data['home_screen_lists'][key] = self.home_screen_lists[key].to_my_mongo()
+        for key, navigate_better_list in enumerate(self.navigate_better_lists):
+            data['navigate_better_lists'][key] = self.navigate_better_lists[key].to_my_mongo()
 
 
         return json_util.dumps(data)
