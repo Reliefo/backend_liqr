@@ -178,7 +178,7 @@ def configuring_food_item(request_type,message):
         this_object.save()
         return message
     elif request_type == 'reorder':
-        food_objs = [FoodItem.objects.get(id=this_id) for this_id in message['fooditem_id_list']]
+        food_objs = [FoodItem.objects.get(id=this_id) for this_id in message['food_id_list']]
         Category.objects.get(id=message['category_id']).update(unset__food_list=[])
         Category.objects.get(id=message['category_id']).update(push_all__food_list=food_objs)
         return message
