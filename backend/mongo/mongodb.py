@@ -13,7 +13,11 @@ class FoodCustomizationMod(EmbeddedDocument):
     less_more = IntField(choices=[-1,0,1])
     that_number = IntField()
     list_of_options = ListField()
-
+    
+class FoodOptionsMod(EmbeddedDocument):
+    options = ListField(DictField())
+    choices = ListField()
+    add_ons = ListField(DictField())
 
 class FoodItemMod(EmbeddedDocument):
     food_id = StringField()
@@ -25,6 +29,7 @@ class FoodItemMod(EmbeddedDocument):
     kitchen = StringField()
     status = StringField(choices=['queued', 'cooking', 'completed'])
     customization = ListField(EmbeddedDocumentField(FoodCustomizationMod))
+    food_options = EmbeddedDocumentField(FoodOptionsMod)
 
 
 class Order(Document):
