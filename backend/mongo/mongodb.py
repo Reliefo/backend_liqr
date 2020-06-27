@@ -374,6 +374,10 @@ class HomeScreenLists(Document):
     name=StringField()
     image=StringField()
     food_list=ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
+    
+    def to_my_mongo(self):
+        data = self.to_mongo()
+        return data
 
 
 # class NavigateBetterLists(Document):
