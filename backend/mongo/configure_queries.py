@@ -84,49 +84,53 @@ def configuring_staff(request_type, message):
         return {'status': 'command type not recognized'}
 
 
-def configuring_food_category(request_type, message):
-    if request_type == 'add':
+def configuring_food_category(request_type,message):
+    if request_type=='add':
         category_object = Category.from_json(json_util.dumps(message['category'])).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__food_menu=category_object.to_dbref())
         message['category']['category_id'] = str(category_object.id)
         return message
-    elif request_type == 'delete':
-        for food in Category.objects.get(id=message['category_id']).food_list:
-            food.delete()
+    elif request_type=='delete':
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Food category deleted!"
         return message
     elif request_type == 'edit':
-        this_object = Category.objects.get(id=message['category_id'])
+        this_object=Category.objects.get(id=message['category_id'])
         for field in message['editing_fields'].keys():
             this_object[field] = message['editing_fields'][field]
         this_object.save()
         return message
+    elif request_type == 'reorder':
+        cat_objs = [Category.objects.get(id=this_id) for this_id in message['category_id_list']]
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(unset__food_menu=[])
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__food_menu=cat_objs)
+        return message
     else:
         return {'status': 'command type not recognized'}
 
-
 def configuring_bar_category(request_type, message):
-    if request_type == 'add':
+    if request_type=='add':
         category_object = Category.from_json(json_util.dumps(message['category'])).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__bar_menu=category_object.to_dbref())
         message['category']['category_id'] = str(category_object.id)
         return message
-    elif request_type == 'delete':
-        for food in Category.objects.get(id=message['category_id']).food_list:
-            food.delete()
+    elif request_type=='delete':
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Bar category deleted!"
         return message
     elif request_type == 'edit':
-        this_object = Category.objects.get(id=message['category_id'])
+        this_object=Category.objects.get(id=message['category_id'])
         for field in message['editing_fields'].keys():
             this_object[field] = message['editing_fields'][field]
         this_object.save()
         return message
+    elif request_type == 'reorder':
+        cat_objs = [Category.objects.get(id=this_id) for this_id in message['category_id_list']]
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(unset__food_menu=[])
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__food_menu=cat_objs)
+        return message
     else:
         return {'status': 'command type not recognized'}
-
 
 def configuring_add_ons(request_type, message):
     if request_type == 'add':
@@ -151,34 +155,36 @@ def configuring_add_ons(request_type, message):
     else:
         return {'status': 'command type not recognized'}
 
-
-def configuring_food_item(request_type, message):
-    if request_type == 'add':
+def configuring_food_item(request_type,message):
+    if request_type=='add':
         food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
         Category.objects(id=message['category_id'])[0].update(push__food_list=food_object.to_dbref())
-        message.pop('food_dict')
-        message['food_obj'] = json_util.loads(food_object.to_json())
+        message['food_dict']['food_id'] = str(food_object.id)
         return message
-    elif request_type == 'delete':
+    elif request_type=='delete':
         FoodItem.objects.get(id=message['food_id']).delete()
         message['status'] = "Food Item Deleted"
         return message
-    elif request_type == 'visibility':
+    elif request_type=='visibility':
         FoodItem.objects.get(id=message['food_id']).update(set__visibility=message['visibility'])
         return message
     elif request_type == 'edit':
-        this_object = FoodItem.objects.get(id=message['food_id'])
+        this_object=FoodItem.objects.get(id=message['food_id'])
         for field in message['editing_fields'].keys():
-            if field == 'customization':
-                this_object[field] = [FoodCustomization.from_json(json_util.dumps(customization)) for customization in
-                                      message['editing_fields'][field]]
+            if field=='food_customization':
+                this_object[field] = [FoodCustomization.from_json(json_util.dumps(customization)) for customization in message['editing_fields'][field]]
             else:
                 this_object[field] = message['editing_fields'][field]
         this_object.save()
         return message
+    elif request_type == 'reorder':
+        food_objs = [FoodItem.objects.get(id=this_id) for this_id in message['fooditem_id_list']]
+        Category.objects.get(id=message['category_id']).update(unset__food_list=[])
+        Category.objects.get(id=message['category_id']).update(push_all__food_list=food_objs)
+        return message
     else:
         return {'status': 'command type not recognized'}
-
+    
 
 def configuring_home_screen(request_type, message):
     if request_type == 'add':
