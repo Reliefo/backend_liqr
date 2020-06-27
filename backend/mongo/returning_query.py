@@ -39,14 +39,12 @@ def return_restaurant(rest_id):
     return Restaurant.objects(restaurant_id=rest_id)[0].to_json()
 
 
-def home_screen_lists(rest_id):
+def fetch_home_screen_lists(rest_id):
     home_screen = {"Need Help Choosing?": {}}
-    for tag in Restaurant.objects(restaurant_id=rest_id).first().home_screen_tags:
-        home_screen[tag] = [str(food.id) for food in
-                            FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
-    for tag in Restaurant.objects(restaurant_id=rest_id).first().navigate_better_tags:
-        home_screen["Need Help Choosing?"][tag] = [str(food.id) for food in
-                                               FoodItem.objects.filter(restaurant_id=rest_id).filter(tags__in=[tag])]
+    for home_screen_list in Restaurant.objects(restaurant_id=rest_id).first().home_screen_lists:
+        home_screen[home_screen_list.name] = (str(food.id) for food in home_screen_list.food_list)
+    for navigate_better_list in Restaurant.objects(restaurant_id=rest_id).first().navigate_better_lists:
+        home_screen["Need Help Choosing?"][navigate_better_list.name] = (str(food.id) for food in navigate_better_list.food_list)
     return json_util.dumps(home_screen)
 
 

@@ -7,11 +7,12 @@ from flask_login import UserMixin
 conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud', password='screwZomato@420',
                authentication_source='reliefo')
 
-
-class FoodOptionsMod(EmbeddedDocument):
-    options = ListField(DictField())
-    choices = ListField()
-    add_ons = ListField(DictField())
+class FoodCustomizationMod(EmbeddedDocument):
+    name = StringField()
+    customization_type = StringField(choices=['options', 'choices', 'add_ons'])
+    less_more = IntField(choices=[-1,0,1])
+    that_number = IntField()
+    list_of_options = ListField()
 
 
 class FoodItemMod(EmbeddedDocument):
@@ -23,7 +24,7 @@ class FoodItemMod(EmbeddedDocument):
     quantity = IntField()
     kitchen = StringField()
     status = StringField(choices=['queued', 'cooking', 'completed'])
-    food_options = EmbeddedDocumentField(FoodOptionsMod)
+    customization = ListField(EmbeddedDocumentField(FoodCustomizationMod))
 
 
 class Order(Document):
@@ -119,7 +120,7 @@ class OrderHistory(Document):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
         return data
-
+    
     def to_json(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
@@ -189,7 +190,7 @@ class Staff(Document):
         data = {'name': self.name, 'id': self.id}
         return data
 
-
+    
 class KitchenStaff(Document):
     name = StringField()
     orders_cooked = ListField(DictField())
@@ -199,7 +200,7 @@ class KitchenStaff(Document):
         data = self.to_mongo()
         return data
 
-
+    
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
     user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin', 'owner'])
@@ -212,8 +213,8 @@ class AppUser(UserMixin, Document):
     restaurant_id = StringField()
     name = StringField()
     temp_password = BooleanField()
-
-
+    
+    
 class CustomerStats(Document):
     username = StringField()
     count = IntField()
@@ -266,30 +267,25 @@ class InventoryItem(Document):
     units = DictField()
     default_unit = StringField()
     quantity = FloatField()
-
+    
     def to_my_mongo(self):
         data = self.to_mongo()
         return data
-
-
+    
+    
 class InventoryItemMod(EmbeddedDocument):
     inventory_item_id = StringField()
     name = StringField()
     unit_used = StringField()
     quantity = FloatField()
-
+            
 
 class FoodCustomization(EmbeddedDocument):
     name = StringField()
     customization_type = StringField(choices=['options', 'choices', 'add_ons'])
-    less_more = IntField(choices=[-1, 0, 1])
+    less_more = IntField(choices=[-1,0,1])
     that_number = IntField()
     list_of_options = ListField()
-
-
-#     options = ListField(DictField())
-#     choices = ListField()
-#     add_ons = ListField(DictField())
 
 
 class FoodItem(Document):
@@ -298,7 +294,7 @@ class FoodItem(Document):
     price = StringField()
     tags = ListField(StringField())
     customization = ListField(EmbeddedDocumentField(FoodCustomization))
-    #     food_options = EmbeddedDocumentField(FoodOptions)
+#     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
     image_link = StringField()
     kitchen = StringField()
@@ -339,7 +335,7 @@ class Kitchen(Document):
     name = StringField()
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     categories = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
-
+    
     def to_my_mongo(self):
         data = self.to_mongo()
         for key, staff in enumerate(self.kitchen_staff):
@@ -362,11 +358,23 @@ class JustMenu(Document):
     created = DateTimeField()
     visits = ListField(DateTimeField())
     qr = StringField()
-
+    
     def to_json(self):
         data = self.to_mongo()
         data['created'] = str(data['created'])
         return json_util.dumps(data)
+
+    
+class HomeScreenLists(Document):
+    name=StringField()
+    image=StringField()
+    food_list=ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
+
+
+# class NavigateBetterLists(Document):
+#     name=StringField()
+#     image=StringField(default="https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_need_help.jpg")
+#     food_list=ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
 
 
 class Restaurant(Document):
@@ -385,11 +393,12 @@ class Restaurant(Document):
     order_history = ListField(ReferenceField(OrderHistory, reverse_delete_rule=PULL))
     home_screen_tags = ListField(StringField(), default=["Most Popular", "Chef's Special", "Daily Special", "On Offer"])
     navigate_better_tags = ListField(StringField(), default=[])
+    navigate_better_lists = ListField(ReferenceField(HomeScreenLists, reverse_delete_rule=PULL))
+    home_screen_lists = ListField(ReferenceField(HomeScreenLists, reverse_delete_rule=PULL))
     manager_room = StringField()
     kitchen_room = StringField()
-    taxes = DictField(default={'Service': 0, 'CGST': 0, 'SGST': 0})
-    home_page_images = DictField(
-        default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
+    taxes = DictField(default={'Service':0, 'CGST':0, 'SGST':0})
+    home_page_images = DictField(default={'0':'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
     invoice_no = IntField(default=0)
     kitchens = ListField(ReferenceField(Kitchen, reverse_delete_rule=PULL))
     inventory = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
@@ -416,6 +425,7 @@ class Restaurant(Document):
             data['kitchens'][key] = self.kitchens[key].to_my_mongo()
         for key, item in enumerate(self.inventory):
             data['inventory'][key] = self.inventory[key].to_my_mongo()
+
 
         return json_util.dumps(data)
 

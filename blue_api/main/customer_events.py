@@ -15,7 +15,7 @@ def fetch_rest_customer(message):
     emit('table_details', return_table_details(user_id))
     # TODO Remove this after frontend integraton
     emit('restaurant_object', return_restaurant_customer(rest_id))
-    emit('home_screen_lists', home_screen_lists(rest_id))
+    emit('home_screen_lists', fetch_home_screen_lists(rest_id))
 
 
 @socket_io.on('place_personal_order', namespace=our_namespace)

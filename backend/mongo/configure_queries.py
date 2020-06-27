@@ -190,42 +190,37 @@ def configuring_home_screen(request_type, message):
     if request_type == 'add':
         restaurant_ob = Restaurant.objects(restaurant_id=message['restaurant_id']).first()
         if message['add_to'] == "navigate_better":
-            restaurant_ob.navigate_better_tags.append(message['tag_name'])
+            lists_obj = HomeScreenLists(name=message['tag_name'], image="https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_need_help.jpg").save()
+            restaurant_ob.navigate_better_lists.append(lists_obj.to_dbref())
+            message['home_screen_lists'] = json_util.loads(lists_obj.to_json())
             message['status'] = "added"
         elif message['add_to'] == "home_screen":
-            restaurant_ob.home_screen_tags.append(message['tag_name'])
+            lists_obj = HomeScreenLists(name=message['tag_name']).save()
+            restaurant_ob.home_screen_lists.append(lists_obj.to_dbref())
+            message['home_screen_lists'] = json_util.loads(lists_obj.to_json())
             message['status'] = "added"
         else:
             message['status'] = "wrong add to"
         restaurant_ob.save()
         return message
-    elif request_type == 'attach':
-        FoodItem.objects.get(id=message['food_id']).update(push__tags=message['tag_name'])
-        message['status'] = "Tag " + message['tag_name'] + " attached to Food Item"
+    elif request_type=='attach':
+        HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(push__food_list=FoodItem.objects.get(id=message['food_id']))
+        message['status'] = "Tag "+message['tag_name']+" attached to Food Item"
         return message
-    elif request_type == 'remove':
-        FoodItem.objects.get(id=message['food_id']).update(pull__tags=message['tag_name'])
-        message['status'] = "Tag " + message['tag_name'] + " removed from Food Item"
+    elif request_type=='remove':
+        HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(pull__food_list=FoodItem.objects.get(id=message['food_id']))
+        message['status'] = "Tag "+message['tag_name']+" removed from Food Item"
         return message
     elif request_type == 'delete':
-        restaurant_ob = Restaurant.objects(restaurant_id=message['restaurant_id']).first()
-        if message['remove_from'] == "navigate_better":
-            restaurant_ob.navigate_better_tags.remove(message['tag_name'])
-            message['status'] = "deleted"
-        elif message['remove_from'] == "home_screen":
-            restaurant_ob.home_screen_tags.remove(message['tag_name'])
-            message['status'] = "deleted"
-        else:
-            message['status'] = "wrong remove from"
-        if message['status'] == 'deleted':
-            for food in FoodItem.objects(tags__in=[message['tag_name']]):
-                food.tags.remove(message['tag_name'])
-                food.save()
-        restaurant_ob.save()
+        HomeScreenLists.objects.get(id=message['home_screen_lists_id']).delete()
+        return message
+    elif request_type == 'reorder':
+        food_objs = [FoodItem.objects.get(id=this_id) for this_id in message['fooditem_id_list']]
+        HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(unset__food_list=[])
+        HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(push_all__food_list=food_objs)
         return message
     else:
         return {'status': 'command type not recognized'}
-
 
 def configuring_taxes(request_type, message):
     if request_type == 'set':
