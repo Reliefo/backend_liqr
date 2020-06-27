@@ -59,25 +59,31 @@ def food_embed(food_dict, fooditem_fields_to_capture):
     json_dict = {key: food_dict[key] for key in food_dict.keys() if key in fooditem_fields_to_capture}
     json_dict['status'] = 'queued'
     option_id = choice_id = add_on_id = ''
+    food_obj = FoodItem.objects.get(id=json_dict['food_id'])
+    price = 0
     if 'customization' in json_dict:
         for customization in json_dict['customization']:
             if customization["customization_type"] == "options":
                 for option in customization['list_of_options']:
                     option_id += option['option_name']
+                    
             elif customization["customization_type"] == "choices":
                 for option in customization['list_of_options']:
                     option_id += option
             elif customization["customization_type"] == "add_ons":
                 for option in customization['list_of_options']:
                     option_id += option
-                for n, option in enumerate(customization['list_of_options']):
+                for n,option in enumerate(customization['list_of_options']):
                     customization["list_of_options"][n] = json_util.loads(FoodItem.objects.
                                                                           get(id=option).to_json())
         food_id = food_dict['food_id']
-        for thing in [option_id, choice_id, add_on_id]:
-            if thing != '':
+        for thing in [option_id,choice_id,add_on_id]:
+            if thing!='':
                 food_id = food_id + "#" + thing
-        json_dict['food_id'] = food_id
+        json_dict['food_id']=food_id
+        json_dict['price'] = str(json_dict['price'])
+    else:
+        json_dict['price'] = food_obj.price
     return json_util.dumps(json_dict)
 
 
