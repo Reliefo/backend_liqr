@@ -205,11 +205,9 @@ def configuring_home_screen(request_type, message):
         return message
     elif request_type=='attach':
         HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(push__food_list=FoodItem.objects.get(id=message['food_id']))
-        message['status'] = "Tag "+message['tag_name']+" attached to Food Item"
         return message
     elif request_type=='remove':
         HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(pull__food_list=FoodItem.objects.get(id=message['food_id']))
-        message['status'] = "Tag "+message['tag_name']+" removed from Food Item"
         return message
     elif request_type == 'delete':
         HomeScreenLists.objects.get(id=message['home_screen_lists_id']).delete()
