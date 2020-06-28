@@ -42,7 +42,7 @@ def connect():
     app_user = AppUser.objects(username=username).first()
     previous_sid = app_user.sid
 
-    sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
+    #sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
     if previous_sid:
         disconnect(previous_sid)
     if app_user.user_type == "manager":
@@ -58,11 +58,11 @@ def connect():
         sys.stderr.write("LiQR_Error: " +app_user.username)
         join_room(str(app_user.rest_user.current_table_id))
         try:
-            sys.stderr.write("LiQR_Error: "+app_user.rest_user.name+" who is a "+app_user.user_type+" joined"+app_user.rest_user.current_table_id+"\n")
+            sys.stderr.write("LiQR_Error: "+app_user.rest_user.name+" who is definitely a customer joined "+app_user.rest_user.current_table_id+"\n")
         except:
             pass
     AppUser.objects(username=app_user.username).first().update(set__sid=request.sid)
-    sys.stderr.write("LiQR_Error: "+app_user.username+" who is a "+app_user.user_type+" connected\n")
+    sys.stderr.write("LiQR_Connection: "+app_user.username+" who is a "+app_user.user_type+" connected\n")
 
 
 @socket_io.on('disconnect', namespace=our_namespace)
