@@ -171,6 +171,7 @@ def configuring_food_item(request_type,message):
         return message
     elif request_type == 'edit':
         this_object=FoodItem.objects.get(id=message['food_id'])
+        sys.stderr.write("LiQR_Error: "+message+" who is a connected\n")
         for field in message['editing_fields'].keys():
             if field=='food_customization':
                 this_object[field] = [FoodCustomization.from_json(json_util.dumps(customization)) for customization in message['editing_fields'][field]]
