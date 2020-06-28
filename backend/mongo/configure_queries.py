@@ -159,7 +159,8 @@ def configuring_food_item(request_type,message):
     if request_type=='add':
         food_object = FoodItem.from_json(json_util.dumps(message['food_dict'])).save()
         Category.objects(id=message['category_id'])[0].update(push__food_list=food_object.to_dbref())
-        message['food_dict']['food_id'] = str(food_object.id)
+        message.pop('food_dict')
+        message['food_obj'] = json_util.loads(food_object.to_json())
         return message
     elif request_type=='delete':
         FoodItem.objects.get(id=message['food_id']).delete()
