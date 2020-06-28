@@ -394,6 +394,7 @@ class Restaurant(Document):
     add_ons = ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
     address = StringField()
     abs_address = StringField()
+    logo = StringField()
     phone_nos = ListField(StringField())
     tables = ListField(ReferenceField(Table, reverse_delete_rule=PULL))
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
