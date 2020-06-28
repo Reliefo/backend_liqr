@@ -215,7 +215,7 @@ def configuring_home_screen(request_type, message):
         HomeScreenLists.objects.get(id=message['home_screen_lists_id']).delete()
         return message
     elif request_type == 'reorder':
-        food_objs = [FoodItem.objects.get(id=this_id) for this_id in message['fooditem_id_list']]
+        food_objs = [FoodItem.objects.get(id=this_id) for this_id in message['food_id_list']]
         HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(unset__food_list=[])
         HomeScreenLists.objects.get(id=message['home_screen_lists_id']).update(push_all__food_list=food_objs)
         return message
