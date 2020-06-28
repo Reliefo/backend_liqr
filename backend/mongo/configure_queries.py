@@ -92,6 +92,8 @@ def configuring_food_category(request_type,message):
         message['category']['category_id'] = str(category_object.id)
         return message
     elif request_type=='delete':
+        for food in Category.objects.get(id=message['category_id']).food_list:
+            food.delete()
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Food category deleted!"
         return message
@@ -116,6 +118,8 @@ def configuring_bar_category(request_type, message):
         message['category']['category_id'] = str(category_object.id)
         return message
     elif request_type=='delete':
+        for food in Category.objects.get(id=message['category_id']).food_list:
+            food.delete()
         Category.objects.get(id=message['category_id']).delete()
         message['status'] = "Bar category deleted!"
         return message
