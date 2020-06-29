@@ -113,8 +113,8 @@ def generate_bill(table_ob, restaurant):
             [Paragraph(food['name'], styles['BodyText']),
              Paragraph(customization(food), styles['BodyText']) if 'food_options' in food.keys() else None,
              float(food['price']),
-             food['quantity'], int(food['price']) * food['quantity']])
-        pretax += int(food['price']) * food['quantity']
+             food['quantity'], float(food['price']) * food['quantity']])
+        pretax += float(food['price']) * food['quantity']
     CGST = restaurant.taxes['CGST']
     SGST = restaurant.taxes['SGST']
     service_tax = restaurant.taxes['Service']
