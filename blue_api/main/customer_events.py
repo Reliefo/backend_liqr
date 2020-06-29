@@ -117,6 +117,7 @@ socket_io.emit('order_updates')
 @socket_io.on('assistance_requests', namespace=our_namespace)
 def assistance_requests(message):
     input_dict = json_util.loads(message)
+    sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     assistance_ob = assistance_req(input_dict)
     returning_message = assistance_ob.to_json()
