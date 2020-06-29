@@ -217,7 +217,7 @@ def billed_cleaned(table_id):
     order_history.save()
     for user in table_ob.users:
         user.dine_in_history.append(order_history.to_dbref())
-        user.current_table_id = None
+        # user.current_table_id = None
         user.save()
     Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)
     table_ob.table_orders = []
