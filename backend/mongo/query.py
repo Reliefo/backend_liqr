@@ -66,26 +66,27 @@ def food_embed(food_dict, fooditem_fields_to_capture):
             if customization["customization_type"] == "options":
                 for option in customization['list_of_options']:
                     option_id += option['option_name']
-                    
+                    price += float(option['option_price'])
+
             elif customization["customization_type"] == "choices":
                 for option in customization['list_of_options']:
                     option_id += option
             elif customization["customization_type"] == "add_ons":
                 for option in customization['list_of_options']:
                     option_id += option
-                for n,option in enumerate(customization['list_of_options']):
+                for n, option in enumerate(customization['list_of_options']):
                     customization["list_of_options"][n] = json_util.loads(FoodItem.objects.
                                                                           get(id=option).to_json())
+                    price += float(customization["list_of_options"][n]['price'])
         food_id = food_dict['food_id']
-        for thing in [option_id,choice_id,add_on_id]:
-            if thing!='':
+        for thing in [option_id, choice_id, add_on_id]:
+            if thing != '':
                 food_id = food_id + "#" + thing
-        json_dict['food_id']=food_id
-        json_dict['price'] = str(json_dict['price'])
+        json_dict['food_id'] = food_id
+        json_dict['price'] = str(price)
     else:
         json_dict['price'] = food_obj.price
     return json_util.dumps(json_dict)
-
 
 def order_placement(input_order):
     fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'customization',
