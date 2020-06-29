@@ -81,7 +81,7 @@ class Assistance(Document):
     table = StringField()
     table_id = StringField()
     user = ReferenceField(User, reverse_delete_rule=CASCADE)
-    assistance_type = StringField(choices=types)
+    assistance_type = StringField()
     timestamp = DateTimeField()
     accepted_by = DictField()
     meta = {'strict': False}
