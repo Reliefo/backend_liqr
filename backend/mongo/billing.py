@@ -194,7 +194,6 @@ def billed_cleaned(table_id):
     table_ob = Table.objects.get(id=table_id)
     restaurant = Restaurant.objects(tables__in=[table_id]).first()
     if len(table_ob.table_orders) == 0:
-        table_ob.users = []
         table_ob.save()
         return False
 
@@ -224,6 +223,10 @@ def billed_cleaned(table_id):
     table_ob.table_orders = []
     table_ob.assistance_reqs = []
     table_ob.requests_queue = []
-    table_ob.users = []
     table_ob.save()
     return order_history.to_json()
+
+
+def clear_table(table_id):
+    Table.objects.get(id=table_id).update(set__users = [])
+    return "done"

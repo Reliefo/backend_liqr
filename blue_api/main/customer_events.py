@@ -135,6 +135,7 @@ def assistance_requests(message):
             returning_dict['staff_id'] = staff.id
             push_assistance_request_notification(returning_dict, staff.endpoint_arn)
     table.save()
+    clear_table(str(table.id))
 
     returning_dict['msg'] = "Service has been requested"
     socket_io.emit('assist', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
