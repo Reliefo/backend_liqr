@@ -88,7 +88,7 @@ def food_embed(food_dict, fooditem_fields_to_capture):
 
 
 def order_placement(input_order):
-    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'food_options',
+    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'customization',
                                   'kitchen']
     ordered_table = Table.objects.get(id=input_order['table'])
     table_order = TableOrder(table=str(ordered_table.name), table_id=str(ordered_table.id), personal_order=True,
@@ -106,7 +106,7 @@ def order_placement(input_order):
 
 
 def push_to_table_cart(input_order):
-    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'food_options',
+    fooditem_fields_to_capture = ['name', 'description', 'price', 'quantity', 'instructions', 'food_id', 'customization',
                                   'kitchen']
     ordered_table = Table.objects.get(id=input_order['table'])
     order = input_order['orders'][0]
