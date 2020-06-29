@@ -21,6 +21,7 @@ def fetch_rest_customer(message):
 @socket_io.on('place_personal_order', namespace=our_namespace)
 def place_personal_order(message):
     input_order = json_util.loads(message)
+    sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
     new_order = order_placement(input_order)
     new_order_dict = json_util.loads(new_order)
