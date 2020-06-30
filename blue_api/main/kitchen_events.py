@@ -19,6 +19,7 @@ def fetch_kitchen_details(message):
 
 @socket_io.on('kitchen_updates', namespace=our_namespace)
 def send_new_orders(message):
+    message = json_util.loads(message)
     restaurant_object = Restaurant.objects.filter(table_orders__in=[message['table_order_id']]).first()
     status_tuple = (message['table_order_id'], message['order_id'], message['food_id'])
     if message['type'] == 'cooking':
