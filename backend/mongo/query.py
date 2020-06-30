@@ -1,6 +1,6 @@
 from backend.mongo.configure_queries import *
 from backend.mongo.returning_query import *
-from backend.mongo.billing import billed_cleaned
+from backend.mongo.billing import billed_cleaned, clear_table
 import time
 
 
