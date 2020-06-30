@@ -1,5 +1,17 @@
 from backend.mongo.utils import *
 import sys
+import random
+import string
+
+def random_alphaNumeric_string(lettersCount, digitsCount):
+    sampleStr = ''.join((random.choice(string.ascii_letters) for i in range(lettersCount)))
+    sampleStr += ''.join((random.choice(string.digits) for i in range(digitsCount)))
+    
+    # Convert string to list and shuffle it to mix letters and digits
+    sampleList = list(sampleStr)
+    random.shuffle(sampleList)
+    finalString = ''.join(sampleList)
+    return finalString
 
 
 def configuring_restaurant(message):
@@ -32,7 +44,13 @@ def configuring_restaurant(message):
 def configuring_tables(request_type, message):
     if request_type == 'add':
         table_pair =  message['table']
-        new_table = Table(name=table_pair['name'], seats=table_pair['seats']).save()
+        while flag:
+            try:
+                gen_tid =  random_alphaNumeric_string(4, 3)
+                new_table = Table(name=table_pair['name'], seats=table_pair['seats'], tid=gen_tid).save()
+                flag=False
+            except NotUniqueError:
+                pass
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__tables=new_table.to_dbref())
         message['table_object'] = json_util.loads(new_table.to_json())
         return message
