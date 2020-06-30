@@ -33,7 +33,6 @@ def configuring_tables(request_type, message):
     if request_type == 'add':
         table_pair =  message['table']
         new_table = Table(name=table_pair['name'], seats=table_pair['seats']).save()
-        table_dict_list.append({**{'table_id': str(new_table.id)}, **table_pair})
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__tables=new_table.to_dbref())
         message['table_object'] = json_util.loads(new_table.to_json())
         return message
