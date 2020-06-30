@@ -116,7 +116,6 @@ socket_io.emit('order_updates')
 
 @socket_io.on('assistance_requests', namespace=our_namespace)
 def assistance_requests(message):
-    clear_table(str(table.id))
     input_dict = json_util.loads(message)
     sys.stderr.write("LiQR_Error: " + message + " was sent to customer events\n")
     socket_io.emit('logger', message, namespace=our_namespace)
@@ -136,6 +135,8 @@ def assistance_requests(message):
         if staff.endpoint_arn:
             returning_dict['staff_id'] = staff.id
             push_assistance_request_notification(returning_dict, staff.endpoint_arn)
+    if input_dict['after_billing']:
+        clear_table(str(table.id))
     table.save()
 
     returning_dict['msg'] = "Service has been requested"

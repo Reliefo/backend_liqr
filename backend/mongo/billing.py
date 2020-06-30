@@ -228,5 +228,10 @@ def billed_cleaned(table_id):
 
 
 def clear_table(table_id):
-    Table.objects.get(id=table_id).update(set__users = [])
+    table_ob = Table.objects.get(id=table_id)
+    table_ob.users = []
+    for user in table_ob.users:
+        user.current_table_id = None
+        user.save()
+    table_ob.save()
     return "done"
