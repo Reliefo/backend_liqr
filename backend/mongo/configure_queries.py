@@ -44,6 +44,7 @@ def configuring_restaurant(message):
 def configuring_tables(request_type, message):
     if request_type == 'add':
         table_pair =  message['table']
+        flag = True
         while flag:
             try:
                 gen_tid =  random_alphaNumeric_string(4, 3)
