@@ -63,6 +63,12 @@ def scanned_table_no(table_no):
     return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
 
 
+@main.route('/x_<string:table_id>', methods=['GET'])
+def shortened_table_id(table_id):
+    actual_table_id=Table.objects.get(tid=table_id).id
+    return redirect("https://order.liqr.cc/?table_id=" + str(actual_table_id))
+
+
 @main.route('/bridge_socket', methods=['GET'])
 def bridge_socket():
     return render_template('index.html')

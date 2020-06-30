@@ -227,6 +227,7 @@ class CustomerStats(Document):
 
 class Table(Document):
     name = StringField(required=True)
+    tid = StringField(unique=True)
     seats = IntField(required=True)
     staff = ListField(ReferenceField(Staff, reverse_delete_rule=PULL))
     users = ListField(ReferenceField(User, reverse_delete_rule=PULL))
