@@ -71,14 +71,10 @@ def configuring_tables(request_type, message):
 
 def configuring_staff(request_type, message):
     if request_type == 'add':
-        staff_objects = []
-        staff_dict_list = []
-        for staff_pair in message['staff']:
-            new_staff = Staff(name=staff_pair['name']).save()
-            staff_objects.append(new_staff.to_dbref())
-            staff_dict_list.append({**{'staff_id': str(new_staff.id)}, **staff_pair})
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push_all__staff=staff_objects)
-        message['staff'] = staff_dict_list
+        staff_pair = message['staff']
+        new_staff = Staff(name=staff_pair['name']).save()
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__staff=new_staff.to_dbref())
+        message['staff'] = json_util.loads(new_staff.to_json())
         return message
     elif request_type == 'delete':
         Staff.objects.get(id=message['staff_id']).delete()
