@@ -354,3 +354,6 @@ def configuring_manage(request_type, message):
     if request_type == 'ordering-ability':
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__ordering_ability=message['status'])
         return message
+    elif request_type == 'hide-ordering':
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__hide_ordering=message['status'])
+        return message
