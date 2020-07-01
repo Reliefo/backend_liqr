@@ -358,6 +358,6 @@ def configuring_manage(request_type, message):
             configuring_manage('hide-ordering', message)
             message['status'] = not message['status']
         return message
-    elif request_type == 'hide-ordering':
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__hide_ordering=message['status'])
+    elif request_type == 'display-order-butttons':
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__display_order_buttons=message['status'])
         return message
