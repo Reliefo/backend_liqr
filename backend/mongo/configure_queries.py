@@ -352,5 +352,5 @@ def configuring_inventory(request_type, message):
 
 def configuring_manage(request_type, message):
     if request_type == 'ordering-ability':
-        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__status=message['status'])
+        Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(set__ordering_ability=message['status'])
         return message
