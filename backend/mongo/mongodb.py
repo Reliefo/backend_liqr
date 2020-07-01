@@ -414,6 +414,7 @@ class Restaurant(Document):
     invoice_no = IntField(default=0)
     kitchens = ListField(ReferenceField(Kitchen, reverse_delete_rule=PULL))
     inventory = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
+    ordering_ability= BooleanField(default=True)
 
     def to_json(self):
         data = self.to_mongo()
