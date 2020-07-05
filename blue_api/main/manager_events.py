@@ -65,6 +65,8 @@ def register_your_people(message):
         emit('receive_your_people', json_util.dumps({"status": "Registration failed"}))
         return
     input_dict['status'] = 'Registration successful'
+    sys.stderr.write("LiQR_Error: "+str(input_dict)+" who is a "+app_user.user_type+" connected\n")
+
     emit('receive_your_people', json_util.dumps(input_dict))
 
 

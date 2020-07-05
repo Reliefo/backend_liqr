@@ -4,15 +4,15 @@ import random
 import string
 
 
-def random_alphaNumeric_string(lettersCount, digitsCount):
-    sampleStr = ''.join((random.choice(string.ascii_letters) for i in range(lettersCount)))
-    sampleStr += ''.join((random.choice(string.digits) for i in range(digitsCount)))
+def random_alphanumeric_string(letters_count, digits_count):
+    sample_str = ''.join((random.choice(string.ascii_letters) for i in range(letters_count)))
+    sample_str += ''.join((random.choice(string.digits) for i in range(digits_count)))
 
     # Convert string to list and shuffle it to mix letters and digits
-    sampleList = list(sampleStr)
-    random.shuffle(sampleList)
-    finalString = ''.join(sampleList)
-    return finalString
+    sample_list = list(sample_str)
+    random.shuffle(sample_list)
+    final_string = ''.join(sample_list)
+    return final_string
 
 
 def configuring_restaurant(message):
@@ -50,7 +50,7 @@ def configuring_tables(request_type, message):
         flag = True
         while flag:
             try:
-                gen_tid = random_alphaNumeric_string(4, 3)
+                gen_tid = random_alphanumeric_string(4, 3)
                 new_table = Table(name=table_pair['name'], seats=table_pair['seats'], tid=gen_tid).save()
                 flag = False
             except NotUniqueError:
