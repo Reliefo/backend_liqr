@@ -63,6 +63,13 @@ def scanned_table_no(table_no):
     return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
 
 
+@main.route('/local/<int:table_no>', methods=['GET'])
+def local_no(table_no):
+    if table_no == 3:
+        table_no = 41
+    return redirect("http://localhost:3000/?table_id=" + str(Table.objects[table_no].id))
+
+
 @main.route('/x_<string:table_id>', methods=['GET'])
 def shortened_table_id(table_id):
     actual_table_id=Table.objects.get(tid=table_id).id
