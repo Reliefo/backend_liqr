@@ -21,6 +21,14 @@ def fetch_restaurant(rest_no):
     return rest_json
 
 
+@main.route('/rest_no', methods=['GET'])
+#@login_required
+def fetch_restaurant_no(rest_no):
+    rest_no_json=json_util.dumps(([{rest.name:n} for n,rest in enumerate(Restaurant.objects)]))
+    # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
+    return rest_no_json
+
+
 @main.route('/bill', methods=['GET'])
 def fetch_orders2():
     billed_cleaned('5eb41b91adb66da6f5312125')
@@ -61,6 +69,12 @@ def scanned_table_no(table_no):
     if table_no == 3:
         table_no = 41
     return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
+
+@main.route('/rt/<int:rest_no>_<int:table_no>', methods=['GET'])
+def rest_table_no(rest_no,table_no):
+    table_id = str(Restaurant.objects[rest_no].tables[table_no].id)
+    return redirect("https://order.liqr.cc/?table_id=" + table_id)
+
 
 
 @main.route('/local/<int:table_no>', methods=['GET'])
