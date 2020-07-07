@@ -101,6 +101,8 @@ def generate_bill(table_ob, restaurant):
         table_dict = json_util.loads(table_ord.to_json())
         for order in table_dict['orders']:
             for new_food in order['food_list']:
+                food_id = new_food['food_id'].split('#')[0]
+                FoodItem.objects.get(id=food_id).update(inc__ordered_times=new_food['quantity'])
                 added = False
                 for food in current_list:
                     if new_food['food_id'] == food['food_id']:

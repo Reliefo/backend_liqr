@@ -155,7 +155,9 @@ def fetch_the_bill(message):
     if input_dict['table_bill']:
         returning_dict['order_history'] = json_util.loads(billed_cleaned(input_dict['table_id']))
         returning_dict['message'] = 'Your table bill will be brought to you'
-        socket_io.emit('billing', json_util.dumps(returning_dict), namespace=our_namespace)
+        socket_io.emit('billing', returning_json, room=returning_dict['table_id'], namespace=our_namespace)
+        socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
+                       namespace=our_namespace)
         returning_dict.pop('order_history')
         for staff in table.staff:
             if staff.endpoint_arn:
@@ -165,4 +167,6 @@ def fetch_the_bill(message):
         returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
                                           'message': 'Your personal bill will be brought to you',
                                           'order_history': 'dud'})
-        socket_io.emit('billing', returning_json, namespace=our_namespace)
+        socket_io.emit('billing', returning_json, room=returning_dict['table_id'], namespace=our_namespace)
+        socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
+                       namespace=our_namespace)

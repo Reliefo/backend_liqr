@@ -306,6 +306,7 @@ class FoodItem(Document):
     kitchen = StringField()
     ingredients = ListField(EmbeddedDocumentField(InventoryItemMod))
     visibility = BooleanField(default=True)
+    ordered_times = IntField(default=0)
 
     def to_my_mongo(self):
         data = self.to_mongo()
