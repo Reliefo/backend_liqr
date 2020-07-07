@@ -139,10 +139,12 @@ def register():
                             if len(Restaurant.objects(restaurant_id=request.form['restaurant_id'])) > 0:
                                 return json_util.dumps(
                                     {"status": "Registration failed, this restaurant already exists"})
+                            default_home_screen_lists = [HomeScreenLists(name=name).save() for name in ['Most Popular', "Chef's Special", 'Experiment New']]
                             restaurant_object = Restaurant(name=request.form['restaurant_name'],
                                                            restaurant_id=request.form['restaurant_id'],
                                                            manager_room=request.form['restaurant_id'],
-                                                           kitchen_room=request.form['restaurant_id'] + '_kitchen'
+                                                           kitchen_room=request.form['restaurant_id'] + '_kitchen',
+                                                           home_screen_lists=default_home_screen_lists
                                                            ).save()
                         else:
                             restaurant_object = Restaurant.objects(restaurant_id=request.form['restaurant_id']).first()
