@@ -23,7 +23,7 @@ def fetch_restaurant(rest_no):
 
 @main.route('/rest_no', methods=['GET'])
 #@login_required
-def fetch_restaurant_no(rest_no):
+def fetch_restaurant_no():
     rest_no_json=json_util.dumps(([{rest.name:n} for n,rest in enumerate(Restaurant.objects)]))
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_no_json
