@@ -192,6 +192,16 @@ def generate_bill(table_ob, restaurant):
                               'Total Amount': total_amount}, pdf_link, invoice_no
 
 
+def clear_table(table_id):
+    table_ob = Table.objects.get(id=table_id)
+    table_ob.users = []
+    for user in table_ob.users:
+        user.current_table_id = None
+        user.save()
+    table_ob.save()
+    return "done"
+
+
 def billed_cleaned(table_id):
     table_ob = Table.objects.get(id=table_id)
     restaurant = Restaurant.objects(tables__in=[table_id]).first()
@@ -226,14 +236,7 @@ def billed_cleaned(table_id):
     table_ob.assistance_reqs = []
     table_ob.requests_queue = []
     table_ob.save()
+    clear_table(table_id)
     return order_history.to_json()
 
 
-def clear_table(table_id):
-    table_ob = Table.objects.get(id=table_id)
-    table_ob.users = []
-    for user in table_ob.users:
-        user.current_table_id = None
-        user.save()
-    table_ob.save()
-    return "done"
