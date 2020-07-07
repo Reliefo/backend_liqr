@@ -35,7 +35,7 @@ def upload_pdf_bill(pdf_file, restaurant_id, invoice_no):
 
 
 def myFirstPage(canvas, doc, restaurant, table_ob):
-    address1 = address2 = phone2 = None
+    address1 = address2 = phone2 = ''
     if restaurant.address:
         address_split = restaurant.address.split()
         first_half = math.ceil(0.4 * len(address_split))
