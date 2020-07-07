@@ -41,7 +41,7 @@ def myFirstPage(canvas, doc, restaurant, table_ob):
         first_half = math.ceil(0.4 * len(address_split))
         address1 = ' '.join(address_split[:first_half])
         address2 = ' '.join(address_split[first_half:])
-    if restaurant.phone_nos>0:
+    if len(restaurant.phone_nos) > 0:
         phone1 = restaurant.phone_nos[0]
     if len(restaurant.phone_nos) > 1:
         phone2 = restaurant.phone_nos[1]
