@@ -261,7 +261,7 @@ def configuring_kitchen(request_type, message):
     if request_type == 'add':
         kitchen = Kitchen(name=message['name']).save()
         Restaurant.objects(restaurant_id=message['restaurant_id'])[0].update(push__kitchens=kitchen.to_dbref())
-        message['kitchen_obj'] = kitchen.to_json()
+        message['kitchen_obj'] = json_util.loads(kitchen.to_json())
         return message
     elif request_type == 'edit':
         """Requires kitchen_id, name, type=edit_kitchen"""
