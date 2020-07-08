@@ -184,7 +184,7 @@ def generate_bill(table_ob, restaurant):
     Story.append(p)
 
     doc.build(Story, onFirstPage=partial(myFirstPage, restaurant=restaurant, table_ob=table_ob),
-              onLaterPages=myLaterPages)
+              onLaterPages=(myLaterPages, restaurant=restaurant))
     invoice_no = str_n(restaurant.invoice_no + 1, 7)
     pdf_file.seek(0)
     pdf_link = upload_pdf_bill(pdf_file, restaurant.restaurant_id, invoice_no)
