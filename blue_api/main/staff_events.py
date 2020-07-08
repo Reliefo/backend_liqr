@@ -16,6 +16,9 @@ def fetch_staff_details(message):
     emit('staff_details', return_staff_details(staff_id))
     emit('restaurant_object', return_restaurant(rest_id))
     emit('requests_queue', fetch_requests_queue(staff_id, rest_id))
+    lists_json = Restaurant.objects.filter(restaurant_id=restaurant_id).first().fetch_order_lists()
+    emit('order_lists', lists_json)
+
 
 
 @socket_io.on('staff_acceptance', namespace=our_namespace)
