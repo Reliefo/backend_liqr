@@ -209,7 +209,7 @@ def billed_cleaned(table_id):
     restaurant = Restaurant.objects(tables__in=[table_id]).first()
     if len(table_ob.table_orders) == 0:
         table_ob.save()
-        return False
+        return { 'message': 'There are no orders to bill' }
 
     taxes, bill_structure, pdf_link, invoice_no = generate_bill(table_ob, restaurant)
     order_history = OrderHistory()
