@@ -239,10 +239,10 @@ def order_status_cooking(status_tuple):
     food_json_dict['status'] = 'cooking'
     Order.objects.get(id=status_tuple[1]).update(pull__food_list__food_id=FoodItemMod(food_id=status_tuple[2]).food_id)
     Order.objects.get(id=status_tuple[1]).update(push__food_list=FoodItemMod.from_json(json_util.dumps(food_json_dict)))
-    if validate_for_order(status_tuple[1], True):
-        Order.objects.get(id=status_tuple[1]).update(set__status='cooking')
-    if validate_for_table_order(status_tuple[0], True):
-        TableOrder.objects.get(id=status_tuple[0]).update(set__status='cooking')
+    # if validate_for_order(status_tuple[1], True):
+    #     Order.objects.get(id=status_tuple[1]).update(set__status='cooking')
+    # if validate_for_table_order(status_tuple[0], True):
+    #     TableOrder.objects.get(id=status_tuple[0]).update(set__status='cooking')
     return "Done"
 
 
@@ -252,8 +252,17 @@ def order_status_completed(status_tuple):
     food_json_dict['status'] = 'completed'
     Order.objects.get(id=status_tuple[1]).update(pull__food_list__food_id=FoodItemMod(food_id=status_tuple[2]).food_id)
     Order.objects.get(id=status_tuple[1]).update(push__food_list=FoodItemMod.from_json(json_util.dumps(food_json_dict)))
-    if validate_for_order(status_tuple[1], False):
-        Order.objects.get(id=status_tuple[1]).update(set__status='completed')
-    if validate_for_table_order(status_tuple[0], False):
-        TableOrder.objects.get(id=status_tuple[0]).update(set__status='completed')
+    # if validate_for_order(status_tuple[1], False):
+    #     Order.objects.get(id=status_tuple[1]).update(set__status='completed')
+    # if validate_for_table_order(status_tuple[0], False):
+    #     TableOrder.objects.get(id=status_tuple[0]).update(set__status='completed')
+    return "Done"
+
+
+def order_status_update(status_tuple, status):
+    order = Order.objects.get(id=status_tuple[1])
+    food_json_dict = json_util.loads(order.fetch_food_item(status_tuple[2]))
+    food_json_dict['status'] = status
+    Order.objects.get(id=status_tuple[1]).update(pull__food_list__food_id=FoodItemMod(food_id=status_tuple[2]).food_id)
+    Order.objects.get(id=status_tuple[1]).update(push__food_list=FoodItemMod.from_json(json_util.dumps(food_json_dict)))
     return "Done"

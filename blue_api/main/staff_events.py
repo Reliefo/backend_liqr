@@ -20,7 +20,6 @@ def fetch_staff_details(message):
     emit('order_lists', lists_json)
 
 
-
 @socket_io.on('staff_acceptance', namespace=our_namespace)
 def staff_acceptance(message):
     input_dict = json_util.loads(message)
@@ -91,3 +90,28 @@ def check_endpoint(message):
     else:
         input_dict['status'] = "damaged"
         emit('endpoint_check', json_util.dumps(input_dict))
+
+
+@socket_io.on('order_acceptance', namespace=our_namespace)
+def order_acceptance(message):
+    input_dict = json_util.loads(message)
+    sys.stderr.write("LiQR_Error: "+message+" who is a ")
+    restaurant_object = Restaurant.objects.filter(table_orders__in=[input_dict['table_order_id']]).first()
+    status_tuple = (input_dict['table_order_id'], input_dict['order_id'], input_dict['food_id'])
+    order_status_update(status_tuple, input_dict['status'])
+
+    table_order = TableOrder.objects.get(id=status_tuple[0])
+    ordered_by = Order.objects.get(id=status_tuple[1]).placed_by['name']
+    food_id = re.search('[a-z0-9]+', status_tuple[2]).group()
+    food_name = FoodItem.objects.get(id=food_id).name
+
+    sending_dict = {'table_order_id': status_tuple[0], 'status': input_dict['status'], 'order_id': status_tuple[1],
+                    'food_id': status_tuple[2], 'staff_id': input_dict['staff_id'],
+                    "table": table_order.table,
+                    'table_id': table_order.table_id, 'user': ordered_by, 'timestamp': str(datetime.now()),
+                    'food_name': food_name}
+
+    sending_json = json_util.dumps(sending_dict)
+    socket_io.emit('order_updates', sending_json, room=restaurant_object.manager_room, namespace=our_namespace)
+    socket_io.emit('order_updates', sending_json, room=restaurant_object.kitchen_room, namespace=our_namespace)
+    socket_io.emit('order_updates', sending_json, room=table_order.table_id, namespace=our_namespace)
