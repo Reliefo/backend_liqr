@@ -27,7 +27,7 @@ class FoodItemMod(EmbeddedDocument):
     instructions = StringField()
     quantity = IntField()
     kitchen = StringField()
-    status = StringField(choices=['queued', 'cooking', 'completed'])
+    status = StringField(choices=['awaiting', 'accepted', 'rejected', 'queued', 'cooking', 'completed'])
     customization = ListField(EmbeddedDocumentField(FoodCustomizationMod))
     food_options = EmbeddedDocumentField(FoodOptionsMod)
 
