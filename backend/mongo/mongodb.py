@@ -415,6 +415,7 @@ class Restaurant(Document):
     inventory = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
     ordering_ability= BooleanField(default=True)
     display_order_buttons = BooleanField(default=True)
+    theme_properties = DictField(default={"theme":False})
 
     def to_json(self):
         data = self.to_mongo()
