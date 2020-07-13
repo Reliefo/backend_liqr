@@ -216,7 +216,7 @@ def billed_cleaned(table_id):
     order_history.table_id = table_id
     order_history.invoice_no = invoice_no
     order_history.table = table_ob.name
-    order_history.restaurant_id = str(restaurant.id)
+    order_history.restaurant_id = str(restaurant.restaurant_id)
     order_history.restaurant_name = str(restaurant.name)
     order_history.pdf = pdf_link
     order_history.taxes, order_history.bill_structure = taxes, bill_structure
