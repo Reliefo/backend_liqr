@@ -37,12 +37,11 @@ def staff_acceptance(message):
                     requests_queue.pop(n)
     table.requests_queue = requests_queue
     table.save()
-
     if input_dict['status'] == "rejected":
         curr_staff.rej_requests_history.append(input_dict)
         curr_staff.save()
         if input_dict['request_type'] == 'pickup_request':
-            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            socket_io.emit('order_pickup_updates', json_util.dumps(input_dict), namespace=our_namespace)
             push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
         else:  # Assistance Request
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
@@ -55,19 +54,18 @@ def staff_acceptance(message):
         curr_staff.rej_requests_history.append(input_dict)
         curr_staff.save()
         if input_dict['request_type'] == 'pickup_request':
-            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            socket_io.emit('order_pickup_updates', json_util.dumps(input_dict), namespace=our_namespace)
             push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
         else:  # Assistance Request
             socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
         return
     else:  # ACCEPTED
-
         if input_dict['request_type'] == 'pickup_request':
             input_dict['type'] = 'on_the_way'
             curr_staff.requests_history.append(input_dict)
             curr_staff.save()
-            socket_io.emit('order_updates', json_util.dumps(input_dict), namespace=our_namespace)
+            socket_io.emit('order_pickup_updates', json_util.dumps(input_dict), namespace=our_namespace)
             return
         else:  # Assistance Request
             Assistance.objects.get(id=input_dict['assistance_req_id']).update(

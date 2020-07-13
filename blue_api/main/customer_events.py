@@ -151,11 +151,14 @@ def fetch_the_bill(message):
     socket_io.emit('logger', message, namespace=our_namespace)
     table = Table.objects.get(id=input_dict['table_id'])
     user = User.objects.get(id=input_dict['user_id'])
+    restaurant_object = Restaurant.objects.filter(tables__in=[input_dict['table_id']]).first()
     returning_dict = {'status': "billed", 'table_id': input_dict['table_id'], 'table': table.name, 'user': user.name}
     if input_dict['table_bill']:
         returning_dict['order_history'] = json_util.loads(billed_cleaned(input_dict['table_id']))
         returning_dict['message'] = 'Your table bill will be brought to you'
         socket_io.emit('billing', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
+        socket_io.emit('billing', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
+                       namespace=our_namespace)
         socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
                        namespace=our_namespace)
         returning_dict.pop('order_history')
