@@ -8,13 +8,14 @@ from backend.mongo.query import *
 
 from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
 
+
 @main.route('/')
 def hello_world():
     return redirect("https://solutions.liqr.cc/")
 
 
 @main.route('/rest_<int:rest_no>', methods=['GET'])
-#@login_required
+# @login_required
 def fetch_restaurant(rest_no):
     rest_json = Restaurant.objects[rest_no].to_json()
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
@@ -22,9 +23,9 @@ def fetch_restaurant(rest_no):
 
 
 @main.route('/rest_no', methods=['GET'])
-#@login_required
+# @login_required
 def fetch_restaurant_no():
-    rest_no_json=json_util.dumps(([{rest.name:n} for n,rest in enumerate(Restaurant.objects)]))
+    rest_no_json = json_util.dumps(([{rest.name: str(n)+" "+rest.restaurant_id} for n, rest in enumerate(Restaurant.objects)]))
     # socket_io.emit('restaurant_object', rest_json, namespace=our_namespace)
     return rest_no_json
 
@@ -70,11 +71,11 @@ def scanned_table_no(table_no):
         table_no = 41
     return redirect("https://order.liqr.cc/?table_id=" + str(Table.objects[table_no].id))
 
+
 @main.route('/rt/<int:rest_no>_<int:table_no>', methods=['GET'])
-def rest_table_no(rest_no,table_no):
+def rest_table_no(rest_no, table_no):
     table_id = str(Restaurant.objects[rest_no].tables[table_no].id)
     return redirect("https://order.liqr.cc/?table_id=" + table_id)
-
 
 
 @main.route('/local/<int:table_no>', methods=['GET'])
@@ -86,7 +87,7 @@ def local_no(table_no):
 
 @main.route('/x_<string:table_id>', methods=['GET'])
 def shortened_table_id(table_id):
-    actual_table_id=Table.objects.get(tid=table_id).id
+    actual_table_id = Table.objects.get(tid=table_id).id
     return redirect("https://order.liqr.cc/?table_id=" + str(actual_table_id))
 
 
