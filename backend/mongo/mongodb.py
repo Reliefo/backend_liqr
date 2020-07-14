@@ -7,17 +7,20 @@ from flask_login import UserMixin
 conn = connect(MONGO_DB, host=MONGO_HOST, alias='default', username='good_blud', password='screwZomato@420',
                authentication_source='reliefo')
 
+
 class FoodCustomizationMod(EmbeddedDocument):
     name = StringField()
     customization_type = StringField(choices=['options', 'choices', 'add_ons'])
-    less_more = IntField(choices=[-1,0,1])
+    less_more = IntField(choices=[-1, 0, 1])
     that_number = IntField()
     list_of_options = ListField()
-    
+
+
 class FoodOptionsMod(EmbeddedDocument):
     options = ListField(DictField())
     choices = ListField()
     add_ons = ListField(DictField())
+
 
 class FoodItemMod(EmbeddedDocument):
     food_id = StringField()
@@ -125,7 +128,7 @@ class OrderHistory(Document):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
         return data
-    
+
     def to_json(self):
         data = self.to_mongo()
         data['timestamp'] = str(data['timestamp'])
@@ -195,7 +198,7 @@ class Staff(Document):
         data = {'name': self.name, 'id': self.id}
         return data
 
-    
+
 class KitchenStaff(Document):
     name = StringField()
     orders_cooked = ListField(DictField())
@@ -205,7 +208,7 @@ class KitchenStaff(Document):
         data = self.to_mongo()
         return data
 
-    
+
 class AppUser(UserMixin, Document):
     username = StringField(max_length=30)
     user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin', 'owner'])
@@ -218,8 +221,8 @@ class AppUser(UserMixin, Document):
     restaurant_id = StringField()
     name = StringField()
     temp_password = BooleanField()
-    
-    
+
+
 class CustomerStats(Document):
     username = StringField()
     count = IntField()
@@ -273,23 +276,23 @@ class InventoryItem(Document):
     units = DictField()
     default_unit = StringField()
     quantity = FloatField()
-    
+
     def to_my_mongo(self):
         data = self.to_mongo()
         return data
-    
-    
+
+
 class InventoryItemMod(EmbeddedDocument):
     inventory_item_id = StringField()
     name = StringField()
     unit_used = StringField()
     quantity = FloatField()
-            
+
 
 class FoodCustomization(EmbeddedDocument):
     name = StringField()
     customization_type = StringField(choices=['options', 'choices', 'add_ons'])
-    less_more = IntField(choices=[-1,0,1])
+    less_more = IntField(choices=[-1, 0, 1])
     that_number = IntField()
     list_of_options = ListField()
 
@@ -300,7 +303,7 @@ class FoodItem(Document):
     price = StringField()
     tags = ListField(StringField())
     customization = ListField(EmbeddedDocumentField(FoodCustomization))
-#     food_options = EmbeddedDocumentField(FoodOptions)
+    #     food_options = EmbeddedDocumentField(FoodOptions)
     restaurant_id = StringField()
     image_link = StringField()
     kitchen = StringField()
@@ -342,7 +345,7 @@ class Kitchen(Document):
     name = StringField()
     kitchen_staff = ListField(ReferenceField(KitchenStaff, reverse_delete_rule=PULL))
     categories = ListField(ReferenceField(Category, reverse_delete_rule=PULL))
-    
+
     def to_my_mongo(self):
         data = self.to_mongo()
         for key, staff in enumerate(self.kitchen_staff):
@@ -365,18 +368,18 @@ class JustMenu(Document):
     created = DateTimeField()
     visits = ListField(DateTimeField())
     qr = StringField()
-    
+
     def to_json(self):
         data = self.to_mongo()
         data['created'] = str(data['created'])
         return json_util.dumps(data)
 
-    
+
 class HomeScreenLists(Document):
-    name=StringField()
-    image=StringField()
-    food_list=ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
-    
+    name = StringField()
+    image = StringField()
+    food_list = ListField(ReferenceField(FoodItem, reverse_delete_rule=PULL))
+
     def to_my_mongo(self):
         data = self.to_mongo()
         return data
@@ -408,14 +411,15 @@ class Restaurant(Document):
     home_screen_lists = ListField(ReferenceField(HomeScreenLists, reverse_delete_rule=PULL))
     manager_room = StringField()
     kitchen_room = StringField()
-    taxes = DictField(default={'Service':0, 'CGST':0, 'SGST':0})
-    home_page_images = DictField(default={'0':'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
+    taxes = DictField(default={'Service': 0, 'CGST': 0, 'SGST': 0})
+    home_page_images = DictField(
+        default={'0': 'https://liqr-restaurants.s3.ap-south-1.amazonaws.com/default_home_page.png'})
     invoice_no = IntField(default=0)
     kitchens = ListField(ReferenceField(Kitchen, reverse_delete_rule=PULL))
     inventory = ListField(ReferenceField(InventoryItem, reverse_delete_rule=PULL))
-    ordering_ability= BooleanField(default=True)
+    ordering_ability = BooleanField(default=True)
     display_order_buttons = BooleanField(default=True)
-    theme_properties = DictField(default={"theme":False})
+    theme_properties = DictField(default={"theme": False})
 
     def to_json(self):
         data = self.to_mongo()
@@ -443,7 +447,6 @@ class Restaurant(Document):
             data['home_screen_lists'][key] = self.home_screen_lists[key].to_my_mongo()
         for key, navigate_better_list in enumerate(self.navigate_better_lists):
             data['navigate_better_lists'][key] = self.navigate_better_lists[key].to_my_mongo()
-
 
         return json_util.dumps(data)
 

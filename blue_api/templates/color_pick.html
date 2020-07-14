@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <script>
+      // function post_theme(){
+
+      // }
+    </script>
+    <h1 style="text-align: center; margin-top: 3%;">LiQR Rest Color Picker</h1>
+    <form action="https://liqr.cc/color" method="GET">
+      <div class="form-group" style="margin: 0 7%; margin-top: 3%;">
+        <select class="form-control" style="width: 50%;" name="restaurant_id">
+          {% for rest in rest_names %}
+          <option value='{{ rest["rest_id"] }}'>{{ rest["rest_name"] }}</option>
+          {% endfor %}
+        </select>
+        <br />
+        <input type="submit" class="btn btn-primary" value="Open Theme" />
+      </div>
+    </form>
+    <form action="https://liqr.cc/set_theme" method="POST">
+      <div class="form-group" style="margin: 7%; margin-top: 3%;">
+        <input
+          type="text"
+          id="{{key}}"
+          name="restaurant_id"
+          value="{{theme_variables.rest_id}}"
+          style="display: none;"
+        />
+        <h1>{{theme_variables.rest_name}}</h1>
+        {% if theme_variables.rest_theme.theme %}
+
+        <h2>Setting existing theme</h2>
+        <div class="container">
+          {% for key,value in theme_variables.rest_theme.variables.items() %}
+          <div style="padding: 0%; margin-bottom: 1%;" class="row">
+            <label for="{{key}}" style="padding: 0 4%;"
+              >{{variable_names[key]}}:
+            </label>
+            <input
+              type="color"
+              id="{{key}}"
+              name="{{key}}"
+              value="{{value}}"
+              class="form-control"
+              style="width: 30%; display: inline; padding: 0%; border: none;"
+            /><br />
+          </div>
+          {% endfor %}
+        </div>
+
+        {% else %}
+        <h2>Setting new theme</h2>
+        <div class="container">
+        {% for key,value in variables.items() %}
+        <div style="padding: 0%; margin-bottom: 1%;" class="row">
+        <label for="{{key}}">{{variable_names[key]}}: </label>
+        <input
+        type="color"
+        id="{{key}}"
+        name="{{key}}"
+        value="{{value}}"
+        class="form-control"
+        style="width: 30%; display: inline; padding: 0%; border: none;"
+      /><br />
+    </div>
+        {% endfor %}
+    </div> {% endif %}
+        <br /><br />
+        <input type="submit" class="btn btn-primary" />
+        <br />
+        <br />
+        <p>
+          <b>Note:</b> type="color" is not supported in Internet Explorer 11 or
+          Safari 9.1 (or earlier).
+        </p>
+      </div>
+    </form>
+  </body>
+</html>
