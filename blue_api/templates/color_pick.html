@@ -32,7 +32,7 @@
     </script>
     <!-- <h1 style="text-align: center; margin-top: 3%;">LiQR Rest Color Picker</h1> -->
     <br/>
-    <form action="https://liqr.cc/color" method="GET">
+    <form action="/color" method="GET">
       <div class="form-group" style="margin: 0 7%; margin-top: 3%; display: inline;">
         <select class="form-control" style="width: 50%; display: inline;" name="restaurant_id" >
           {% for rest in rest_names %}
@@ -42,7 +42,7 @@
         <input type="submit" class="btn btn-primary" value="Open Theme" style="display: inline;"/>
       </div>
     </form>
-    <form action="https://liqr.cc/set_theme" method="POST">
+    <form action="/set_theme" method="POST">
       <div class="form-group" style="margin: 7%; margin-top: 3%;">
         <input
           type="text"
@@ -77,7 +77,7 @@
               >{{variable_names[key]}}:
             </label>
             <input
-              type="color"
+              type="text"
               id="{{key}}"
               name="{{key}}"
               value="{{value}}"
