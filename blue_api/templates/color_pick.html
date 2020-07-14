@@ -22,6 +22,7 @@
       integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
       crossorigin="anonymous"
     ></script>
+    <title>LiQR Color</title>
   </head>
   <body>
     <script>
@@ -29,16 +30,16 @@
 
       // }
     </script>
-    <h1 style="text-align: center; margin-top: 3%;">LiQR Rest Color Picker</h1>
+    <!-- <h1 style="text-align: center; margin-top: 3%;">LiQR Rest Color Picker</h1> -->
+    <br/>
     <form action="https://liqr.cc/color" method="GET">
-      <div class="form-group" style="margin: 0 7%; margin-top: 3%;">
-        <select class="form-control" style="width: 50%;" name="restaurant_id">
+      <div class="form-group" style="margin: 0 7%; margin-top: 3%; display: inline;">
+        <select class="form-control" style="width: 50%; display: inline;" name="restaurant_id" >
           {% for rest in rest_names %}
           <option value='{{ rest["rest_id"] }}'>{{ rest["rest_name"] }}</option>
           {% endfor %}
         </select>
-        <br />
-        <input type="submit" class="btn btn-primary" value="Open Theme" />
+        <input type="submit" class="btn btn-primary" value="Open Theme" style="display: inline;"/>
       </div>
     </form>
     <form action="https://liqr.cc/set_theme" method="POST">
@@ -72,7 +73,7 @@
           </div>
           {% else %}
           <div style="padding: 0%; margin-bottom: 1%;" class="row">
-            <label for="{{key}}" style="padding: 0 4%;"
+            <label for="{{key}}" style="padding: 0 4%; display: none;"
               >{{variable_names[key]}}:
             </label>
             <input
@@ -90,10 +91,12 @@
         {% else %}
         <h2>Setting new theme</h2>
         <div class="container">
-          {% for key,value in variables.items() %} {% if key != '--theme-font'
+          {% for key,value in variables.items() %} 
+          
+          {% if key != '--theme-font'
           %}
           <div style="padding: 0%; margin-bottom: 1%;" class="row">
-            <label for="{{key}}">{{variable_names[key]}}: </label>
+            <label for="{{key}}">{{variable_names[key]}}:</label>
             <input
               type="color"
               id="{{key}}"
@@ -105,7 +108,7 @@
           </div>
           {% else %}
           <div style="padding: 0%; margin-bottom: 1%;" class="row">
-            <label for="{{key}}" style="padding: 0 4%;"
+            <label for="{{key}}" style="padding: 0 4%; display: none;"
               >{{variable_names[key]}}:
             </label>
             <input
