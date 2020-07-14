@@ -56,6 +56,7 @@
         <h2>Setting existing theme</h2>
         <div class="container">
           {% for key,value in theme_variables.rest_theme.variables.items() %}
+          {% if key != '--theme-font' %}
           <div style="padding: 0%; margin-bottom: 1%;" class="row">
             <label for="{{key}}" style="padding: 0 4%;"
               >{{variable_names[key]}}:
@@ -69,6 +70,7 @@
               style="width: 30%; display: inline; padding: 0%; border: none;"
             /><br />
           </div>
+          {% endif %}
           {% endfor %}
         </div>
 
@@ -76,6 +78,7 @@
         <h2>Setting new theme</h2>
         <div class="container">
         {% for key,value in variables.items() %}
+          {% if key != '--theme-font' %}
         <div style="padding: 0%; margin-bottom: 1%;" class="row">
         <label for="{{key}}">{{variable_names[key]}}: </label>
         <input
@@ -87,6 +90,7 @@
         style="width: 30%; display: inline; padding: 0%; border: none;"
       /><br />
     </div>
+          {% endif %}
         {% endfor %}
     </div> {% endif %}
         <br /><br />
