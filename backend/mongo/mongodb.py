@@ -420,6 +420,7 @@ class Restaurant(Document):
     ordering_ability = BooleanField(default=True)
     display_order_buttons = BooleanField(default=True)
     theme_properties = DictField(default={"theme": False})
+    currency = StringField(default='$', choices=['$','₹'])
 
     def to_json(self):
         data = self.to_mongo()

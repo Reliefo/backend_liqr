@@ -75,9 +75,6 @@ def fetch_restaurant_no():
 def set_rest_theme():
     if request.method == "POST":
         restaurant_id = request.form['restaurant_id']
-        print('rest id here')
-        print(restaurant_id)
-        print(request.form)
         variables = dict(request.form)
         variables.pop('restaurant_id')
         theme_properties = { 'theme':True, 'variables':variables }
