@@ -35,7 +35,7 @@ from flask_cognito import cognito_auth_required, current_user, current_cognito_j
 #     })
 
 @socket_io.on('connect', namespace=our_namespace)
-@jwt_required
+#@jwt_required
 # @cognito_auth_required
 def connect():
     username = get_jwt_identity()

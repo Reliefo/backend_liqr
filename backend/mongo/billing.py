@@ -34,7 +34,7 @@ def upload_pdf_bill(pdf_file, restaurant_id, invoice_no):
     return image_link
 
 
-def myFirstPage(canvas, doc, restaurant, table_ob):
+def my_first_page(canvas, doc, restaurant, table_ob):
     address1 = address2 = phone2 = phone1 = ''
     if restaurant.address:
         address_split = restaurant.address.split()
@@ -76,7 +76,7 @@ def myFirstPage(canvas, doc, restaurant, table_ob):
     canvas.restoreState()
 
 
-def myLaterPages(canvas, doc, restaurant):
+def my_later_pages(canvas, doc, restaurant):
     canvas.saveState()
     canvas.setFont('Times-Roman', 9)
     canvas.drawString(inch, 0.75 * inch, "Page %d %s" % (doc.page, restaurant.name))
@@ -125,10 +125,10 @@ def generate_bill(table_ob, restaurant):
              float(food['price']),
              food['quantity'], float(food['price']) * food['quantity']])
         pretax += float(food['price']) * food['quantity']
-    CGST = restaurant.taxes['CGST']
-    SGST = restaurant.taxes['SGST']
+    cgst = restaurant.taxes['CGST']
+    sgst = restaurant.taxes['SGST']
     service_tax = restaurant.taxes['Service']
-    total_tax = CGST + SGST + service_tax
+    total_tax = cgst + sgst + service_tax
     taxes = total_tax * pretax / 100
     total_amount = round(pretax + taxes, 2)
     taxes = round(taxes, 2)
@@ -136,34 +136,32 @@ def generate_bill(table_ob, restaurant):
     pdf_file = BytesIO()
     doc = SimpleDocTemplate(pdf_file)
 
-    Story = [Spacer(1, 1.7 * inch)]
-    PS = ParagraphStyle(name='Welcome', parent=styles["Heading2"], alignment=1)
+    story = [Spacer(1, 1.7 * inch)]
+    ps = ParagraphStyle(name='Welcome', parent=styles["Heading2"], alignment=1)
     welcome_message = ("Welcome to " + restaurant.name)
-    p = Paragraph(welcome_message, PS)
-    Story.append(p)
-    Story.append(Spacer(1, 0.2 * inch))
+    p = Paragraph(welcome_message, ps)
+    story.append(p)
+    story.append(Spacer(1, 0.2 * inch))
 
     title_style = ParagraphStyle(name='Table Title', parent=styles['Normal'], alignment=1)
     pretax_total_style = ParagraphStyle(name='pretax', parent=styles['Normal'])
     total_style = ParagraphStyle(name='Tatotalitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
-                                fontSize=11)
-    RawTitles = ['Item Name', 'Customization', 'Price', 'Qty', 'Subtotal']
-    Titles = [Paragraph('<b>{}</b>'.format(title), title_style) for title in RawTitles]
-    PreTotalRow = [Paragraph('<b>Pretax Total</b>', pretax_total_style), '', '', '',
-                   Paragraph('<b>₹ {}</b>'.format(pretax), total_style)]
-    TaxesRow = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), pretax_total_style), Paragraph('<b>CGST: {}%, SGST: {}%, '
-                                                                                             'Service Tax: {}%</b>'.
-                                                                                             format(CGST, SGST,
-                                                                                                    service_tax),
-                                                                                             pretax_total_style), '', '',
-                Paragraph('<b>₹ {}</b>'.format(taxes), total_style)]
-    TotalRow = [Paragraph('<b>Total</b>', pretax_total_style), '', '', '',
-                Paragraph('<b>₹ {}</b>'.format(total_amount), total_style)]
+                                 fontSize=11)
+    raw_titles = ['Item Name', 'Customization', 'Price', 'Qty', 'Subtotal']
+    titles = [Paragraph('<b>{}</b>'.format(title), title_style) for title in raw_titles]
+    pre_total_row = [Paragraph('<b>Pretax Total</b>', pretax_total_style), '', '', '',
+                     Paragraph('<b>₹ {}</b>'.format(pretax), total_style)]
+    taxes_row = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), pretax_total_style),
+                 Paragraph('<b>CGST: {}%, SGST: {}%, Service Tax: {}%</b>'.format(cgst, sgst, service_tax),
+                           pretax_total_style), '', '',
+                 Paragraph('<b>₹ {}</b>'.format(taxes), total_style)]
+    total_row = [Paragraph('<b>Total</b>', pretax_total_style), '', '', '',
+                 Paragraph('<b>₹ {}</b>'.format(total_amount), total_style)]
 
-    data = [Titles] + item_rows + [PreTotalRow] + [TaxesRow] + [TotalRow]
+    data = [titles] + item_rows + [pre_total_row] + [taxes_row] + [total_row]
 
-    columnSizes = [3 * inch, 2.5 * inch, 0.6 * inch, 0.4 * inch, 0.8 * inch]
-    t = TablePDF(data, columnSizes)
+    column_sizes = [3 * inch, 2.5 * inch, 0.6 * inch, 0.4 * inch, 0.8 * inch]
+    t = TablePDF(data, column_sizes)
     t.setStyle(TableStyle([('ALIGN', (0, 0), (-1, 0), 'CENTER'),
                            ('ALIGN', (2, 1), (-1, -1), 'RIGHT'),
                            #                        ('VALIGN',(0,0),(-1,0),'MIDDLE'),
@@ -175,22 +173,22 @@ def generate_bill(table_ob, restaurant):
                            ('SPAN', (-4, -3), (-2, -3))
                            ]))
 
-    Story.append(t)
-    Story.append(Spacer(1, 0.2 * inch))
+    story.append(t)
+    story.append(Spacer(1, 0.2 * inch))
 
-    RupeeStyle = ParagraphStyle(name='Tatotaitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
-                                fontSize=14)
+    rupee_style = ParagraphStyle(name='Tatotaitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
+                                 fontSize=14)
 
-    last_P = Paragraph('Total Bill to be Paid: ₹ ' + str(total_amount), RupeeStyle)
+    last_p = Paragraph('Total Bill to be Paid: ₹ ' + str(total_amount), rupee_style)
 
-    Story.append(last_P)
-    Story.append(Spacer(1, 0.2 * inch))
-    bogustext = ("Thank you, visit again")
-    p = Paragraph(bogustext, PS)
-    Story.append(p)
+    story.append(last_p)
+    story.append(Spacer(1, 0.2 * inch))
+    bogustext = "Thank you, visit again"
+    p = Paragraph(bogustext, ps)
+    story.append(p)
 
-    doc.build(Story, onFirstPage=partial(myFirstPage, restaurant=restaurant, table_ob=table_ob),
-              onLaterPages=partial(myLaterPages, restaurant=restaurant))
+    doc.build(story, onFirstPage=partial(my_first_page, restaurant=restaurant, table_ob=table_ob),
+              onLaterPages=partial(my_later_pages, restaurant=restaurant))
     invoice_no = str_n(restaurant.invoice_no + 1, 7)
     pdf_file.seek(0)
     pdf_link = upload_pdf_bill(pdf_file, restaurant.restaurant_id, invoice_no)
