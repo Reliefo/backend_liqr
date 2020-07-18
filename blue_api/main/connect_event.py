@@ -35,12 +35,12 @@ from flask_cognito import cognito_auth_required, current_user, current_cognito_j
 #     })
 
 @socket_io.on('connect', namespace=our_namespace)
-@jwt_required
+#@jwt_required
 # @cognito_auth_required
 def connect():
     username = get_jwt_identity()
-    app_user = AppUser.objects(username=username).first()
-    #app_user = AppUser.objects.get(id="5f033493cfb1be420f5827a3")
+    #app_user = AppUser.objects(username=username).first()
+    app_user = AppUser.objects.get(id="5f033493cfb1be420f5827a3")
     previous_sid = app_user.sid
 
     sys.stderr.write("LiQR_Error:  who is a "+str(request.args)+" connected\n")
