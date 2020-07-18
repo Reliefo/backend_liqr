@@ -35,7 +35,7 @@ def upload_pdf_bill(pdf_file, restaurant_id, invoice_no):
 
 
 def myFirstPage(canvas, doc, restaurant, table_ob):
-    address1 = address2 = phone2 = phone1= ''
+    address1 = address2 = phone2 = phone1 = ''
     if restaurant.address:
         address_split = restaurant.address.split()
         first_half = math.ceil(0.4 * len(address_split))
@@ -83,14 +83,20 @@ def myLaterPages(canvas, doc, restaurant):
     canvas.restoreState()
 
 
-def customization(food):
+def get_customization(food):
     cust = ''
-    for key in food['food_options'].keys():
-        if food['food_options'][key]:
-            if key == 'options':
-                cust += key + ": " + food['food_options'][key][0]['option_name'] + ' '
-            elif key == 'choices':
-                cust += food['food_options'][key][0] + ' '
+    for customization in food['customization']:
+        if len(customization['list_of_options']):
+            cust = cust + customization['name'] + ": ["
+            for option in customization['list_of_options']:
+                if customization['customization_type'] == "choices":
+                    cust += option + ", "
+                elif customization['customization_type'] == "options":
+                    cust += option['option_name'] + ": " + str(option['option_price']) + ", "
+                elif customization['customization_type'] == "add_ons":
+                    cust += option['name'] + ": " + str(option['price']) + ", "
+            cust = cust[0:-2]
+            cust += "]; "
     return cust
 
 
@@ -115,7 +121,7 @@ def generate_bill(table_ob, restaurant):
     for food in current_list:
         item_rows.append(
             [Paragraph(food['name'], styles['BodyText']),
-             Paragraph(customization(food), styles['BodyText']) if 'food_options' in food.keys() else None,
+             Paragraph(get_customization(food), styles['BodyText']) if 'customization' in food.keys() else None,
              float(food['price']),
              food['quantity'], float(food['price']) * food['quantity']])
         pretax += float(food['price']) * food['quantity']
@@ -137,22 +143,22 @@ def generate_bill(table_ob, restaurant):
     Story.append(p)
     Story.append(Spacer(1, 0.2 * inch))
 
-    TitleStyle = ParagraphStyle(name='Table Title', parent=styles['Normal'], alignment=1)
-    PretaxTotalStyle = ParagraphStyle(name='pretax', parent=styles['Normal'])
-    TotalStyle = ParagraphStyle(name='Tatotalitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
+    title_style = ParagraphStyle(name='Table Title', parent=styles['Normal'], alignment=1)
+    pretax_total_style = ParagraphStyle(name='pretax', parent=styles['Normal'])
+    total_style = ParagraphStyle(name='Tatotalitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
                                 fontSize=11)
     RawTitles = ['Item Name', 'Customization', 'Price', 'Qty', 'Subtotal']
-    Titles = [Paragraph('<b>{}</b>'.format(title), TitleStyle) for title in RawTitles]
-    PreTotalRow = [Paragraph('<b>Pretax Total</b>', PretaxTotalStyle), '', '', '',
-                   Paragraph('<b>₹ {}</b>'.format(pretax), TotalStyle)]
-    TaxesRow = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), PretaxTotalStyle), Paragraph('<b>CGST: {}%, SGST: {}%, '
+    Titles = [Paragraph('<b>{}</b>'.format(title), title_style) for title in RawTitles]
+    PreTotalRow = [Paragraph('<b>Pretax Total</b>', pretax_total_style), '', '', '',
+                   Paragraph('<b>₹ {}</b>'.format(pretax), total_style)]
+    TaxesRow = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), pretax_total_style), Paragraph('<b>CGST: {}%, SGST: {}%, '
                                                                                              'Service Tax: {}%</b>'.
                                                                                              format(CGST, SGST,
                                                                                                     service_tax),
-                                                                                             PretaxTotalStyle), '', '',
-                Paragraph('<b>₹ {}</b>'.format(taxes), TotalStyle)]
-    TotalRow = [Paragraph('<b>Total</b>', PretaxTotalStyle), '', '', '',
-                Paragraph('<b>₹ {}</b>'.format(total_amount), TotalStyle)]
+                                                                                             pretax_total_style), '', '',
+                Paragraph('<b>₹ {}</b>'.format(taxes), total_style)]
+    TotalRow = [Paragraph('<b>Total</b>', pretax_total_style), '', '', '',
+                Paragraph('<b>₹ {}</b>'.format(total_amount), total_style)]
 
     data = [Titles] + item_rows + [PreTotalRow] + [TaxesRow] + [TotalRow]
 
@@ -164,9 +170,9 @@ def generate_bill(table_ob, restaurant):
                            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                           ('SPAN',(-4,-1),(-2,-1)),
-                           ('SPAN',(-4,-2),(-2,-2)),
-                           ('SPAN',(-4,-3),(-2,-3))
+                           ('SPAN', (-4, -1), (-2, -1)),
+                           ('SPAN', (-4, -2), (-2, -2)),
+                           ('SPAN', (-4, -3), (-2, -3))
                            ]))
 
     Story.append(t)
@@ -209,7 +215,7 @@ def billed_cleaned(table_id):
     restaurant = Restaurant.objects(tables__in=[table_id]).first()
     if len(table_ob.table_orders) == 0:
         table_ob.save()
-        return { 'message': 'There are no orders to bill' }
+        return {'message': 'There are no orders to bill'}
 
     taxes, bill_structure, pdf_link, invoice_no = generate_bill(table_ob, restaurant)
     order_history = OrderHistory()
@@ -240,5 +246,3 @@ def billed_cleaned(table_id):
     table_ob.save()
     clear_table(table_id)
     return order_history.to_json()
-
-
