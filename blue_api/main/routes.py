@@ -137,6 +137,12 @@ def rest_table_no(rest_no, table_no):
     table_id = str(Restaurant.objects[rest_no].tables[table_no].id)
     return redirect("https://order.liqr.cc/?table_id=" + table_id)
 
+@main.route('/rtl/<int:rest_no>_<int:table_no>', methods=['GET'])
+def rest_table_no_local(rest_no, table_no):
+    table_id = str(Restaurant.objects[rest_no].tables[table_no].id)
+    return redirect("http://localhost:3000/?table_id=" + table_id)
+
+
 
 @main.route('/local/<int:table_no>', methods=['GET'])
 def local_no(table_no):
