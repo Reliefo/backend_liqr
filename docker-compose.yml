@@ -53,3 +53,18 @@ services:
         awslogs-group: agent_007
         awslogs-create-group: 'true'
         awslogs-stream: react_logs
+
+  manager:
+    image: 020452232211.dkr.ecr.ap-south-1.amazonaws.com/liqr_manager:latest
+    #    build:
+    #  context: ./relief_customer/
+    #  dockerfile: ./Dockerfile
+    ports:
+      - "420:420"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-south-1
+        awslogs-group: agent_007
+        awslogs-create-group: 'true'
+        awslogs-stream: manager_logs

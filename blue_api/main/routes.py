@@ -159,4 +159,5 @@ def shortened_table_id(table_id):
 
 @main.route('/bridge_socket', methods=['GET'])
 def bridge_socket():
-    return render_template('index.html')
+    return render_template('bridge_index.html')
+
