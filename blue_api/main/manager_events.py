@@ -65,7 +65,7 @@ def register_your_people(message):
         emit('receive_your_people', json_util.dumps({"status": "Registration failed"}))
         return
     input_dict['status'] = 'Registration successful'
-    sys.stderr.write("LiQR_Error: "+str(input_dict)+" who is a  connected\n")
+    sys.stderr.write("LiQR_Error: " + str(input_dict) + " who is a  connected\n")
 
     emit('receive_your_people', json_util.dumps(input_dict))
 
@@ -74,20 +74,21 @@ def register_your_people(message):
 def bill_the_table(message):
     input_dict = json_util.loads(message)
     table_id = input_dict['table_id']
-    table = Table.objects.get(id=input_dict['table_id'])
-    restaurant_object = Restaurant.objects.filter(tables__in=[input_dict['table_id']]).first()
-    billed_return = billed_cleaned(input_dict['table_id'])
-    if not billed_return:
-        returning_dict = {'status': "failed", 'table_id': input_dict['table_id'], 'table': table.name, 'user': "Manager",
-                          'message': 'No orders in the table'}
+    table = Table.objects.get(id=table_id)
+    restaurant_object = Restaurant.objects.filter(tables__in=[table_id]).first()
+    billed_return = billed_cleaned(table_id)
+    if billed_return['status'] == 'failed':
+        returning_dict = {'status': "failed", 'table_id': table_id, 'table': table.name,
+                          'user': "Manager", 'message': 'No orders in the table'}
         emit('billing', json_util.dumps(returning_dict), namespace=our_namespace)
         return
-    returning_dict = {'status': "billed", 'table_id': input_dict['table_id'], 'table': table.name, 'user': "Manager",
-                      'order_history': json_util.loads(billed_cleaned(input_dict['table_id'])),
+    returning_dict = {'status': "billed", 'table_id': table_id, 'table': table.name, 'user': "Manager",
+                      'order_history': json_util.loads(billed_return['order_history']),
                       'message': 'Your table bill will be brought to you'}
     returning_json = json_util.dumps(returning_dict)
-    socket_io.emit('billing', json_util.dumps(returning_dict), room=restaurant_object.manager_room, namespace=our_namespace)
-    socket_io.emit('billing', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
+    socket_io.emit('billing', returning_json, room=restaurant_object.manager_room,
+                   namespace=our_namespace)
+    socket_io.emit('billing', returning_json, room=returning_dict['table_id'], namespace=our_namespace)
     returning_dict.pop('order_history')
     for staff in table.staff:
         if staff.endpoint_arn:

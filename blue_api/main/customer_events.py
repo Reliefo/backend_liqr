@@ -104,8 +104,10 @@ def cancel_items(message):
     socket_io.emit('logger', message, namespace=our_namespace)
     input_order['status'] = 'cancelled'
     Order.objects.get(id=input_order['order_id']).update(pull__food_list=FoodItemMod(food_id=input_order['food_id']))
-    input_order['table_orders'] = json_util.loads(Table.objects.only("table_orders").get(id=input_order['table_id']).to_json())['table_orders']
-    socket_io.emit('cancel_items_request', json_util.dumps(input_order), room=input_order['table_id'], namespace=our_namespace)
+    input_order['table_orders'] = \
+        json_util.loads(Table.objects.only("table_orders").get(id=input_order['table_id']).to_json())['table_orders']
+    socket_io.emit('cancel_items_request', json_util.dumps(input_order), room=input_order['table_id'],
+                   namespace=our_namespace)
 
 
 """
@@ -148,28 +150,28 @@ def assistance_requests(message):
 @socket_io.on('fetch_the_bill', namespace=our_namespace)
 def fetch_the_bill(message):
     input_dict = json_util.loads(message)
-    socket_io.emit('logger', message, namespace=our_namespace)
-    table = Table.objects.get(id=input_dict['table_id'])
+    table_id = input_dict['table_id']
+    table = Table.objects.get(id=table_id)
     user = User.objects.get(id=input_dict['user_id'])
-    restaurant_object = Restaurant.objects.filter(tables__in=[input_dict['table_id']]).first()
-    returning_dict = {'status': "billed", 'table_id': input_dict['table_id'], 'table': table.name, 'user': user.name}
+    restaurant_object = Restaurant.objects.filter(tables__in=[table_id]).first()
     if input_dict['table_bill']:
-        returning_dict['order_history'] = json_util.loads(billed_cleaned(input_dict['table_id']))
-        returning_dict['message'] = 'Your table bill will be brought to you'
-        socket_io.emit('billing', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
-        socket_io.emit('billing', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
-                       namespace=our_namespace)
-        socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
-                       namespace=our_namespace)
+        billed_return = billed_cleaned(table_id)
+        returning_dict = {'status': "billed", 'table_id': table_id, 'table': table.name, 'user': user.name,
+                          'order_history': json_util.loads(billed_return['order_history']),
+                          'message': 'Your table bill will be brought to you'}
+        returning_json = json_util.dumps(returning_dict)
+        socket_io.emit('billing', returning_json, room=table_id, namespace=our_namespace)
+        socket_io.emit('billing', returning_json, room=restaurant_object.manager_room, namespace=our_namespace)
+        socket_io.emit('assist', returning_json, room=restaurant_object.manager_room, namespace=our_namespace)
         returning_dict.pop('order_history')
         for staff in table.staff:
             if staff.endpoint_arn:
                 returning_dict['staff_id'] = str(staff.id)
                 push_bill_request_notification(returning_dict, staff.endpoint_arn)
     else:
-        returning_json = json_util.dumps({'status': "billed", 'table_id': input_dict['table_id'],
-                                          'message': 'Your personal bill will be brought to you',
-                                          'order_history': 'dud'})
-        socket_io.emit('billing', returning_json, room=returning_dict['table_id'], namespace=our_namespace)
-        socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
+        returning_json = json_util.dumps(
+            {'status': "billed", 'table_id': table_id, 'table': table.name, 'user': user.name,
+             'message': 'Your personal bill will be brought to you', 'order_history': 'dud'})
+        socket_io.emit('billing', returning_json, room=table_id, namespace=our_namespace)
+        socket_io.emit('assist', returning_json, room=restaurant_object.manager_room,
                        namespace=our_namespace)

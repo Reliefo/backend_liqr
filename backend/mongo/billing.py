@@ -214,7 +214,7 @@ def billed_cleaned(table_id):
     restaurant = Restaurant.objects(tables__in=[table_id]).first()
     if len(table_ob.table_orders) == 0:
         table_ob.save()
-        return json_util.dumps({'message': 'There are no orders to bill'})
+        return {'status': 'failed', 'message': 'There are no orders to bill'}
 
     taxes, bill_structure, pdf_link, invoice_no = generate_bill(table_ob, restaurant)
     order_history = OrderHistory()
@@ -244,4 +244,4 @@ def billed_cleaned(table_id):
     table_ob.requests_queue = []
     table_ob.save()
     clear_table(table_id)
-    return order_history.to_json()
+    return {"status": "billed", "order_history": order_history.to_json()}
