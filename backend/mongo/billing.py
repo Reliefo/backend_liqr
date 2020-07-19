@@ -128,6 +128,7 @@ def generate_bill(table_ob, restaurant):
     cgst = restaurant.taxes['CGST']
     sgst = restaurant.taxes['SGST']
     service_tax = restaurant.taxes['Service']
+    currency = restaurant.currency
     total_tax = cgst + sgst + service_tax
     taxes = total_tax * pretax / 100
     total_amount = round(pretax + taxes, 2)
@@ -150,13 +151,13 @@ def generate_bill(table_ob, restaurant):
     raw_titles = ['Item Name', 'Customization', 'Price', 'Qty', 'Subtotal']
     titles = [Paragraph('<b>{}</b>'.format(title), title_style) for title in raw_titles]
     pre_total_row = [Paragraph('<b>Pretax Total</b>', pretax_total_style), '', '', '',
-                     Paragraph('<b>₹ {}</b>'.format(pretax), total_style)]
+                     Paragraph('<b>{} {}</b>'.format(currency, pretax), total_style)]
     taxes_row = [Paragraph('<b>Taxes {}%</b>'.format(total_tax), pretax_total_style),
                  Paragraph('<b>CGST: {}%, SGST: {}%, Service Tax: {}%</b>'.format(cgst, sgst, service_tax),
                            pretax_total_style), '', '',
-                 Paragraph('<b>₹ {}</b>'.format(taxes), total_style)]
+                 Paragraph('<b>{} {}</b>'.format(currency, taxes), total_style)]
     total_row = [Paragraph('<b>Total</b>', pretax_total_style), '', '', '',
-                 Paragraph('<b>₹ {}</b>'.format(total_amount), total_style)]
+                 Paragraph('<b>{} {}</b>'.format(currency, total_amount), total_style)]
 
     data = [titles] + item_rows + [pre_total_row] + [taxes_row] + [total_row]
 
@@ -179,7 +180,7 @@ def generate_bill(table_ob, restaurant):
     rupee_style = ParagraphStyle(name='Tatotaitle', parent=styles['Normal'], alignment=2, fontName='New Times Bo',
                                  fontSize=14)
 
-    last_p = Paragraph('Total Bill to be Paid: ₹ ' + str(total_amount), rupee_style)
+    last_p = Paragraph('Total Bill to be Paid: {} '.format(currency) + str(total_amount), rupee_style)
 
     story.append(last_p)
     story.append(Spacer(1, 0.2 * inch))
@@ -213,7 +214,7 @@ def billed_cleaned(table_id):
     restaurant = Restaurant.objects(tables__in=[table_id]).first()
     if len(table_ob.table_orders) == 0:
         table_ob.save()
-        return {'message': 'There are no orders to bill'}
+        return json_util.dumps({'message': 'There are no orders to bill'})
 
     taxes, bill_structure, pdf_link, invoice_no = generate_bill(table_ob, restaurant)
     order_history = OrderHistory()
