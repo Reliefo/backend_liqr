@@ -136,7 +136,9 @@ def assistance_requests(message):
     for staff in table.staff:
         if staff.endpoint_arn:
             returning_dict['staff_id'] = staff.id
-            push_assistance_request_notification(returning_dict, staff.endpoint_arn)
+            returning_message = push_assistance_request_notification(returning_dict, staff.endpoint_arn)
+            if returning_message!='sent':
+                sys.stderr.write("LiQR_Notification_Error: " + returning_message + " was sent to customer events\n"+staff.to_json())
     if input_dict['after_billing']:
         clear_table(str(table.id))
     table.save()

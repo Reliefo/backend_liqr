@@ -51,9 +51,13 @@ def push_assistance_request_notification(request_dict, staff_endpoint_arn):
             Subject='Thsi is subejct',
             MessageStructure="json"
         )
+        return_message = "sent"
     except sns_client.exceptions.EndpointDisabledException:
         verify_endpoint(request_dict['staff_id'])
-    return
+        return_message = "endpoint_disabled"
+    except sns_client.exceptions.InvalidParameterException:
+        return_message = "invalid_parameter_exception"
+    return return_message
 
 
 def push_bill_request_notification(request_dict, staff_endpoint_arn):
