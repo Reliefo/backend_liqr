@@ -8,55 +8,62 @@ from backend.mongo.query import *
 from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
 
 variables = {'--theme-font': 'Poppins',
-  '--first-background-color': '#ffffff',
-  '--second-background-color': '#ffffff',
-  '--first-menu-background-color': '#f0f0f0',
-  '--second-menu-background-color': '#f0f0f0',
-  '--first-light-color': '#ffc967',
-  '--second-light-color': '#ffa813',
-  '--first-pattern-light-color': '#ffb023',
-  '--second-pattern-light-color': '#ffb023',
-  '--food-card-color': '#ffffff',
-  '--welcome-card-color': '#ffffff',
-  '--welcome-card-text-color': '#000000',
-  '--food-menu-button-color': '#ffb023',
-  '--add-button-color': '#ffb023',
-  '--top-bar-color': '#ffb023',
-  '--search-background-color': '#ffc45c',
-  '--burger-menu-background-color': '#c0841d',
-  '--first-footer-color': '#ffb023',
-  '--second-footer-color': '#ffb023',
-  '--categories-button-color': '#ffb023',
-  '--categories-list-item-color': '#ffffff'}
+             '--first-background-color': '#ffffff',
+             '--second-background-color': '#ffffff',
+             '--first-menu-background-color': '#f0f0f0',
+             '--second-menu-background-color': '#f0f0f0',
+             '--first-light-color': '#ffc967',
+             '--second-light-color': '#ffa813',
+             '--first-pattern-light-color': '#ffb023',
+             '--second-pattern-light-color': '#ffb023',
+             '--food-card-color': '#ffffff',
+             '--welcome-card-color': '#ffffff',
+             '--welcome-card-text-color': '#000000',
+             '--food-menu-button-color': '#ffb023',
+             '--add-button-color': '#ffb023',
+             '--top-bar-color': '#ffb023',
+             '--search-background-color': '#ffc45c',
+             '--burger-menu-background-color': '#c0841d',
+             '--first-footer-color': '#ffb023',
+             '--second-footer-color': '#ffb023',
+             '--categories-button-color': '#ffb023',
+             '--categories-list-item-color': '#ffffff',
+             '--table-cart-color': '#ffb023'}
 variable_names = {'--theme-font': 'Theme Font, ignore this',
-  '--first-background-color': 'Home Screen Background Color',
-  '--second-background-color': 'Home Screen Background Color2',
-  '--first-menu-background-color': 'Menu and Other Screens Background Color',
-  '--second-menu-background-color': 'Menu and Other Screens Background Color2',
-  '--first-light-color': 'Theme color which is blended for Need Help Choosing',
-  '--second-light-color': 'Theme color which is blended for Need Help Choosing 2',
-  '--first-pattern-light-color': 'Color for all other objects',
-  '--second-pattern-light-color': 'COlor for all other objects 2',
-  '--food-card-color': 'Food Item Card Color',
-  '--welcome-card-color': 'Welcome to Restaurant Card Color',
-  '--welcome-card-text-color': 'Welcome to Restaurant Text Color',
-  '--food-menu-button-color': 'Full Menu Button color',
-  '--add-button-color': 'Add button in food items color',
-  '--top-bar-color': 'Top bar color',
-  '--search-background-color': 'Search bar color',
-  '--burger-menu-background-color': 'Side menu background color',
-  '--first-footer-color': 'Footer color 1',
-  '--second-footer-color': 'Footer color 1',
-  '--categories-button-color': 'Floating categories button in menu screen color',
-  '--categories-list-item-color': 'Floating categories item color'}
+                  '--first-background-color': 'Home Screen Background Color',
+                  '--second-background-color': 'Home Screen Background Color2',
+                  '--first-menu-background-color': 'Menu and Other Screens Background Color',
+                  '--second-menu-background-color': 'Menu and Other Screens Background Color2',
+                  '--first-light-color': 'Theme color which is blended for Need Help Choosing',
+                  '--second-light-color': 'Theme color which is blended for Need Help Choosing 2',
+                  '--first-pattern-light-color': 'Color for all other objects',
+                  '--second-pattern-light-color': 'COlor for all other objects 2',
+                  '--food-card-color': 'Food Item Card Color',
+                  '--welcome-card-color': 'Welcome to Restaurant Card Color',
+                  '--welcome-card-text-color': 'Welcome to Restaurant Text Color',
+                  '--food-menu-button-color': 'Full Menu Button color',
+                  '--add-button-color': 'Add button in food items color',
+                  '--top-bar-color': 'Top bar color',
+                  '--search-background-color': 'Search bar color',
+                  '--burger-menu-background-color': 'Side menu background color',
+                  '--first-footer-color': 'Footer color 1',
+                  '--second-footer-color': 'Footer color 1',
+                  '--categories-button-color': 'Floating categories button in menu screen color',
+                  '--categories-list-item-color': 'Floating categories item color',
+                  '--table-cart-color': 'Table cart  orders background color'}
+
 
 @main.route('/')
 def hello_world():
     return redirect("https://solutions.liqr.cc/")
 
 
+# eyJraWQiOiI0RHBvWkRXTTlsb2RcL2hyZEVxSzF1NkRVOTRRNDBBZjd5WDUzXC9kY3pNeGs9IiwiYWxnIjoiUlMyNTYifQ.\
+#     eyJzdWIiOiJjYTk4Mzg5Ni01NzZjLTQ0ODktOGMyOS0zODQ1ZGY3NmRkODEiLCJldmVudF9pZCI6IjgzNzYwOTZkLTcwMjgtNDViNC1iOTU2LTc3ODIzYmQ5MGY3ZCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1OTU2NzY2MjgsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoLTFfdjl1ejNnTkg2IiwiZXhwIjoxNTk1NjgwMjI4LCJpYXQiOjE1OTU2NzY2MjgsImp0aSI6ImY2MzE0MGFkLWQ2N2YtNDEwYi04ODFmLTQ4ZDBiYzg3YTZiMiIsImNsaWVudF9pZCI6IjJvYXVvN3Ewb2R2bjNjOTlkc2V2bXN0azU0IiwidXNlcm5hbWUiOiJjYTk4Mzg5Ni01NzZjLTQ0ODktOGMyOS0zODQ1ZGY3NmRkODEifQ.\
+#     K_RceuRRGft0ysYL-vS1e7V9BcbTOfaSy2yK_76TeHOIoKAt4zF4MLuGRc8EH9kZvE7O6riL6g-FnJvTM6VbvXdalNZpjQc6Q0x8kfohTZc6Oms52YFqKubwLAaQUXGJ_d6TTtDQvs8NCE7SSA_oJpyRLRHUHFBGY0w6MINH_T0xftUlGPMW_a6dUdaLbdTr7F0-r81V2aXVW1VnhHGzQoUpfluOXIm2qd8qyA4tn-WxtJy7XllK4XG7WOv1FLFUs3gro_wY6UQ03RTikRFGbNoi_9x4Khzr58iabspYaNeB39CYbvvTAdsz3HMwdytZJ3NoF5Ncb_Iajn4Vwxj7og
 @main.route('/rest_<int:rest_no>', methods=['GET'])
-# @login_required
+@login_required
+# @cognito_auth_required
 def fetch_restaurant(rest_no):
     rest_json = Restaurant.objects[rest_no].to_json()
     return rest_json
@@ -77,7 +84,7 @@ def set_rest_theme():
         restaurant_id = request.form['restaurant_id']
         variables = dict(request.form)
         variables.pop('restaurant_id')
-        theme_properties = { 'theme':True, 'variables':variables }
+        theme_properties = {'theme': True, 'variables': variables}
         Restaurant.objects(restaurant_id=restaurant_id)[0].update(set__theme_properties=theme_properties)
         return redirect("https://liqr.cc/color?restaurant_id=" + restaurant_id)
 
@@ -137,11 +144,11 @@ def rest_table_no(rest_no, table_no):
     table_id = str(Restaurant.objects[rest_no].tables[table_no].id)
     return redirect("https://order.liqr.cc/?table_id=" + table_id)
 
+
 @main.route('/rtl/<int:rest_no>_<int:table_no>', methods=['GET'])
 def rest_table_no_local(rest_no, table_no):
     table_id = str(Restaurant.objects[rest_no].tables[table_no].id)
     return redirect("http://localhost:3000/?table_id=" + table_id)
-
 
 
 @main.route('/local/<int:table_no>', methods=['GET'])
@@ -160,4 +167,3 @@ def shortened_table_id(table_id):
 @main.route('/bridge_socket', methods=['GET'])
 def bridge_socket():
     return render_template('bridge_index.html')
-

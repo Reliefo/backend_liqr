@@ -22,17 +22,19 @@ app = Flask(__name__)
 @login_manager.request_loader
 def load_user_from_request_header(request):
     try:
-        access_token = request.headers.get("Authorization")
+        access_token = request.headers.get("X-LiQR-Authorization")
+        id_token = request.headers.get("X-LiQR-ID")
 
         sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
-        cognito = Cognito("ap-south-1_rO5dDlChJ", "6c3hp92sshqjpemgaof7hplup1", access_token)
-        sys.stderr.write("LiQR_Error: " + str(cognito)+ " who is a " + str(request.args) + " connected\n")
+        cognito = Cognito("ap-south-1_v9uz3gNH6", "2oauo7q0odvn3c99dsevmstk54", user_pool_region="ap-south-1", access_token=access_token, id_token=id_token)
+        sys.stderr.write("LiQR_Error: " +str(cognito.get_user()._metadata)+ " who is a " + str(request.args) + " connected\n")
         username = cognito.get_user()._metadata.get("username")
         sys.stderr.write("LiQR_Error: " + username+ " who is a " + str(request.args) + " connected\n")
         if username is None:
             return None
-        return AppUser.objects(username=username)
+        return AppUser.objects[0]
     except Exception as e:
+        print(e)
         return None
 
 
@@ -56,7 +58,7 @@ def create_app(debug=False):
     app.config['PROPAGATE_EXCEPTIONS'] = True
 
     app.config['COGNITO_REGION'] = 'ap-south-1'
-    app.config['COGNITO_USERPOOL_ID'] = 'ap-south-1_rO5dDlChJ'
+    app.config['COGNITO_USERPOOL_ID'] = 'ap-south-1_v9uz3gNH6'
 
     # optional
     # app.config['COGNITO_APP_CLIENT_ID'] = '6c3hp92sshqjpemgaof7hplup1' # client ID you wish to verify user is authenticated against
@@ -66,8 +68,8 @@ def create_app(debug=False):
 
     login_manager.init_app(app)
     jwt = JWTManager(app)
-    # global cogauth
-    # cogauth = CognitoAuth(app)
+    global cogauth
+    cogauth = CognitoAuth(app)
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 

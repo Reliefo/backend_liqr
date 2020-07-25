@@ -45,7 +45,9 @@ def user_register():
             app_user = AppUser.objects(rest_user__in=[tempuser_ob.id]).first()
             app_user.rest_user = reguser_ob.to_dbref()
             app_user.password = hash_pass
-            app_user.save()
+            app_user.save(
+
+            )
         else:
             reguser_ob = RegisteredUser(name=name, email_id=email_id, unique_id=unique_id)
             reguser_ob.save()
