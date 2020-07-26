@@ -24,7 +24,7 @@ def load_user_from_request_header(request):
         access_token = request.headers.get("X-LiQR-Authorization")
         id_token = request.headers.get("X-LiQR-ID")
         unique_id = request.form['unique_id']
-        name = request.form['unique_id']
+        name = request.form['name']
 
         # sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
         cognito = Cognito("ap-south-1_v9uz3gNH6", "2oauo7q0odvn3c99dsevmstk54", user_pool_region="ap-south-1",

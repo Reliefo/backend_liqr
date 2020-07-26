@@ -76,11 +76,12 @@ def phone_login():
         username = current_user.username
         user_id = str(current_user.rest_user.id)
         unique_id = request.form['unique_id']
-        name = request.form['name']
         table_id = request.form['table_id']
         restaurant_object = Restaurant.objects.filter(tables__in=[table_id])[0]
 
         user_scan_otp(table_id, user_id)
+        this_user = User.objects.get(id=current_user.rest_user.id)
+        name = this_user.name
         access_token = create_access_token(identity=username)
         refresh_token = create_refresh_token(identity=username)
         return json_util.dumps(
