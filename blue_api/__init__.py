@@ -6,7 +6,7 @@ from flask_login import LoginManager, UserMixin, current_user, login_user, login
 from os import path, walk
 from flask_cognito import CognitoAuth
 from warrant import Cognito
-from backend.mongo.query import AppUser
+from backend.mongo.query import AppUser, PhoneUser, datetime
 import sys
 
 socket_io = SocketIO(logger=True, engineio_logger=False, ping_timeout=10, ping_interval=5, cors_allowed_origins="*")
@@ -14,7 +14,6 @@ our_namespace = '/reliefo'
 login_manager = LoginManager()
 
 cogauth = ''
-
 
 app = Flask(__name__)
 
@@ -24,15 +23,27 @@ def load_user_from_request_header(request):
     try:
         access_token = request.headers.get("X-LiQR-Authorization")
         id_token = request.headers.get("X-LiQR-ID")
+        unique_id = request.form['unique_id']
+        name = request.form['unique_id']
 
-        sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
-        cognito = Cognito("ap-south-1_v9uz3gNH6", "2oauo7q0odvn3c99dsevmstk54", user_pool_region="ap-south-1", access_token=access_token, id_token=id_token)
-        sys.stderr.write("LiQR_Error: " +str(cognito.get_user()._metadata)+ " who is a " + str(request.args) + " connected\n")
-        username = cognito.get_user()._metadata.get("username")
-        sys.stderr.write("LiQR_Error: " + username+ " who is a " + str(request.args) + " connected\n")
+        # sys.stderr.write("LiQR_Error: " + access_token+ " who is a " + str(request.args) + " connected\n")
+        cognito = Cognito("ap-south-1_v9uz3gNH6", "2oauo7q0odvn3c99dsevmstk54", user_pool_region="ap-south-1",
+                          access_token=access_token, id_token=id_token)
+        username = cognito.get_user().sub
+        phone_number = cognito.get_user().phone_number
+        sys.stderr.write("LiQR_Error: " + phone_number + " who is a " + " connected\n")
+        sys.stderr.write("LiQR_Error: " + username + " who is a " + " connected\n")
+        sys.stderr.write("LiQR_Error: " + unique_id + " who is a " + " connected\n")
+        if len(AppUser.objects(username=username)) == 0:
+            print("NEW USERRR")
+            the_user = PhoneUser(phone_no=phone_number, unique_id=unique_id, name=name).save()
+            app_user = AppUser(username=username, user_type="neo_customer",
+                               rest_user=the_user.to_dbref(), timestamp=datetime.now()).save()
+            return app_user
         if username is None:
             return None
-        return AppUser.objects[0]
+        print("OLD USERRR OYLO")
+        return AppUser.objects(username=username).first()
     except Exception as e:
         print(e)
         return None
@@ -40,7 +51,7 @@ def load_user_from_request_header(request):
 
 def create_app(debug=False):
     """Create an application."""
-    extra_dirs = ['templates/',]
+    extra_dirs = ['templates/', ]
     extra_files = extra_dirs[:]
     for extra_dir in extra_dirs:
         for dirname, dirs, files in walk(extra_dir):

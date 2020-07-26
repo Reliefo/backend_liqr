@@ -59,7 +59,7 @@ def connect():
     elif app_user.user_type == "staff":
         for table in Table.objects(staff__in=[app_user.staff_user.id]):
             join_room(str(table.id))
-    elif app_user.user_type == "customer":
+    elif app_user.user_type == "customer" or app_user.user_type == "neo_customer":
         sys.stderr.write("LiQR_Error: " +app_user.username)
         join_room(str(app_user.rest_user.current_table_id))
         try:

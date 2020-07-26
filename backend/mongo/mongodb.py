@@ -175,6 +175,13 @@ class RegisteredUser(User):
     unique_id = StringField()
 
 
+class PhoneUser(User):
+    phone_no = StringField(required=True)
+    unique_id = StringField()
+    aws_id = StringField()
+    from_login = BooleanField()
+
+
 class TempUser(User):
     planet_choices = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Neptune']
     planet = StringField(choices=planet_choices)
@@ -210,8 +217,8 @@ class KitchenStaff(Document):
 
 
 class AppUser(UserMixin, Document):
-    username = StringField(max_length=30)
-    user_type = StringField(choices=['customer', 'manager', 'staff', 'kitchen', 'admin', 'owner'])
+    username = StringField(max_length=40, unique=True)
+    user_type = StringField(choices=['customer', 'neo_customer', 'manager', 'staff', 'kitchen', 'admin', 'owner'])
     password = StringField()
     sid = StringField()
     timestamp = DateTimeField(default=datetime.now())
@@ -420,7 +427,7 @@ class Restaurant(Document):
     ordering_ability = BooleanField(default=True)
     display_order_buttons = BooleanField(default=True)
     theme_properties = DictField(default={"theme": False})
-    currency = StringField(default='$', choices=['$','₹'])
+    currency = StringField(default='$', choices=['$', '₹'])
 
     def to_json(self):
         data = self.to_mongo()

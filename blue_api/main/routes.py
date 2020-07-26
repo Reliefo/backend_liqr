@@ -2,10 +2,12 @@ from flask import request, jsonify, redirect, render_template
 
 from . import main
 from .. import login_manager
-from flask_login import login_required, logout_user
+from flask_login import login_required, logout_user, current_user
 from backend.mongo.query import *
-
-from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
+from flask_jwt_extended import (
+    get_jwt_identity, jwt_required, create_access_token, create_refresh_token, jwt_refresh_token_required
+)
+from flask_cognito import cognito_auth_required, current_cognito_jwt
 
 variables = {'--theme-font': 'Poppins',
              '--first-background-color': '#ffffff',
@@ -58,15 +60,34 @@ def hello_world():
     return redirect("https://solutions.liqr.cc/")
 
 
-# eyJraWQiOiI0RHBvWkRXTTlsb2RcL2hyZEVxSzF1NkRVOTRRNDBBZjd5WDUzXC9kY3pNeGs9IiwiYWxnIjoiUlMyNTYifQ.\
-#     eyJzdWIiOiJjYTk4Mzg5Ni01NzZjLTQ0ODktOGMyOS0zODQ1ZGY3NmRkODEiLCJldmVudF9pZCI6IjgzNzYwOTZkLTcwMjgtNDViNC1iOTU2LTc3ODIzYmQ5MGY3ZCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1OTU2NzY2MjgsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoLTFfdjl1ejNnTkg2IiwiZXhwIjoxNTk1NjgwMjI4LCJpYXQiOjE1OTU2NzY2MjgsImp0aSI6ImY2MzE0MGFkLWQ2N2YtNDEwYi04ODFmLTQ4ZDBiYzg3YTZiMiIsImNsaWVudF9pZCI6IjJvYXVvN3Ewb2R2bjNjOTlkc2V2bXN0azU0IiwidXNlcm5hbWUiOiJjYTk4Mzg5Ni01NzZjLTQ0ODktOGMyOS0zODQ1ZGY3NmRkODEifQ.\
-#     K_RceuRRGft0ysYL-vS1e7V9BcbTOfaSy2yK_76TeHOIoKAt4zF4MLuGRc8EH9kZvE7O6riL6g-FnJvTM6VbvXdalNZpjQc6Q0x8kfohTZc6Oms52YFqKubwLAaQUXGJ_d6TTtDQvs8NCE7SSA_oJpyRLRHUHFBGY0w6MINH_T0xftUlGPMW_a6dUdaLbdTr7F0-r81V2aXVW1VnhHGzQoUpfluOXIm2qd8qyA4tn-WxtJy7XllK4XG7WOv1FLFUs3gro_wY6UQ03RTikRFGbNoi_9x4Khzr58iabspYaNeB39CYbvvTAdsz3HMwdytZJ3NoF5Ncb_Iajn4Vwxj7og
 @main.route('/rest_<int:rest_no>', methods=['GET'])
 @login_required
 # @cognito_auth_required
 def fetch_restaurant(rest_no):
+    print(current_user)
     rest_json = Restaurant.objects[rest_no].to_json()
     return rest_json
+
+
+@main.route('/phone_login', methods=['POST'])
+@login_required
+def phone_login():
+    if request.method == 'POST':
+        username = current_user.username
+        user_id = str(current_user.rest_user.id)
+        unique_id = request.form['unique_id']
+        name = request.form['name']
+        table_id = request.form['table_id']
+        restaurant_object = Restaurant.objects.filter(tables__in=[table_id])[0]
+
+        user_scan_otp(table_id, user_id)
+        access_token = create_access_token(identity=username)
+        refresh_token = create_refresh_token(identity=username)
+        return json_util.dumps(
+            {"status": "Registration successful", "jwt": access_token, "refresh_token": refresh_token, "code": "200",
+             "name": name, "unique_id": unique_id, "user_id": user_id, "table_id": table_id,
+             "restaurant_id": restaurant_object.restaurant_id})
+    return "asdf"
 
 
 @main.route('/rest_no', methods=['GET'])
