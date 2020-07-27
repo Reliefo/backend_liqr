@@ -189,3 +189,9 @@ def shortened_table_id(table_id):
 @main.route('/bridge_socket', methods=['GET'])
 def bridge_socket():
     return render_template('bridge_index.html')
+@main.route('/privacy_policy', methods=['GET'])
+def privacy_policy():
+    return render_template('privacy_policy.html')
+@main.route('/terms_of_service', methods=['GET'])
+def terms_of_service():
+    return render_template('terms_of_service.html')
