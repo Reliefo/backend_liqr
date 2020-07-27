@@ -2,6 +2,7 @@ from backend.mongo.utils import *
 import sys
 import random
 import string
+from backend.mongo.generate_qr_code import generate_qr_image
 
 
 def random_alphanumeric_string(letters_count, digits_count):
@@ -52,6 +53,9 @@ def configuring_tables(request_type, message):
             try:
                 gen_tid = random_alphanumeric_string(4, 3)
                 new_table = Table(name=table_pair['name'], seats=table_pair['seats'], tid=gen_tid).save()
+                table_id = str(new_table.id)
+                qr_code_link = generate_qr_image(table_id, message['restaurant_id'])
+                Table.objects.get(id=table_id).update(set__qr_code_link=qr_code_link)
                 flag = False
             except NotUniqueError:
                 pass

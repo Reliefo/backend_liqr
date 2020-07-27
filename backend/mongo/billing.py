@@ -11,27 +11,10 @@ import math
 import boto3
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from backend.aws_api.s3_interaction import upload_fileobj, fetch_file_object, fetch_file_object_acl, copy_fileobj
 
 pdfmetrics.registerFont(TTFont('New Times Bo', 'Times New Roman Gras 700.ttf'))
 styles = getSampleStyleSheet()
-
-client = boto3.client(
-    "s3",
-    aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
-    aws_secret_access_key="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",
-    region_name="ap-south-1"
-)
-
-
-def upload_pdf_bill(pdf_file, restaurant_id, invoice_no):
-    key_location = restaurant_id + '/bills/' + invoice_no + '.pdf'
-    bucket_name = 'liqr-restaurants'
-    client.upload_fileobj(Fileobj=pdf_file,
-                          Bucket=bucket_name,
-                          Key=key_location,
-                          ExtraArgs={'ACL': 'public-read'})
-    image_link = 'https://' + bucket_name + '.s3.ap-south-1.amazonaws.com/' + key_location
-    return image_link
 
 
 def my_first_page(canvas, doc, restaurant, table_ob):
@@ -190,9 +173,10 @@ def generate_bill(table_ob, restaurant):
 
     doc.build(story, onFirstPage=partial(my_first_page, restaurant=restaurant, table_ob=table_ob),
               onLaterPages=partial(my_later_pages, restaurant=restaurant))
-    invoice_no = str_n(restaurant.invoice_no + 1, 7)
+    invoice_no = restaurant.restaurant_id + "_" + str_n(restaurant.invoice_no + 1, 7)
     pdf_file.seek(0)
-    pdf_link = upload_pdf_bill(pdf_file, restaurant.restaurant_id, invoice_no)
+    pdf_file_path = restaurant.restaurant_id + '/bills/' + invoice_no + '.pdf'
+    pdf_link = upload_fileobj(pdf_file, 'liqr-restaurants', pdf_file_path)
     Restaurant.objects.get(id=restaurant.id).update(inc__invoice_no=1)
 
     return restaurant.taxes, {'Pre-Tax Amount': pretax, 'Taxes': taxes,
@@ -236,6 +220,8 @@ def billed_cleaned(table_id):
     order_history.save()
     for user in table_ob.users:
         user.dine_in_history.append(order_history.to_dbref())
+        user_bill_path = user.aws_id + "/bills/" + invoice_no
+        copy_fileobj(pdf_link, "liqr-users", user_bill_path)
         # user.current_table_id = None
         user.save()
     Restaurant.objects(tables__in=[table_ob]).first().update(push__order_history=order_history)

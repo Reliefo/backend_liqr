@@ -245,6 +245,7 @@ class Table(Document):
     table_cart = ReferenceField(TableOrder, reverse_delete_rule=NULLIFY)
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     requests_queue = ListField(DictField())
+    qr_code_link = StringField()
 
     meta = {'strict': False}
 

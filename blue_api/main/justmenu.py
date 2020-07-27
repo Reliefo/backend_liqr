@@ -2,23 +2,11 @@ import traceback
 from flask_socketio import emit
 from .. import socket_io, our_namespace
 from backend.mongo.query import *
-import boto3
 from PIL import Image, ImageDraw, ImageFont
 import io
 import qrcode
+from backend.aws_api.s3_interaction import upload_fileobj, fetch_file_object, fetch_file_object_acl
 
-s3_res = boto3.resource(
-    "s3",
-    aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
-    aws_secret_access_key="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",
-    region_name="ap-south-1"
-)
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id="AKIAQJQYMJQJYTMFNHEU",
-    aws_secret_access_key="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",
-    region_name="ap-south-1"
-)
 
 def generate_qr_image(justmenu_id, name):
     qr = qrcode.QRCode(
@@ -56,21 +44,22 @@ def generate_qr_image(justmenu_id, name):
 
     d.text(((W - w) / 2, 330), msg, font=font_scan, fill="black")
 
-    imgobj = io.BytesIO()
+    img_obj = io.BytesIO()
 
     # format here would be something like "JPEG". See below link for more info.
-    img.save(imgobj, format='png')
-    imgobj.seek(0)
+    img.save(img_obj, format='png')
+    img_obj.seek(0)
 
     filename = name.lower().replace(' ', '_') + "_qr.png"
 
-    s3.upload_fileobj(imgobj, 'liqr-justmenu', justmenu_id + '/' + filename, ExtraArgs={'ACL': 'public-read'})
-    img_url = "https://s3-ap-south-1.amazonaws.com/liqr-justmenu/" + justmenu_id + "/" + filename
+    file_path = justmenu_id + '/' + filename
+    img_url = upload_fileobj(img_obj, 'liqr-justmenu', file_path)
 
     return img_url
 
 
 def configure_justmenu(input_dict):
+    bucket_name = 'liqr-justmenu'
     [request_type, element_type] = input_dict['type'].split('_', 1)
     if request_type == 'add':
         name = input_dict['name']
@@ -80,14 +69,14 @@ def configure_justmenu(input_dict):
         just.save()
     elif request_type == 'image':
         object_key = input_dict['image_url'].split('/', 4)[-1]
-        image = s3_res.ObjectAcl('liqr-justmenu', object_key)
+        image = fetch_file_object_acl(bucket_name, object_key)
         image.put(ACL='public-read')
         just = JustMenu.objects.get(id=input_dict['justmenu_id'])
         just.menu.append(input_dict['image_url'])
         just.save()
     elif request_type == 'delimage':
         object_key = input_dict['image_url'].split('/', 3)[-1]
-        image = s3_res.Object('liqr-justmenu', object_key)
+        image = fetch_file_object(bucket_name, object_key)
         image.delete()
         just = JustMenu.objects.get(id=input_dict['justmenu_id'])
         just.menu.remove(input_dict['image_url'])
@@ -96,10 +85,10 @@ def configure_justmenu(input_dict):
         just = JustMenu.objects.get(id=input_dict['justmenu_id'])
         for image_url in just.menu:
             object_key = image_url.split('/', 4)[-1]
-            image = s3_res.Object('liqr-justmenu', object_key)
+            image = fetch_file_object(bucket_name, object_key)
             image.delete()
         object_key = just.qr.split('/', 4)[-1]
-        image = s3_res.Object('liqr-justmenu', object_key)
+        image = fetch_file_object(bucket_name, object_key)
         image.delete()
         just.delete()
         input_dict['status'] = 'deleted'
@@ -108,14 +97,13 @@ def configure_justmenu(input_dict):
 
 
 @socket_io.on('justmenu_configuration', namespace=our_namespace)
-def justmenu_configuration(message):
+def just_menu_configuration(message):
     input_dict = json_util.loads(message)
-
     emit('justmenu_config', configure_justmenu(input_dict))
 
 
 @socket_io.on('fetch_justmenu', namespace=our_namespace)
-def fetch_justmenu(message):
+def fetch_just_menu(message):
     just_list = []
     for just in JustMenu.objects:
         just_list.append(json_util.loads(just.to_json()))
