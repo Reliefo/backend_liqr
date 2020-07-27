@@ -5,9 +5,11 @@ from backend.mongo.mongodb import Restaurant
 from backend.aws_api.s3_interaction import upload_fileobj
 
 
-def generate_qr_image(table_id, rest_id, logo_path=''):
+def generate_qr_image(table_obj, rest_id, logo_path=''):
     rest_obj = Restaurant.objects(restaurant_id=rest_id).first()
     rest_name = rest_obj.name
+    unique_table_id = table_obj.tid
+    table_name = table_obj.name
     #     rest_name = "Chicago Style Restaurant In Chicago Illinois"
 
     qr = qrcode.QRCode(
@@ -16,12 +18,12 @@ def generate_qr_image(table_id, rest_id, logo_path=''):
         box_size=10,
         border=2,
     )
-    qr.add_data('https://liqr.cc/x_awfejr8d')
+    qr.add_data('https://liqr.cc/x_' + unique_table_id)
     qr.make(fit=True)
 
     img_qr = qr.make_image(fill_color="black", back_color="white")
 
-    square_length = 1050
+    square_length = 1019
     qr_resize = img_qr.resize((square_length, square_length))
 
     img = Image.open('liqr_QR_temp.png', 'r')
@@ -57,13 +59,20 @@ def generate_qr_image(table_id, rest_id, logo_path=''):
 
     d.text(((W - w) / 2, 330), msg, font=font_scan, fill="black")
 
+    W, H = img.size
+    msg = table_name
+    d = ImageDraw.Draw(img)
+    w, h = d.textsize(msg, font=font_scan)
+
+    d.text(((W - w) / 2, 1320), msg, font=font_scan, fill="black")
+
     imgobj = io.BytesIO()
 
     # format here would be something like "JPEG". See below link for more info.
     img.save(imgobj, format='png')
     imgobj.seek(0)
 
-    filename = rest_name.lower().replace(' ', '_') + "_" + table_id + "_qr.png"
+    filename = rest_name.lower().replace(' ', '_') + "_" + table_name.lower().replace(' ', '_') + "_qr.png"
 
     file_path = rest_id + '/tables/' + filename
     img_url = upload_fileobj(imgobj, 'liqr-restaurants', file_path)

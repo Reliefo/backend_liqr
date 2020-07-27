@@ -54,7 +54,7 @@ def configuring_tables(request_type, message):
                 gen_tid = random_alphanumeric_string(4, 3)
                 new_table = Table(name=table_pair['name'], seats=table_pair['seats'], tid=gen_tid).save()
                 table_id = str(new_table.id)
-                qr_code_link = generate_qr_image(gen_tid, message['restaurant_id'])
+                qr_code_link = generate_qr_image(new_table, message['restaurant_id'])
                 Table.objects.get(id=table_id).update(set__qr_code_link=qr_code_link)
                 flag = False
             except NotUniqueError:
