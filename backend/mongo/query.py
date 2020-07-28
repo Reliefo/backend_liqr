@@ -8,6 +8,9 @@ import sys
 def user_scan_otp(table_id, user_id):
     scanned_table = Table.objects.get(id=table_id)
     phone_user = PhoneUser.objects.get(id=user_id)
+    for table in Table.objects(users__in=[phone_user.id]):
+        table.users.remove(phone_user)
+        table.save()
     current_names = [user.name for user in scanned_table.users]
     if phone_user.name == "":
         try_name = np.random.choice(TempUser.planet_choices)
@@ -23,9 +26,6 @@ def user_scan_otp(table_id, user_id):
     scanned_table.users.append(phone_user.to_dbref())
     scanned_table.save()
     phone_user.current_table_id = str(scanned_table.id)
-    for table in Table.objects(users__in=[phone_user.id]):
-        table.users.remove(phone_user)
-        table.save()
     phone_user.save()
 
 
@@ -38,15 +38,8 @@ def user_scan(table_id, unique_id, email_id='dud'):
                 if Table.objects(users__in=[temp_user[0].id]):
                     return temp_user[0]
                 else:
-                    scanned_table.users.append(temp_user[0].to_dbref())
-                    scanned_table.save()
                     return temp_user[0]
             temp_user[0].update(set__current_table_id=str(scanned_table.id))
-            for table in Table.objects(users__in=[temp_user[0].id]):
-                table.users.remove(temp_user[0])
-                table.save()
-            scanned_table.users.append(temp_user[0].to_dbref())
-            scanned_table.save()
             return temp_user[0]
         else:
             planet = np.random.choice(TempUser.planet_choices)

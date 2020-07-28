@@ -31,18 +31,18 @@ def load_user_from_request_header(request):
                           access_token=access_token, id_token=id_token)
         username = cognito.get_user().sub
         phone_number = cognito.get_user().phone_number
-        sys.stderr.write("LiQR_Error: " + phone_number + " who is a " + " connected\n")
-        sys.stderr.write("LiQR_Error: " + username + " who is a " + " connected\n")
-        sys.stderr.write("LiQR_Error: " + unique_id + " who is a " + " connected\n")
+        # sys.stderr.write("LiQR_Error: " + phone_number + " who is a " + " connected\n")
+        # sys.stderr.write("LiQR_Error: " + username + " who is a " + " connected\n")
+        # sys.stderr.write("LiQR_Error: " + unique_id + " who is a " + " connected\n")
         if len(AppUser.objects(username=username)) == 0:
-            print("NEW USERRR")
+            print("New user here")
             the_user = PhoneUser(phone_no=phone_number, unique_id=unique_id, name=name).save()
             app_user = AppUser(username=username, user_type="neo_customer",
                                rest_user=the_user.to_dbref(), timestamp=datetime.now()).save()
             return app_user
         if username is None:
             return None
-        print("OLD USERRR OYLO")
+        print("Old user")
         return AppUser.objects(username=username).first()
     except Exception as e:
         print(e)
