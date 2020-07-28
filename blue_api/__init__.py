@@ -36,7 +36,7 @@ def load_user_from_request_header(request):
         # sys.stderr.write("LiQR_Error: " + unique_id + " who is a " + " connected\n")
         if len(AppUser.objects(username=username)) == 0:
             print("New user here")
-            the_user = PhoneUser(phone_no=phone_number, unique_id=unique_id, name=name).save()
+            the_user = PhoneUser(phone_no=phone_number, unique_id=unique_id, name=name, aws_id=username).save()
             app_user = AppUser(username=username, user_type="neo_customer",
                                rest_user=the_user.to_dbref(), timestamp=datetime.now()).save()
             return app_user
