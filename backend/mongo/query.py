@@ -50,8 +50,6 @@ def user_scan(table_id, unique_id, email_id='dud'):
             name = planet + " " + str(planet_no)
             temp_user = TempUser(unique_id=unique_id + "$" + name, current_table_id=str(scanned_table.id),
                                  planet=planet, planet_no=planet_no, name=name).save()
-            scanned_table.users.append(temp_user.to_dbref())
-            scanned_table.save()
             return temp_user
     else:
         reg_user = RegisteredUser.objects.filter(email_id=email_id)[0]
@@ -59,14 +57,10 @@ def user_scan(table_id, unique_id, email_id='dud'):
             if Table.objects(users__in=[reg_user.id]):
                 return reg_user
             else:
-                scanned_table.users.append(reg_user.to_dbref())
-                scanned_table.save()
                 return reg_user
         for table in Table.objects(users__in=[reg_user.id]):
             table.users.remove(reg_user)
             table.save()
-        scanned_table.users.append(reg_user.to_dbref())
-        scanned_table.save()
         reg_user.current_table_id = str(scanned_table.id)
         reg_user.save()
         return reg_user
