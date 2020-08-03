@@ -44,7 +44,7 @@ def staff_acceptance(message):
             socket_io.emit('order_pickup_updates', json_util.dumps(input_dict), namespace=our_namespace)
             push_order_complete_notification(input_dict, curr_staff.endpoint_arn)
         else:  # Assistance Request
-            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            socket_io.emit('assist', json_util.dumps(input_dict), room=input_dict['table_id'], namespace=our_namespace)
             push_assistance_request_notification(input_dict, curr_staff.endpoint_arn)
         return
     elif input_dict['status'] == "accepted_rejected":
@@ -75,7 +75,7 @@ def staff_acceptance(message):
             input_dict['msg'] = "Service has been accepted"
             curr_staff.requests_history.append(input_dict)
             curr_staff.save()
-            socket_io.emit('assist', json_util.dumps(input_dict), namespace=our_namespace)
+            socket_io.emit('assist', json_util.dumps(input_dict), room=input_dict['table_id'], namespace=our_namespace)
             return
 
 

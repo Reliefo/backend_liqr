@@ -42,7 +42,7 @@ def connect():
     security = 1
     if security == 1:
         app_user = AppUser.objects(username=username).first()
-        sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
+        # sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
     else:
         app_user = AppUser.objects.get(id="5f033493cfb1be420f5827a3")
         sys.stderr.write("LiQR_Error:  who is a "+str(request.args)+" connected\n")
@@ -60,12 +60,7 @@ def connect():
         for table in Table.objects(staff__in=[app_user.staff_user.id]):
             join_room(str(table.id))
     elif app_user.user_type == "customer" or app_user.user_type == "neo_customer":
-        sys.stderr.write("LiQR_Error: " +app_user.username)
         join_room(str(app_user.rest_user.current_table_id))
-        try:
-            sys.stderr.write("LiQR_Error: "+app_user.rest_user.name+" who is definitely a customer joined "+app_user.rest_user.current_table_id+"\n")
-        except:
-            pass
     AppUser.objects(username=app_user.username).first().update(set__sid=request.sid)
     sys.stderr.write("LiQR_Connection: "+app_user.username+" who is a "+app_user.user_type+" connected\n")
 
