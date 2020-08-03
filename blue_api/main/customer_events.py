@@ -144,7 +144,8 @@ def assistance_requests(message):
     table.save()
 
     returning_dict['msg'] = "Service has been requested"
-    socket_io.emit('assist', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
+    # socket_io.emit('assist', json_util.dumps(returning_dict), room=returning_dict['table_id'], namespace=our_namespace)
+    emit('assist', json_util.dumps(returning_dict), namespace=our_namespace)
     socket_io.emit('assist', json_util.dumps(returning_dict), room=restaurant_object.manager_room,
                    namespace=our_namespace)
 
