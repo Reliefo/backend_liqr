@@ -228,6 +228,7 @@ def billed_cleaned(table_id):
     table_ob.table_orders = []
     table_ob.assistance_reqs = []
     table_ob.requests_queue = []
+    table_ob.billing['total_bill'] = bill_structure['Total Amount']
     table_ob.save()
     clear_table(table_id)
     return {"status": "billed", "order_history": order_history.to_json()}

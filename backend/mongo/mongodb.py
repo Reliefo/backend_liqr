@@ -246,6 +246,7 @@ class Table(Document):
     assistance_reqs = ListField(ReferenceField(Assistance, reverse_delete_rule=PULL))
     requests_queue = ListField(DictField())
     qr_code_link = StringField()
+    billing = DictField()
 
     meta = {'strict': False}
 

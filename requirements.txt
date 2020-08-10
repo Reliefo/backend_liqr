@@ -28,13 +28,13 @@ gevent-websocket==0.10.1
 greenlet==0.4.15
 idna==2.9
 ipykernel==5.3.0
-ipython @ file:///tmp/build/80754af9/ipython_1593447377063/work
+ipython==7.17.0
 ipython-genutils==0.2.0
 itsdangerous==1.1.0
-jedi @ file:///tmp/build/80754af9/jedi_1592841866100/work
+jedi==0.17.2
 Jinja2==2.11.1
 jmespath==0.9.5
-jupyter-client @ file:///tmp/build/80754af9/jupyter_client_1594163838128/work
+jupyter-client==6.1.6
 jupyter-core==4.6.3
 MarkupSafe==1.1.1
 mongoengine==0.19.1

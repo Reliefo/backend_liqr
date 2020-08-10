@@ -4,55 +4,42 @@ from . import main
 from .. import login_manager
 from flask_login import login_required, logout_user, current_user
 from backend.mongo.query import *
+from backend.constants.theme_constants import *
 from flask_jwt_extended import (
     get_jwt_identity, jwt_required, create_access_token, create_refresh_token, jwt_refresh_token_required
 )
+import stripe
 from flask_cognito import cognito_auth_required, current_cognito_jwt
 
-variables = {'--theme-font': 'Poppins',
-             '--first-background-color': '#ffffff',
-             '--second-background-color': '#ffffff',
-             '--first-menu-background-color': '#f0f0f0',
-             '--second-menu-background-color': '#f0f0f0',
-             '--first-light-color': '#ffc967',
-             '--second-light-color': '#ffa813',
-             '--first-pattern-light-color': '#ffb023',
-             '--second-pattern-light-color': '#ffb023',
-             '--food-card-color': '#ffffff',
-             '--welcome-card-color': '#ffffff',
-             '--welcome-card-text-color': '#000000',
-             '--food-menu-button-color': '#ffb023',
-             '--add-button-color': '#ffb023',
-             '--top-bar-color': '#ffb023',
-             '--search-background-color': '#ffc45c',
-             '--burger-menu-background-color': '#c0841d',
-             '--first-footer-color': '#ffb023',
-             '--second-footer-color': '#ffb023',
-             '--categories-button-color': '#ffb023',
-             '--categories-list-item-color': '#ffffff',
-             '--table-cart-color': '#ffb023'}
-variable_names = {'--theme-font': 'Theme Font, ignore this',
-                  '--first-background-color': 'Home Screen Background Color',
-                  '--second-background-color': 'Home Screen Background Color2',
-                  '--first-menu-background-color': 'Menu and Other Screens Background Color',
-                  '--second-menu-background-color': 'Menu and Other Screens Background Color2',
-                  '--first-light-color': 'Theme color which is blended for Need Help Choosing',
-                  '--second-light-color': 'Theme color which is blended for Need Help Choosing 2',
-                  '--first-pattern-light-color': 'Color for all other objects',
-                  '--second-pattern-light-color': 'COlor for all other objects 2',
-                  '--food-card-color': 'Food Item Card Color',
-                  '--welcome-card-color': 'Welcome to Restaurant Card Color',
-                  '--welcome-card-text-color': 'Welcome to Restaurant Text Color',
-                  '--food-menu-button-color': 'Full Menu Button color',
-                  '--add-button-color': 'Add button in food items color',
-                  '--top-bar-color': 'Top bar color',
-                  '--search-background-color': 'Search bar color',
-                  '--burger-menu-background-color': 'Side menu background color',
-                  '--first-footer-color': 'Footer color 1',
-                  '--second-footer-color': 'Footer color 1',
-                  '--categories-button-color': 'Floating categories button in menu screen color',
-                  '--categories-list-item-color': 'Floating categories item color',
-                  '--table-cart-color': 'Table cart  orders background color'}
+# Set your secret key. Remember to switch to your live secret key in production!
+# See your keys here: https://dashboard.stripe.com/account/apikeys
+stripe.api_key = 'sk_test_51H4JNtEjtenrp5aUOHdImobYzp3B1ugG5gl1hzh5ZMpTXD2WEO9Ze6vcbyQjk5CKbNhZmzWSkDkLHiaHJhDgcnR800Z9F7xhJ1'
+test_id = ''
+
+
+@main.route('/secret', methods=['POST'])
+def client_secret():
+    table_id = request.form['table_id']
+    table_ob = Table.objects.get(id=table_id)
+    # ... Create or retrieve the PaymentIntent
+    intent = stripe.PaymentIntent.create(
+        amount=table_ob.billing['total_bill']*100,
+        currency='usd',
+        # Verify your integration in this guide by including this parameter
+        metadata={'integration_check': 'accept_a_payment'},
+    )
+    table_ob.billing['client_secret'] = intent.client_secret
+    table_ob.save()
+    return jsonify(client_secret=intent.client_secret)
+
+
+@main.route('/secret_check', methods=['POST'])
+def client_secret_check():
+    # retrieve the PaymentIntent
+    table_id = request.form['table_id']
+    table_ob = Table.objects.get(id=table_id)
+    payment_intent = stripe.PaymentIntent.retrieve(table_ob.billing['client_secret'].split('_secret_')[0])
+    return jsonify(payment_intent['status'])
 
 
 @main.route('/')
@@ -189,9 +176,13 @@ def shortened_table_id(table_id):
 @main.route('/bridge_socket', methods=['GET'])
 def bridge_socket():
     return render_template('bridge_index.html')
+
+
 @main.route('/privacy_policy', methods=['GET'])
 def privacy_policy():
     return render_template('privacy_policy.html')
+
+
 @main.route('/terms_of_service', methods=['GET'])
 def terms_of_service():
     return render_template('terms_of_service.html')
