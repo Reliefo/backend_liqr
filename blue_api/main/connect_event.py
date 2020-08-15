@@ -1,7 +1,7 @@
 import sys
 from . import main
 from flask import session, request
-from .. import socket_io, our_namespace, cogauth
+from .. import socket_io, our_namespace
 from backend.mongo.query import *
 import numpy as np
 from flask_jwt_extended import (

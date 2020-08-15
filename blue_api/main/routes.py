@@ -22,8 +22,9 @@ def client_secret():
     table_id = request.form['table_id']
     table_ob = Table.objects.get(id=table_id)
     # ... Create or retrieve the PaymentIntent
+    total_amount = int(table_ob.billing['total_bill'])
     intent = stripe.PaymentIntent.create(
-        amount=table_ob.billing['total_bill']*100,
+        amount=total_amount*100,
         currency='usd',
         # Verify your integration in this guide by including this parameter
         metadata={'integration_check': 'accept_a_payment'},

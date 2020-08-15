@@ -6,11 +6,16 @@ import sys
 
 
 def user_scan_otp(table_id, user_id):
-    scanned_table = Table.objects.get(id=table_id)
     phone_user = PhoneUser.objects.get(id=user_id)
     for table in Table.objects(users__in=[phone_user.id]):
         table.users.remove(phone_user)
         table.save()
+
+    scanned_table = Table.objects.get(id=table_id)
+    scanned_table.users.append(phone_user.to_dbref())
+    scanned_table.save()
+    scanned_table = Table.objects.get(id=table_id)
+
     current_names = [user.name for user in scanned_table.users]
     if phone_user.name == "":
         try_name = np.random.choice(TempUser.planet_choices)
@@ -23,8 +28,6 @@ def user_scan_otp(table_id, user_id):
                 found_it = False
         phone_user.name = try_name
 
-    scanned_table.users.append(phone_user.to_dbref())
-    scanned_table.save()
     phone_user.current_table_id = str(scanned_table.id)
     phone_user.save()
 

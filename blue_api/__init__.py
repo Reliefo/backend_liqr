@@ -13,7 +13,7 @@ socket_io = SocketIO(logger=True, engineio_logger=False, ping_timeout=10, ping_i
 our_namespace = '/reliefo'
 login_manager = LoginManager()
 
-cogauth = ''
+# cogauth = ''
 
 app = Flask(__name__)
 
@@ -68,21 +68,20 @@ def create_app(debug=False):
     app.config['JWT_SECRET_KEY'] = '42@s3xn%o69^!xd$'
     app.config['PROPAGATE_EXCEPTIONS'] = True
 
-    app.config['COGNITO_REGION'] = 'ap-south-1'
-    app.config['COGNITO_USERPOOL_ID'] = 'ap-south-1_v9uz3gNH6'
+    # app.config['COGNITO_REGION'] = 'ap-south-1'
+    # app.config['COGNITO_USERPOOL_ID'] = 'ap-south-1_v9uz3gNH6'
 
     # optional
     # app.config['COGNITO_APP_CLIENT_ID'] = '6c3hp92sshqjpemgaof7hplup1' # client ID you wish to verify user is authenticated against
-    app.config['COGNITO_CHECK_TOKEN_EXPIRATION'] = False  # disable token expiration checking for testing purposes
-    app.config['COGNITO_JWT_HEADER_NAME'] = 'X-LiQR-Authorization',
-    app.config['COGNITO_JWT_HEADER_PREFIX'] = 'Bearer',
+    # app.config['COGNITO_CHECK_TOKEN_EXPIRATION'] = False  # disable token expiration checking for testing purposes
+    # app.config['COGNITO_JWT_HEADER_NAME'] = 'X-LiQR-Authorization',
+    # app.config['COGNITO_JWT_HEADER_PREFIX'] = 'Bearer',
 
     login_manager.init_app(app)
     jwt = JWTManager(app)
-    global cogauth
-    cogauth = CognitoAuth(app)
+    # global cogauth
+    # cogauth = CognitoAuth(app)
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
-
     socket_io.init_app(app)
     return app
