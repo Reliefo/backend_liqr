@@ -50,7 +50,7 @@ class Order(Document):
 class TableOrder(Document):
     table = StringField()
     table_id = StringField()
-    orders = ListField(ReferenceField(Order))
+    orders = ListField(ReferenceField(Order), reverse_delete_rule=PULL)
     personal_order = BooleanField()
     status = StringField(choices=['queued', 'cooking', 'completed'], default='queued')
     timestamp = DateTimeField(default=datetime.now())
