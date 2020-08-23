@@ -31,7 +31,7 @@ def client_secret():
     )
     table_ob.billing['client_secret'] = intent.client_secret
     table_ob.save()
-    return jsonify(client_secret=intent.client_secret)
+    return jsonify(client_secret=intent.client_secret, total_amount=total_amount)
 
 
 @main.route('/secret_check', methods=['POST'])

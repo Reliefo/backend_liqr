@@ -9,7 +9,6 @@ from flask_jwt_extended import (
 )
 from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 
-
 # configuration
 
 
@@ -21,8 +20,8 @@ from flask_socketio import emit, join_room, leave_room, disconnect, rooms
 #     return AppUser.objects(username=payload['username'])
 
 
-
 from flask_cognito import cognito_auth_required, current_user, current_cognito_jwt
+
 
 # @route('/api/private')
 # @cognito_auth_required
@@ -45,8 +44,8 @@ def connect():
         # sys.stderr.write("LiQR_Error: "+username+" who is a "+app_user.user_type+" connected\n")
     else:
         app_user = AppUser.objects.get(id="5f033493cfb1be420f5827a3")
-        sys.stderr.write("LiQR_Error:  who is a "+str(request.args)+" connected\n")
-        sys.stderr.write("LiQR_Error:  who is a "+str(request.headers)+" connected\n")
+        sys.stderr.write("LiQR_Error:  who is a " + str(request.args) + " connected\n")
+        sys.stderr.write("LiQR_Error:  who is a " + str(request.headers) + " connected\n")
     previous_sid = app_user.sid
     if previous_sid:
         disconnect(previous_sid)
@@ -55,14 +54,14 @@ def connect():
     elif app_user.user_type == "owner":
         join_room(app_user.restaurant_id)
     elif app_user.user_type == "kitchen":
-        join_room(app_user.restaurant_id+"_kitchen")
+        join_room(app_user.restaurant_id + "_kitchen")
     elif app_user.user_type == "staff":
         for table in Table.objects(staff__in=[app_user.staff_user.id]):
             join_room(str(table.id))
     elif app_user.user_type == "customer" or app_user.user_type == "neo_customer":
         join_room(str(app_user.rest_user.current_table_id))
     AppUser.objects(username=app_user.username).first().update(set__sid=request.sid)
-    sys.stderr.write("LiQR_Connection: "+app_user.username+" who is a "+app_user.user_type+" connected\n")
+    sys.stderr.write("LiQR_Connection: " + app_user.username + " who is a " + app_user.user_type + " connected\n")
 
 
 @socket_io.on('disconnect', namespace=our_namespace)
