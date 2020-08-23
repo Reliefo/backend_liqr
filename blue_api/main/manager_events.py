@@ -94,27 +94,41 @@ def bill_the_table(message):
         if staff.endpoint_arn:
             push_bill_request_notification(returning_dict, staff.endpoint_arn)
 
+
 @socket_io.on('edit_the_bill', namespace=our_namespace)
 def edit_the_bill(message):
     input_dict = json_util.loads(message)
     table_id = input_dict['table_id']
-    table = Table.objects.get(id=table_id)
+    table_order_id = input_dict['table_order_id']
+    order_id = input_dict['order_id']
+    food_id = input_dict['food_id']
+    request_type = input_dict['request_type']
     restaurant_object = Restaurant.objects.filter(tables__in=[table_id]).first()
-    billed_return = billed_cleaned(table_id)
-    if billed_return['status'] == 'failed':
-        returning_dict = {'status': "failed", 'table_id': table_id, 'table': table.name,
-                          'user': "Manager", 'message': 'No orders in the table'}
-        emit('billing', json_util.dumps(returning_dict), namespace=our_namespace)
-        return
-    returning_dict = {'status': "billed", 'table_id': table_id, 'table': table.name, 'user': "Manager",
-                      'order_history': json_util.loads(billed_return['order_history']),
-                      'message': 'Your table bill will be brought to you'}
-    returning_json = json_util.dumps(returning_dict)
-    socket_io.emit('billing', returning_json, room=restaurant_object.manager_room,
-                   namespace=our_namespace)
-    socket_io.emit('billing', returning_json, room=returning_dict['table_id'], namespace=our_namespace)
-    returning_dict.pop('order_history')
-    for staff in table.staff:
-        if staff.endpoint_arn:
-            push_bill_request_notification(returning_dict, staff.endpoint_arn)
+    order = Order.objects.get(id=order_id)
+    list_of_food_orders = []
+    for food_order in order.food_list:
+        if food_order.food_id == food_id:
+            if request_type == 'delete':
+                pass
+            elif request_type == 'edit_quantity':
+                food_order.quantity = input_dict['quantity']
+                list_of_food_orders.append(food_order)
+        else:
+            list_of_food_orders.append(food_order)
+    order.food_list = list_of_food_orders
+    order.save()
+    if len(order.food_list) == 0:
+        Order.objects.get(id=order_id).delete()
+        if len(TableOrder.objects.get(id=table_order_id).orders) == 0:
+            TableOrder.objects.get(id=table_order_id).delete()
+    socket_io.emit('bill_editing', message, room=restaurant_object.manager_room, namespace=our_namespace)
 
+
+@socket_io.on('mirror_testing', namespace=our_namespace)
+def mirror_testing(message):
+    emit('mirror_testing', message)
+
+
+@socket_io.on('mirror_testing2', namespace=our_namespace)
+def mirror_testing2(message):
+    socket_io.emit('mirror_testing2', message, namespace=our_namespace)
